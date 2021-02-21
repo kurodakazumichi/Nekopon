@@ -15,9 +15,6 @@ namespace MyGame
     protected override void MyStart()
     {
       var system = new GameObject("GlobalSystem");
-      // 親要素をDontDestoryしておかないと、DontDestoryされた子であっても消される
-      // このDontDestoryOnLoadは大事だよ。
-      DontDestroyOnLoad(system);
 
       // シングルトンを管理するシングルトン
       var singleton = new GameObject("SingletonManager", typeof(SingletonManager));
