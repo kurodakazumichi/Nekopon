@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace MyGame
 {
-  public class SingletonMonobehaviour<T> : MonoBehaviour where T : MonoBehaviour
+  public class SingletonMonobehaviour<T> : MyMonoBehaviour where T : MyMonoBehaviour
   {
     private static T instance;
 
@@ -22,7 +22,7 @@ namespace MyGame
 
     public static bool HasInstance => (instance != null);
 
-    virtual protected void Awake()
+    protected override void MyAwake()
     {
       if (this != Instance) {
 #if _DEBUG

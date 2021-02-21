@@ -9,12 +9,6 @@ namespace MyGame
   /// </summary>
   public class SingletonManager : SingletonMonobehaviour<SingletonManager>
   {
-    override protected void Awake()
-    {
-      base.Awake();
-      DontDestroyOnLoad(this.gameObject);
-    }
-
     public SingletonManager Setup<T> (GameObject parent) where T : SingletonMonobehaviour<T>
     {
       var type = typeof(T);
