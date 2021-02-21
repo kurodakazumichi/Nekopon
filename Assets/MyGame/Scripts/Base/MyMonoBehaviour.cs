@@ -21,15 +21,15 @@ namespace MyGame
 
     protected sealed override void Awake()
     {
+      if (cacheTransform == null) {
+        cacheTransform = this.transform;
+      }
+
       MyAwake();
     }
 
     protected sealed override void Start()
     {
-      if (cacheTransform == null) {
-        cacheTransform = this.transform;
-      }
-
       MyStart();
     }
 
@@ -41,5 +41,17 @@ namespace MyGame
     protected virtual void MyAwake() { }
     protected virtual void MyStart() { }
     protected virtual void MyUpdate() { }
+
+    public MyMonoBehaviour SetParent(Transform parent)
+    {
+      this.cacheTransform.parent = parent;
+      return this;
+    }
+
+    public MyMonoBehaviour SetActive(bool active)
+    {
+      this.gameObject.SetActive(active);
+      return this;
+    }
   }
 }
