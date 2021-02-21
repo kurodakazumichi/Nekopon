@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace MyGame.Title
 {
-  public class Menu : MonoBehaviour
+  public class Menu : MyMonoBehaviour
   {
     public Vector4 Move = Vector4.zero;
     public Vector4 Scale = Vector4.zero;
@@ -15,14 +15,14 @@ namespace MyGame.Title
 
 
     // Start is called before the first frame update
-    void Start()
+    protected override void MyStart()
     {
       this.startPos = transform.position;
       this.startScale = transform.localScale;
     }
 
     // Update is called once per frame
-    void Update()
+    protected override void MyUpdate()
     {
       transform.position = this.startPos + new Vector3(
         Move.x * Mathf.Cos(Time.time * Move.z),

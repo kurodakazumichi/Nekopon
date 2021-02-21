@@ -37,18 +37,33 @@ namespace MyGame.Title
     // バウンド階数
     private int boundCount = 0;
 
+    // バウンドが完了した時に呼ばれるコールバック
+    private System.Action completedBound = null;
+    public System.Action CompletedBound {
+      set { this.completedBound = value; }
+    }
+
+    public void SetBound()
+    {
+      this.state.SetState(State.Bound);
+    }
+
+    public void SetFixed()
+    {
+      this.state.SetState(State.Fixed);
+    }
+
     protected override void MyAwake()
     {
       this.state = new StateMachine<State>();
       this.state.Add(State.Idle);
-      this.state.Add(State.Bound, this.BoundEnter, this.BoundUpdate, null);
-      this.state.Add(State.Fixed, this.FixedEnter);
+      this.state.Add(State.Bound, BoundEnter, BoundUpdate, BoundExit);
+      this.state.Add(State.Fixed, FixedEnter);
       this.state.SetState(State.Idle);
     }
 
     protected override void MyStart()
     {
-      this.state.SetState(State.Bound);
     }
 
     protected override void MyUpdate()
@@ -78,6 +93,11 @@ namespace MyGame.Title
       if (_BoundLimit <= this.boundCount) {
         this.state.SetState(State.Fixed);
       }
+    }
+
+    private void BoundExit()
+    {
+      this.completedBound?.Invoke();
     }
 
     private void FixedEnter()
