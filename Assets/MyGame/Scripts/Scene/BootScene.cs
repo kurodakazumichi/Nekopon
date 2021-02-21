@@ -23,7 +23,8 @@ namespace MyGame.Scene
       // 常駐させたいシステムがあればここで生成
       SingletonManager.Instance
         .Setup<TimeManager>(system)
-        .Setup<SceneManager>(system);
+        .Setup<SceneManager>(system)
+        .Setup<ResourceManager>(system);
 
 #if _DEBUG
       if (_NoSceneTransition) {
