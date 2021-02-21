@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace TitleScene
+namespace MyGame.Title
 {
   public class Menu : MonoBehaviour
   {
     public Vector4 Move = Vector4.zero;
     public Vector4 Scale = Vector4.zero;
     public Color SelectedColor = Color.white;
+    public SceneManager.SceneType _SceneType;
     private Vector3 startPos;
     private Vector3 startScale;
 
