@@ -19,7 +19,7 @@ namespace MyGame
     [HideInInspector]
     public Transform cacheTransform;
 
-    protected sealed override void Awake()
+    protected override void Awake()
     {
       if (cacheTransform == null) {
         cacheTransform = this.transform;
@@ -28,12 +28,12 @@ namespace MyGame
       MyAwake();
     }
 
-    protected sealed override void Start()
+    protected override void Start()
     {
       MyStart();
     }
 
-    protected sealed override void Update()
+    protected override void Update()
     {
       MyUpdate();
     }

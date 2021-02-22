@@ -1,57 +1,54 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
+using MyGame.Unit.Title;
 
 namespace MyGame.Scene
 {
   public class TitleScene : SceneBase
   {
-    private GameObject titleLogoPrefab = null;
-    private List<GameObject> menuPrefabs = new List<GameObject>();
-
-    private Title.TitleLogo titleLogo = null;
-    private List<Title.Menu> menus = new List<Title.Menu>();
-
     private enum State
     {
-      LoadWait,
+      Setup,
       Intro,
       InputWait,
     }
+
+    private GameObject titleLogoPrefab = null;
+    private List<GameObject> menuPrefabs = new List<GameObject>();
+
+    private TitleLogo titleLogo = null;
+    private List<Menu> menus = new List<Menu>();
 
     private StateMachine<State> state;
 
     protected override void MyStart()
     {
       this.state = new StateMachine<State>();
-      this.state.Add(State.LoadWait, null, LoadUpdate, LoadExit);
+      this.state.Add(State.Setup, SetupEnter, SetupUpdate, null);
       this.state.Add(State.Intro, IntroEnter, IntroUpdate, null);
       this.state.Add(State.InputWait, InputWaitEnter, InputWaitUpdate, null);
-
-      this.isLoaded = false;
-      StartCoroutine(Load());
-      this.state.SetState(State.LoadWait);
     }
 
     protected override IEnumerator Load()
     {
-      int count = 0;
-      System.Action pre  = () => { count++; };
-      System.Action done = () => { count--; };
+      var waitForCount = new WaitForCount();
+      System.Action pre  = waitForCount.inc;
+      System.Action done = waitForCount.dec;
 
       var rm = ResourceManager.Instance;
-      rm.Load<GameObject>("TitleLogo" , pre, (res) => { this.titleLogoPrefab  = res; }, done);
-      rm.Load<GameObject>("MenuCpu"   , pre, (res) => { this.menuPrefabs.Add(res);   }, done);
-      rm.Load<GameObject>("MenuVs"    , pre, (res) => { this.menuPrefabs.Add(res);   }, done);
-      rm.Load<GameObject>("MenuDemo"  , pre, (res) => { this.menuPrefabs.Add(res);   }, done);
-      rm.Load<GameObject>("MenuOption", pre, (res) => { this.menuPrefabs.Add(res);   }, done);
+      rm.Load<GameObject>("TitleLogo" , pre, (res) => { this.titleLogoPrefab = res; }, done);
+      rm.Load<GameObject>("MenuCpu"   , pre, (res) => { this.menuPrefabs.Add(res);  }, done);
+      rm.Load<GameObject>("MenuVs"    , pre, (res) => { this.menuPrefabs.Add(res);  }, done);
+      rm.Load<GameObject>("MenuDemo"  , pre, (res) => { this.menuPrefabs.Add(res);  }, done);
+      rm.Load<GameObject>("MenuOption", pre, (res) => { this.menuPrefabs.Add(res);  }, done);
 
-      while (0 < count) {
-        yield return  null;
-      }
+      SoundManager.Instance.Load("BGM_001", pre, done);
+      
+      yield return waitForCount;
 
       this.isLoaded = true;
+      this.state.SetState(State.Setup);
     }
 
     protected override void MyUpdate()
@@ -59,27 +56,30 @@ namespace MyGame.Scene
       this.state.Update();
     }
 
-    private void LoadUpdate()
+    private void SetupEnter()
     {
-      if (this.isLoaded) {
-        this.state.SetState(State.Intro);
-      }
-    }
-
-    private void LoadExit()
-    {
-      this.titleLogo = Instantiate(this.titleLogoPrefab).GetComponent<Title.TitleLogo>();
+      this.titleLogo = Instantiate(this.titleLogoPrefab).GetComponent<Unit.Title.TitleLogo>();
       this.titleLogo.SetParent(this.cacheTransform).SetActive(false);
-      
-      this.menuPrefabs.ForEach((prefab) => { 
-        var menu = Instantiate(prefab).GetComponent<Title.Menu>();
+
+      this.menuPrefabs.ForEach((prefab) => {
+        var menu = Instantiate(prefab).GetComponent<Menu>();
         menu.SetParent(this.cacheTransform).SetActive(false);
         this.menus.Add(menu);
       });
     }
 
+    private void SetupUpdate()
+    {
+      if (this.titleLogo.IsLoaded) return;
+
+      this.state.SetState(State.Intro);
+    }
+
+
+
     private void IntroEnter()
     {
+      SoundManager.Instance.PlayBGM("BGM_001");
       this.titleLogo.SetActive(true);
       this.titleLogo.SetBound();
       this.titleLogo.CompletedBound = () => { this.state.SetState(State.InputWait); };
@@ -103,11 +103,11 @@ namespace MyGame.Scene
 
     private void InputWaitUpdate()
     {
-      if (Input.GetMouseButtonDown(0)) {
-        UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync("Title").completed += op => {
-          Debug.Log(op);
-        };
-      }
+      //if (Input.GetMouseButtonDown(0)) {
+      //  UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync("Title").completed += op => {
+      //    Debug.Log(op);
+      //  };
+      //}
     }
   }
 }

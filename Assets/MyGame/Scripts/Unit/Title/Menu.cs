@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace MyGame.Title
+namespace MyGame.Unit.Title
 {
-  public class Menu : MyMonoBehaviour
+  public class Menu : Unit
   {
     public Vector4 Move = Vector4.zero;
     public Vector4 Scale = Vector4.zero;

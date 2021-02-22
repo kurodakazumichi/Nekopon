@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace MyGame.Title
+namespace MyGame.Unit.Title
 {
-
-  public class TitleLogo : MyMonoBehaviour
+  /// <summary>
+  /// NekoPonというタイトルロゴにアタッチするスクリプト
+  /// </summary>
+  public class TitleLogo : Unit
   {
     //-------------------------------------------------------------------------
     // Inspector設定項目
@@ -20,8 +22,9 @@ namespace MyGame.Title
     public int _BoundLimit = 0;
 
     //-------------------------------------------------------------------------
-    // メンバ
+    // メンバ変数
     //-------------------------------------------------------------------------
+    // 状態
     private enum State
     {
       Idle,
@@ -37,10 +40,12 @@ namespace MyGame.Title
     // バウンド階数
     private int boundCount = 0;
 
-    // バウンドが完了した時に呼ばれるコールバック
-    private System.Action completedBound = null;
+
+    //-------------------------------------------------------------------------
+    // プロパティ
+    //-------------------------------------------------------------------------
     public System.Action CompletedBound {
-      set { this.completedBound = value; }
+      private get; set;
     }
 
     public void SetBound()
@@ -66,6 +71,16 @@ namespace MyGame.Title
     {
     }
 
+    protected override IEnumerator Load()
+    {
+      var waitForCount = new WaitForCount();
+      SoundManager.Instance.Load("SE_Bound001", waitForCount.inc, waitForCount.dec);
+      
+      yield return waitForCount;
+
+      this.IsLoaded = true;
+    }
+
     protected override void MyUpdate()
     {
       this.state.Update();
@@ -85,6 +100,7 @@ namespace MyGame.Title
 
       if (transform.position.y < _EndY) 
       {
+        SoundManager.Instance.PlaySE("SE_Bound001");
         transform.position = new Vector3(0, _EndY, 0);
         this.velocity.y *= -0.9f;
         this.boundCount++;
@@ -97,7 +113,7 @@ namespace MyGame.Title
 
     private void BoundExit()
     {
-      this.completedBound?.Invoke();
+      this.CompletedBound?.Invoke();
     }
 
     private void FixedEnter()

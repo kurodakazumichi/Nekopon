@@ -2,31 +2,33 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace MyGame.Scene
+namespace MyGame.Unit
 {
-  public abstract class SceneBase : MyMonoBehaviour
+  public class Unit : MyMonoBehaviour
   {
     /// <summary>
     /// ロード完了フラグ
     /// </summary>
-    protected bool isLoaded = false;
+    public bool IsLoaded {
+      get; protected set;
+    }
 
     protected override void Start()
     {
       MyStart();
-      this.isLoaded = false;
+      this.IsLoaded = false;
       StartCoroutine(Load());
     }
 
     protected virtual IEnumerator Load()
     {
-      isLoaded = true;
+      IsLoaded = true;
       yield break;
     }
 
     protected override void Update()
     {
-      if (!this.isLoaded) return;
+      if (!this.IsLoaded) return;
 
       MyUpdate();
     }

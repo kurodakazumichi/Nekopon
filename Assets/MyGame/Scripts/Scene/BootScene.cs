@@ -24,7 +24,8 @@ namespace MyGame.Scene
       SingletonManager.Instance
         .Setup<TimeManager>(system)
         .Setup<SceneManager>(system)
-        .Setup<ResourceManager>(system);
+        .Setup<ResourceManager>(system)
+        .Setup<SoundManager>(system);
 
 #if _DEBUG
       if (_NoSceneTransition) {
