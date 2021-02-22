@@ -89,8 +89,8 @@ namespace MyGame.Scene
     {
       // TODO: InputManagerできたら差し替え
       if (Input.GetMouseButtonDown(0)) {
-        this.titleLogo.SetFixed();
         this.titleLogo.CompletedBound = null;
+        this.titleLogo.SetFixed();
       }
     }
 
