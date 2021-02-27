@@ -24,6 +24,13 @@ namespace MyGame
         func(value, Enum.GetName(typeof(T), value));
       }
     }
+
+    public static void ForEach<T1, T2>(Dictionary<T1, T2> dic, Action<T1, T2> func)
+    {
+      foreach(KeyValuePair<T1, T2> data in dic) {
+        func(data.Key, data.Value);
+      }
+    }
   }
 
   public static class MyMath

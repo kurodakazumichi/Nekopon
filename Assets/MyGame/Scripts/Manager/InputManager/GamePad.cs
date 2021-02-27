@@ -55,8 +55,11 @@ namespace MyGame.InputManagement
 
     public void Update()
     {
-      Util.ForEach<AxisType>((value) => { this.axes[value].Update(); });
-      Util.ForEach<ButtonType>((value) => {  this.buttons[value].Update(); });
+      foreach(KeyValuePair<AxisType, Axis> axis in this.axes) {
+        axis.Value.Update();
+      }
+      Util.ForEach(this.axes, (type, axis) => { axis.Update(); });
+      Util.ForEach(this.buttons, (type, button) => { button.Update(); });
     }
 
     private GamePad SetupAxis(int padNo, AxisType type, int no, bool invert)
