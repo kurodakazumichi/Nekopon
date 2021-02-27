@@ -55,10 +55,10 @@ namespace MyGame.InputManagement
     RS,
     Start,
     Back,
-    Up,
-    Down,
-    Left,
-    Right,
+    U,
+    D,
+    L,
+    R,
   }
 
 }
