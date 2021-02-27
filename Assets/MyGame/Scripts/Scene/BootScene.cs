@@ -9,7 +9,15 @@ namespace MyGame.Scene
 #if _DEBUG
     // シーン遷移しないフラグ(デバッグ用)
     public bool _NoSceneTransition = false;
+    public int _TargetFrameRate = 60;
 #endif
+
+    protected override void MyAwake()
+    {
+#if _DEBUG
+      Application.targetFrameRate = _TargetFrameRate;
+#endif
+    }
 
     // Start is called before the first frame update
     protected override void MyStart()
@@ -25,7 +33,8 @@ namespace MyGame.Scene
         .Setup<TimeManager>(system)
         .Setup<SceneManager>(system)
         .Setup<ResourceManager>(system)
-        .Setup<SoundManager>(system);
+        .Setup<SoundManager>(system)
+        .Setup<InputManager>(system);
 
 #if _DEBUG
       if (_NoSceneTransition) {

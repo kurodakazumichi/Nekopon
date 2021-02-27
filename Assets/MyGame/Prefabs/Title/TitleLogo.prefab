@@ -97,5 +97,5 @@ MonoBehaviour:
   cacheTransform: {fileID: 0}
   _StartY: 1.1
   _EndY: 0.5
-  _Speed: 0.015
+  _Speed: 2
   _BoundLimit: 5

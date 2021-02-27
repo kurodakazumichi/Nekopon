@@ -96,12 +96,12 @@ namespace MyGame.Unit.Title
     private void BoundUpdate()
     {
       this.velocity.y -= _Speed * TimeManager.Instance.DeltaTime;
-      transform.position += this.velocity;
+      cacheTransform.position += this.velocity * TimeManager.Instance.DeltaTime;
 
-      if (transform.position.y < _EndY) 
+      if (cacheTransform.position.y < _EndY) 
       {
         SoundManager.Instance.PlaySE("SE_Bound001");
-        transform.position = new Vector3(0, _EndY, 0);
+        cacheTransform.position = new Vector3(0, _EndY, 0);
         this.velocity.y *= -0.9f;
         this.boundCount++;
       }
@@ -120,6 +120,7 @@ namespace MyGame.Unit.Title
     {
       this.cacheTransform.position = new Vector3(0, _EndY, 0);
     }
+
   }
 
 }

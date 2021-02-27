@@ -91,6 +91,7 @@ namespace MyGame.Scene
       if (Input.GetMouseButtonDown(0)) {
         this.titleLogo.CompletedBound = null;
         this.titleLogo.SetFixed();
+        this.state.SetState(State.InputWait);
       }
     }
 
