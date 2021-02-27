@@ -37,4 +37,28 @@ namespace MyGame.InputManagement
     Back,
   }
 
+  /// <summary>
+  /// キーボード入力をマッピングするための定義
+  /// キーボードのAが押されたときに、パッドのAが押された事にするなどマッピングする
+  /// </summary>
+  public enum KeyType
+  {
+    A,
+    B,
+    X,
+    Y,
+    L1,
+    L2,
+    R1,
+    R2,
+    LS,
+    RS,
+    Start,
+    Back,
+    Up,
+    Down,
+    Left,
+    Right,
+  }
+
 }
