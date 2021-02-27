@@ -18,7 +18,7 @@ namespace MyGame.InputManagement
     /// <summary>
     /// Input.GetButtonで入力を取得する際に指定するボタンの名称(Joy1_Button0など)
     /// </summary>
-    public string Name;
+    private string name;
 
     /// <summary>
     /// 初回入力時のみtrueになる
@@ -56,7 +56,7 @@ namespace MyGame.InputManagement
     public void Setup(ButtonType type, string name)
     {
       this.type = type;
-      this.Name = name;
+      this.name = name;
     }
 
     /// <summary>
@@ -64,7 +64,7 @@ namespace MyGame.InputManagement
     /// </summary>
     public void Update()
     {
-      bool value = Input.GetButton(Name);
+      bool value = Input.GetButton(this.name);
       IsDown = IsUp = false;
 
       // 入力があった場合

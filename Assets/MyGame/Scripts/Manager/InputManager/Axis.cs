@@ -18,7 +18,7 @@ namespace MyGame.InputManagement
     /// <summary>
     /// Input.GetAxisで入力を取得する際に指定する軸の名称(Joy1_Axis1など) 
     /// </summary>
-    public string Name = "";
+    private string name = "";
 
     /// <summary>
     /// Y軸などは入力値の符号を反転させたいケースがあるので、そのためのフラグ
@@ -66,7 +66,7 @@ namespace MyGame.InputManagement
     public void Setup(AxisType type, string name, bool invert)
     {
       this.type = type;
-      this.Name = name;
+      this.name = name;
       this.invert = invert;
     }
 
@@ -76,7 +76,7 @@ namespace MyGame.InputManagement
     public void Update()
     {
       // 軸の入力を受け取る
-      var value = Input.GetAxis(Name);
+      var value = Input.GetAxis(this.name);
       Value = (invert) ? -value : value;
 
       // 押された瞬間、離された瞬間、入力し続けている時間などを更新
