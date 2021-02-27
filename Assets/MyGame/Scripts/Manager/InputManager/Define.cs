@@ -9,13 +9,13 @@ namespace MyGame.InputManagement
   /// </summary>
   public enum AxisType
   {
-    AxisLX,
-    AxisLY,
-    AxisRX,
-    AxisRY,
-    AxisDX,
-    AxisDY,
-    Triggers,
+    LX,
+    LY,
+    RX,
+    RY,
+    DX,
+    DY,
+    LR,
     LT,
     RT,
   }

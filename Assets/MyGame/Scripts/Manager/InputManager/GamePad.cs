@@ -29,13 +29,13 @@ namespace MyGame.InputManagement
 
       // 軸のセットアップ
       this
-        .SetupAxis(padNo, AxisType.AxisLX  , 1 , false)
-        .SetupAxis(padNo, AxisType.AxisLY  , 2 , true)
-        .SetupAxis(padNo, AxisType.AxisRX  , 4 , false)
-        .SetupAxis(padNo, AxisType.AxisRY  , 5 , true)
-        .SetupAxis(padNo, AxisType.AxisDX  , 6 , false)
-        .SetupAxis(padNo, AxisType.AxisDY  , 7 , false)
-        .SetupAxis(padNo, AxisType.Triggers, 3 , false)
+        .SetupAxis(padNo, AxisType.LX  , 1 , false)
+        .SetupAxis(padNo, AxisType.LY  , 2 , true)
+        .SetupAxis(padNo, AxisType.RX  , 4 , false)
+        .SetupAxis(padNo, AxisType.RY  , 5 , true)
+        .SetupAxis(padNo, AxisType.DX  , 6 , false)
+        .SetupAxis(padNo, AxisType.DY  , 7 , false)
+        .SetupAxis(padNo, AxisType.LR, 3 , false)
         .SetupAxis(padNo, AxisType.LT      , 9 , false)
         .SetupAxis(padNo, AxisType.RT      , 10, false);
 
