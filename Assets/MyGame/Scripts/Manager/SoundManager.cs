@@ -12,6 +12,12 @@ namespace MyGame
 
     private Dictionary<string, AudioClip> audios = new Dictionary<string, AudioClip>();
 
+    /// <summary>
+    /// サウンドリソースのロード
+    /// </summary>
+    /// <param name="address">AddressableAssetsで設定したアドレス</param>
+    /// <param name="pre">ロード前に呼ばれるコールバック</param>
+    /// <param name="done">ロード後に呼ばれるコールバック</param>
     public void Load(string address, Action pre, Action done) 
     {
       // 既に指定されたリソースがあればロードしない
@@ -22,12 +28,13 @@ namespace MyGame
       );
     }
 
+    /// <summary>
+    /// BGMを再生
+    /// </summary>
     public void PlayBGM(string address, bool loop = true)
     {
       if (!HasAudioClip(address)) {
-#if _DEBUG
-        Debug.LogWarning($"AudioClip is not exists. address = {address}");
-#endif
+        Debug.Logger.Warn($"AudioClip is not exists. address = {address}");
         return;
       }
 
@@ -36,12 +43,15 @@ namespace MyGame
       this.bgmSource.Play();
     }
 
+    public void StopBGM()
+    {
+      this.bgmSource.Stop();
+    }
+
     public void PlaySE(string address)
     {
       if (!HasAudioClip(address)) {
-#if _DEBUG
-        Debug.LogWarning($"AudioClip is not exists. address = {address}");
-#endif
+        Debug.Logger.Warn($"AudioClip is not exists. address = {address}");
         return;
       }
 
@@ -61,17 +71,6 @@ namespace MyGame
       this.bgmSource.playOnAwake = false;
       this.seSource = this.gameObject.AddComponent<AudioSource>();
       this.seSource.playOnAwake = false;
-    }
-
-    protected override void MyUpdate()
-    {
-      if (Input.GetKeyDown(KeyCode.A)) {
-        PlayBGM("BGM_001");
-      }
-      if (Input.GetKeyDown(KeyCode.B)) {
-        PlayBGM("BGM_002");
-      }
-
     }
   }
 }

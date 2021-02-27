@@ -13,7 +13,7 @@ namespace MyGame
         if (instance == null) {
           instance = (T)FindObjectOfType(typeof(T));
           if (instance == null) {
-            Debug.LogError(typeof(T) + "がシーンに存在しません。");
+            Debug.Logger.Error(typeof(T) + "がシーンに存在しません。");
           }
         }
         return instance;
@@ -25,9 +25,7 @@ namespace MyGame
     protected override void MyAwake()
     {
       if (this != Instance) {
-#if _DEBUG
-        Debug.LogWarning($"{typeof(T).Name} が1回以上生成されるフローが存在します。");
-#endif
+        Debug.Logger.Warn($"{typeof(T).Name} が1回以上生成されるフローが存在します。");
         Destroy(this);
         return;
       }
