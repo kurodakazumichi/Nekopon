@@ -4,8 +4,15 @@ using UnityEngine;
 
 namespace MyGame.Unit
 {
+  /// <summary>
+  /// 画面上のオブジェクトの基底となるUnitBase
+  /// </summary>
+  /// <typeparam name="TState">状態の列挙型</typeparam>
   public class Unit<TState> : MyMonoBehaviour where TState:System.Enum
   {
+    /// <summary>
+    /// ステートマシン
+    /// </summary>
     protected StateMachine<TState> state = new StateMachine<TState>();
 
     protected override void Start()
