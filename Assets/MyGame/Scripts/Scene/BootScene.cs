@@ -4,8 +4,9 @@ using UnityEngine;
 
 namespace MyGame.Scene
 {
-  public class BootScene : SceneBase
+  public class BootScene : SceneBase<BootScene.State>
   {
+    public enum State { }
 #if _DEBUG
     // シーン遷移しないフラグ(デバッグ用)
     public bool _NoSceneTransition = false;
@@ -23,6 +24,8 @@ namespace MyGame.Scene
     protected override void MyStart()
     {
       var system = new GameObject("GlobalSystem");
+      // ゲーム終了時に先にManagerが消えてしまうとエラーがでるため、その対策
+      DontDestroyOnLoad(system);
 
       // シングルトンを管理するシングルトン
       var singleton = new GameObject("SingletonManager", typeof(SingletonManager));

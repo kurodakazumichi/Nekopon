@@ -4,12 +4,14 @@ using UnityEngine;
 
 namespace MyGame.Scene
 {
-  public abstract class SceneBase : MyMonoBehaviour
+  public abstract class SceneBase<TState> : MyMonoBehaviour where TState: System.Enum
   {
     /// <summary>
     /// ロード完了フラグ
     /// </summary>
     protected bool isLoaded = false;
+
+    protected StateMachine<TState> state = new StateMachine<TState>();
 
     protected override void Start()
     {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace MyGame
 {
-  class StateMachine<T>
+  public class StateMachine<T>
   {
     /// <summary>
     /// ステート

@@ -24,7 +24,7 @@ namespace MyGame
       if (this.audios.ContainsKey(address)) return;
 
       ResourceManager.Instance.Load<AudioClip>(
-        address, pre, (obj) => { this.audios[address] = obj; }, done
+        address, (obj) => { this.audios[address] = obj; }, pre, done
       );
     }
 

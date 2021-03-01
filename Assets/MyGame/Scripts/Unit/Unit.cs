@@ -4,33 +4,23 @@ using UnityEngine;
 
 namespace MyGame.Unit
 {
-  public class Unit : MyMonoBehaviour
+  public class Unit<TState> : MyMonoBehaviour where TState:System.Enum
   {
-    /// <summary>
-    /// ロード完了フラグ
-    /// </summary>
-    public bool IsLoaded {
-      get; protected set;
-    }
+    protected StateMachine<TState> state = new StateMachine<TState>();
 
     protected override void Start()
     {
       MyStart();
-      this.IsLoaded = false;
-      StartCoroutine(Load());
-    }
-
-    protected virtual IEnumerator Load()
-    {
-      IsLoaded = true;
-      yield break;
     }
 
     protected override void Update()
     {
-      if (!this.IsLoaded) return;
-
       MyUpdate();
+    }
+
+    protected override void MyUpdate()
+    {
+      this.state.Update();
     }
   }
 }

@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using MyGame.Unit.Title;
+using MyGame.Unit.Cursor;
 
 namespace MyGame.Scene
 {
-  public class TitleScene : SceneBase
+  public class TitleScene : SceneBase<TitleScene.State>
   {
-    private enum State
+    public enum State
     {
       Setup,
       Intro,
@@ -16,15 +17,17 @@ namespace MyGame.Scene
 
     private GameObject titleLogoPrefab = null;
     private List<GameObject> menuPrefabs = new List<GameObject>();
-
+    private GameObject cursorPrefab = null;
+    
     private TitleLogo titleLogo = null;
+   
     private List<Menu> menus = new List<Menu>();
+    private CatPaw cursor = null;
 
-    private StateMachine<State> state;
+    
 
     protected override void MyStart()
     {
-      this.state = new StateMachine<State>();
       this.state.Add(State.Setup, SetupEnter, SetupUpdate, null);
       this.state.Add(State.Intro, IntroEnter, IntroUpdate, null);
       this.state.Add(State.InputWait, InputWaitEnter, InputWaitUpdate, null);
@@ -37,14 +40,18 @@ namespace MyGame.Scene
       System.Action done = waitForCount.dec;
 
       var rm = ResourceManager.Instance;
-      rm.Load<GameObject>("TitleLogo" , pre, (res) => { this.titleLogoPrefab = res; }, done);
-      rm.Load<GameObject>("MenuCpu"   , pre, (res) => { this.menuPrefabs.Add(res);  }, done);
-      rm.Load<GameObject>("MenuVs"    , pre, (res) => { this.menuPrefabs.Add(res);  }, done);
-      rm.Load<GameObject>("MenuDemo"  , pre, (res) => { this.menuPrefabs.Add(res);  }, done);
-      rm.Load<GameObject>("MenuOption", pre, (res) => { this.menuPrefabs.Add(res);  }, done);
+      rm.Load<GameObject>("TitleLogo"   , (res) => { this.titleLogoPrefab = res; }, pre, done);
+      rm.Load<GameObject>("MenuCpu"     , (res) => { this.menuPrefabs.Add(res);  }, pre, done);
+      rm.Load<GameObject>("MenuVs"      , (res) => { this.menuPrefabs.Add(res);  }, pre, done);
+      rm.Load<GameObject>("MenuDemo"    , (res) => { this.menuPrefabs.Add(res);  }, pre, done);
+      rm.Load<GameObject>("MenuOption"  , (res) => { this.menuPrefabs.Add(res);  }, pre, done);
+      rm.Load<GameObject>("CursorCatPaw", (res) => { this.cursorPrefab = res;    }, pre, done);
+      rm.Load<Sprite>("SpriteCursorCat01", null, pre, done);
+      rm.Load<Sprite>("SpriteCursorCat02", null, pre, done);
 
       SoundManager.Instance.Load("BGM_001", pre, done);
-      
+      SoundManager.Instance.Load("SE_Bound001", waitForCount.inc, waitForCount.dec);
+
       yield return waitForCount;
 
       this.isLoaded = true;
@@ -58,7 +65,7 @@ namespace MyGame.Scene
 
     private void SetupEnter()
     {
-      this.titleLogo = Instantiate(this.titleLogoPrefab).GetComponent<Unit.Title.TitleLogo>();
+      this.titleLogo = Instantiate(this.titleLogoPrefab).GetComponent<TitleLogo>();
       this.titleLogo.SetParent(this.cacheTransform).SetActive(false);
 
       this.menuPrefabs.ForEach((prefab) => {
@@ -66,12 +73,13 @@ namespace MyGame.Scene
         menu.SetParent(this.cacheTransform).SetActive(false);
         this.menus.Add(menu);
       });
+
+      this.cursor = Instantiate(this.cursorPrefab).GetComponent<CatPaw>();
+      this.cursor.SetParent(this.cacheTransform).SetActive(false);
+
     }
 
-    private void SetupUpdate()
-    {
-      if (this.titleLogo.IsLoaded) return;
-
+    private void SetupUpdate() {
       this.state.SetState(State.Intro);
     }
 
@@ -83,12 +91,15 @@ namespace MyGame.Scene
       this.titleLogo.SetActive(true);
       this.titleLogo.SetBound();
       this.titleLogo.CompletedBound = () => { this.state.SetState(State.InputWait); };
+      this.cursor.SetStateMovable();
+      this.cursor.SetType(CatPaw.Type.White);
+      this.cursor.SetActive(true);
+      this.cursor.PadNo = 0;
     }
 
     private void IntroUpdate()
     {
-      // TODO: InputManagerできたら差し替え
-      if (Input.GetMouseButtonDown(0)) {
+      if (InputManager.Instance.GetCommand(InputManagement.Command.Decide, 0).IsFixed) {
         this.titleLogo.CompletedBound = null;
         this.titleLogo.SetFixed();
         this.state.SetState(State.InputWait);

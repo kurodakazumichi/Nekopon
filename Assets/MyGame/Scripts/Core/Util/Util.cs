@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System.Collections.Generic;
 using System;
 
 namespace MyGame
@@ -30,15 +28,6 @@ namespace MyGame
       foreach(KeyValuePair<T1, T2> data in dic) {
         func(data.Key, data.Value);
       }
-    }
-  }
-
-  public static class MyMath
-  {
-    public static float Round(float num, int digit)
-    {
-      float pow = Mathf.Pow(10, digit);
-      return Mathf.Floor(num * pow) / pow;
     }
   }
 }

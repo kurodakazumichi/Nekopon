@@ -7,7 +7,7 @@ namespace MyGame.Unit.Title
   /// <summary>
   /// NekoPonというタイトルロゴにアタッチするスクリプト
   /// </summary>
-  public class TitleLogo : Unit
+  public class TitleLogo : Unit<TitleLogo.State>
   {
     //-------------------------------------------------------------------------
     // Inspector設定項目
@@ -25,14 +25,12 @@ namespace MyGame.Unit.Title
     // メンバ変数
     //-------------------------------------------------------------------------
     // 状態
-    private enum State
+    public enum State
     {
       Idle,
       Bound,
       Fixed,
     }
-
-    private StateMachine<State> state;
 
     // 速度
     private Vector3 velocity = Vector3.zero;
@@ -65,20 +63,6 @@ namespace MyGame.Unit.Title
       this.state.Add(State.Bound, BoundEnter, BoundUpdate, BoundExit);
       this.state.Add(State.Fixed, FixedEnter);
       this.state.SetState(State.Idle);
-    }
-
-    protected override void MyStart()
-    {
-    }
-
-    protected override IEnumerator Load()
-    {
-      var waitForCount = new WaitForCount();
-      SoundManager.Instance.Load("SE_Bound001", waitForCount.inc, waitForCount.dec);
-      
-      yield return waitForCount;
-
-      this.IsLoaded = true;
     }
 
     protected override void MyUpdate()

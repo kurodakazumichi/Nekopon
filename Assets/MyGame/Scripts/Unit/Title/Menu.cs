@@ -4,8 +4,9 @@ using UnityEngine;
 
 namespace MyGame.Unit.Title
 {
-  public class Menu : Unit
+  public class Menu : Unit<Menu.State>
   {
+    public enum State { }
     public Vector4 Move = Vector4.zero;
     public Vector4 Scale = Vector4.zero;
     public Color SelectedColor = Color.white;

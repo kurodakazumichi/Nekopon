@@ -4,22 +4,14 @@ using UnityEngine;
 
 namespace MyGame
 {
-  public class MyMonoBehaviourBase:MonoBehaviour
-  {
-    protected virtual void Awake() { }
-    protected virtual void Start() { }
-    protected virtual void Update() { }
-  }
-
-  public class MyMonoBehaviour : MyMonoBehaviourBase
+  public class MyMonoBehaviour : MonoBehaviour
   {
     /// <summary>
     /// Transformコンポーネントのキャッシュ
     /// </summary>
-    [HideInInspector]
-    public Transform cacheTransform;
+    public Transform cacheTransform { get; private set; }
 
-    protected override void Awake()
+    protected virtual void Awake()
     {
       if (cacheTransform == null) {
         cacheTransform = this.transform;
@@ -28,19 +20,26 @@ namespace MyGame
       MyAwake();
     }
 
-    protected override void Start()
+    protected virtual void Start()
     {
       MyStart();
     }
 
-    protected override void Update()
+    protected virtual void Update()
     {
       MyUpdate();
+    }
+
+    protected virtual void OnDestroy()
+    {
+      this.OnMyDestory();
     }
 
     protected virtual void MyAwake() { }
     protected virtual void MyStart() { }
     protected virtual void MyUpdate() { }
+
+    protected virtual void OnMyDestory() { }
 
     public MyMonoBehaviour SetParent(Transform parent)
     {
