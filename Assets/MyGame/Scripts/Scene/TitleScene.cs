@@ -6,31 +6,42 @@ using MyGame.Unit.Cursor;
 
 namespace MyGame.Scene
 {
+  /// <summary>
+  /// タイトルシーン、タイトルシーンに必要なリソース、オブジェクトの管理と制御
+  /// </summary>
   public class TitleScene : SceneBase<TitleScene.State>
   {
+    /// <summary>
+    /// 状態
+    /// </summary>
     public enum State
     {
       Setup,
       Intro,
-      InputWait,
+      MenuSelection,
     }
 
+    //-------------------------------------------------------------------------
+    // メンバ変数
+
+    // Resource
     private GameObject titleLogoPrefab = null;
     private List<GameObject> menuPrefabs = new List<GameObject>();
     private GameObject cursorPrefab = null;
     
+    // GameObject
     private TitleLogo titleLogo = null;
-   
     private List<Menu> menus = new List<Menu>();
     private CatPaw cursor = null;
 
-    
+    //-------------------------------------------------------------------------
+    // メソッド
 
     protected override void MyStart()
     {
-      this.state.Add(State.Setup, SetupEnter, SetupUpdate, null);
+      this.state.Add(State.Setup, SetupEnter, null, null);
       this.state.Add(State.Intro, IntroEnter, IntroUpdate, null);
-      this.state.Add(State.InputWait, InputWaitEnter, InputWaitUpdate, null);
+      this.state.Add(State.MenuSelection, MenuSelectionEnter, MenuSelectionUpdate, null);
     }
 
     protected override IEnumerator Load()
@@ -58,62 +69,77 @@ namespace MyGame.Scene
       this.state.SetState(State.Setup);
     }
 
-    protected override void MyUpdate()
-    {
-      this.state.Update();
-    }
-
+    /// <summary>
+    /// リソースからゲームオブジェクトを生成する
+    /// </summary>
     private void SetupEnter()
     {
+      // タイトルロゴ
       this.titleLogo = Instantiate(this.titleLogoPrefab).GetComponent<TitleLogo>();
       this.titleLogo.SetParent(this.cacheTransform).SetActive(false);
 
+      // カーソル
+      this.cursor = Instantiate(this.cursorPrefab).GetComponent<CatPaw>();
+      this.cursor.SetParent(this.cacheTransform).SetActive(false);
+      this.cursor.PadNo = 0;
+
+      // メニュー
       this.menuPrefabs.ForEach((prefab) => {
         var menu = Instantiate(prefab).GetComponent<Menu>();
         menu.SetParent(this.cacheTransform).SetActive(false);
         this.menus.Add(menu);
       });
 
-      this.cursor = Instantiate(this.cursorPrefab).GetComponent<CatPaw>();
-      this.cursor.SetParent(this.cacheTransform).SetActive(false);
-
-    }
-
-    private void SetupUpdate() {
+      // Introへ
       this.state.SetState(State.Intro);
     }
 
-
-
+    /// <summary>
+    /// タイトルシーンの最初の状態
+    /// </summary>
     private void IntroEnter()
     {
+      // BGM再生
       SoundManager.Instance.PlayBGM("BGM_001");
+
+      // タイトルロゴをバウンド状態へ、バンド完了時に入力待ちになるようにコールバックを設定
       this.titleLogo.SetActive(true);
       this.titleLogo.SetBound();
-      this.titleLogo.CompletedBound = () => { this.state.SetState(State.InputWait); };
+      this.titleLogo.CompletedBound = () => { this.state.SetState(State.MenuSelection); };
+
+      // カーソルの設定
       this.cursor.SetStateMovable();
       this.cursor.SetType(CatPaw.Type.White);
       this.cursor.SetActive(true);
       this.cursor.PadNo = 0;
     }
 
+    /// <summary>
+    /// 何かしら入力があったらInputWaitへ遷移する
+    /// </summary>
     private void IntroUpdate()
     {
       if (InputManager.Instance.GetCommand(InputManagement.Command.Decide, 0).IsFixed) {
         this.titleLogo.CompletedBound = null;
         this.titleLogo.SetFixed();
-        this.state.SetState(State.InputWait);
+        this.state.SetState(State.MenuSelection);
       }
     }
 
-    private void InputWaitEnter()
+    /// <summary>
+    /// メニューの表示
+    /// </summary>
+    private void MenuSelectionEnter()
     {
       this.menus.ForEach((menu) => { 
         menu.SetActive(true);
       });
     }
 
-    private void InputWaitUpdate()
+    /// <summary>
+    /// メニュー選択
+    /// </summary>
+    private void MenuSelectionUpdate()
     {
 
     }

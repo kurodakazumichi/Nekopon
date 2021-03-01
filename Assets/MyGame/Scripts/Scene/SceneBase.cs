@@ -4,6 +4,10 @@ using UnityEngine;
 
 namespace MyGame.Scene
 {
+  /// <summary>
+  /// シーンの基底クラス
+  /// Start→Load→Updateの順で動作する(Updateはロードが完了するまで動かない)
+  /// </summary>
   public abstract class SceneBase<TState> : MyMonoBehaviour where TState: System.Enum
   {
     /// <summary>
@@ -31,6 +35,11 @@ namespace MyGame.Scene
       if (!this.isLoaded) return;
 
       MyUpdate();
+    }
+
+    protected override void MyUpdate()
+    {
+      this.state.Update();
     }
   }
 }
