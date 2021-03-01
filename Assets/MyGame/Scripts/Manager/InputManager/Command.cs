@@ -11,6 +11,7 @@ namespace MyGame.InputManagement
   {
     Move,
     Decide,
+    PressAnyButton,
   }
 
   /// <summary>
@@ -64,6 +65,14 @@ namespace MyGame.InputManagement
     public override void Execute(GamePad pad)
     {
       IsFixed = pad.GetButtonDown(ButtonType.A);
+    }
+  }
+
+  public class PressAnyButton: CommandBase, ICommand
+  {
+    public override void Execute(GamePad pad)
+    {
+      this.IsFixed = (pad.GetInputedButton() != null);
     }
   }
 }

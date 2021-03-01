@@ -29,5 +29,13 @@ namespace MyGame
         func(data.Key, data.Value);
       }
     }
+
+    public static void ForEach<T1, T2>(Dictionary<T1, T2> dic, Func<T1, T2, bool> func)
+    {
+      foreach(KeyValuePair<T1, T2> data in dic) {
+        bool completed = func(data.Key, data.Value);
+        if (completed) break;
+      }
+    }
   }
 }

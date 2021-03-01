@@ -18,6 +18,7 @@ namespace MyGame
       this.pads.Add(new GamePad(0));
       this.commands[Command.Move] = new MoveCommand();
       this.commands[Command.Decide] = new DecideCommand();
+      this.commands[Command.PressAnyButton] = new PressAnyButton();
     }
 
     public GamePad GetPad(int padNo)

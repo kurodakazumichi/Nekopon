@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using MyGame.Unit.Title;
 using MyGame.Unit.Cursor;
+using MyGame.InputManagement;
 
 namespace MyGame.Scene
 {
@@ -119,7 +120,7 @@ namespace MyGame.Scene
     /// </summary>
     private void IntroUpdate()
     {
-      if (InputManager.Instance.GetCommand(InputManagement.Command.Decide, 0).IsFixed) {
+      if (InputManager.Instance.GetCommand(Command.PressAnyButton, 0).IsFixed) {
         this.titleLogo.CompletedBound = null;
         this.titleLogo.SetFixed();
         this.state.SetState(State.MenuSelection);

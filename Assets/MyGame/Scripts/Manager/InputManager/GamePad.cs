@@ -187,6 +187,21 @@ namespace MyGame.InputManagement
       return 0;
     }
 
+    public Button GetInputedButton()
+    {
+      Button inputed = null;
+      Util.ForEach(this.buttons, (type, button) => 
+      {
+        if (button.IsHold) { 
+          inputed = button;
+          return true; 
+        } 
+        return false;
+      });
+
+      return inputed;
+    }
+
     /// <summary>
     /// キーボードの入力があった場合に、入力内容をボタン入力にマージする
     /// </summary>
