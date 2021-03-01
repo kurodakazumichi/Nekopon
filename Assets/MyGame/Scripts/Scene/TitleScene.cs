@@ -115,11 +115,7 @@ namespace MyGame.Scene
 
     private void InputWaitUpdate()
     {
-      //if (Input.GetMouseButtonDown(0)) {
-      //  UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync("Title").completed += op => {
-      //    Debug.Log(op);
-      //  };
-      //}
+
     }
   }
 }
