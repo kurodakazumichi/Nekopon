@@ -30,8 +30,6 @@ namespace MyGame
     {
       if (type == SceneType.None) return;
 
-      Debug.Logger.Log(this.getSceneNameOfType(type));
-
       Origin.SceneManager
         .LoadScene(this.getSceneNameOfType(type), Origin.LoadSceneMode.Additive);
     }

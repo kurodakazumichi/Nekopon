@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 namespace MyGame.Unit.Title
 {
@@ -9,59 +10,84 @@ namespace MyGame.Unit.Title
   /// </summary>
   public class TitleLogo : Unit<TitleLogo.State>
   {
-    //-------------------------------------------------------------------------
-    // Inspector設定項目
-    //-------------------------------------------------------------------------
-    // 開始位置の高さ
-    public float _StartY = 0;
-    // 終了位置の高さ
-    public float _EndY = 0;
-    // バウンドスピード
-    public float _Speed = 0;
-    // バウンド回数制限
-    public int _BoundLimit = 0;
-
-    //-------------------------------------------------------------------------
-    // メンバ変数
-    //-------------------------------------------------------------------------
-    // 状態
+    /// <summary>
+    /// 状態
+    /// </summary>
     public enum State
     {
       Idle,
       Bound,
-      Fixed,
+      Usual,
     }
 
-    // 速度
+    //-------------------------------------------------------------------------
+    // Inspector設定項目
+
+    /// <summary>
+    /// 開始位置の高さ 
+    /// </summary>
+    public float _StartY = 0;
+
+    /// <summary>
+    /// 終了位置の高さ 
+    /// </summary>
+    public float _EndY = 0;
+
+    /// <summary>
+    /// バウンドスピード 
+    /// </summary>
+    public float _Speed = 0;
+
+    /// <summary>
+    /// バウンド回数制限
+    /// </summary>
+    public int _BoundLimit = 0;
+
+    //-------------------------------------------------------------------------
+    // メンバ変数
+
+    /// <summary>
+    /// 速度
+    /// </summary>
     private Vector3 velocity = Vector3.zero;
 
-    // バウンド階数
+    /// <summary>
+    /// バウンド階数 
+    /// </summary>
     private int boundCount = 0;
-
 
     //-------------------------------------------------------------------------
     // プロパティ
-    //-------------------------------------------------------------------------
-    public System.Action CompletedBound {
+
+    /// <summary>
+    /// バウンド完了時に呼ばれるコールバック
+    /// </summary>
+    public Action CompletedBound {
       private get; set;
     }
 
-    public void SetBound()
+    //-------------------------------------------------------------------------
+    // Load, Unload
+
+    public static void Load(Action pre, Action done)
     {
-      this.state.SetState(State.Bound);
+      ResourceManager.Instance.Load<AudioClip>("SE.Bound001", pre, done);
     }
 
-    public void SetFixed()
+    public static void Unload()
     {
-      this.state.SetState(State.Fixed);
+      ResourceManager.Instance.Unload("SE.Bound001");
     }
+
+    //-------------------------------------------------------------------------
+    // ライフサイクル
 
     protected override void MyAwake()
     {
       this.state = new StateMachine<State>();
       this.state.Add(State.Idle);
       this.state.Add(State.Bound, BoundEnter, BoundUpdate, BoundExit);
-      this.state.Add(State.Fixed, FixedEnter);
+      this.state.Add(State.Usual, UsualEnter);
       this.state.SetState(State.Idle);
     }
 
@@ -69,6 +95,28 @@ namespace MyGame.Unit.Title
     {
       this.state.Update();
     }
+
+    //-------------------------------------------------------------------------
+    // 公開メソッド
+
+    /// <summary>
+    /// バウンド状態に
+    /// </summary>
+    public void ToBound()
+    {
+      this.state.SetState(State.Bound);
+    }
+
+    /// <summary>
+    /// 通常状態に
+    /// </summary>
+    public void ToUsual()
+    {
+      this.state.SetState(State.Usual);
+    }
+
+    //-------------------------------------------------------------------------
+    // ステートマシン
 
     private void BoundEnter()
     {
@@ -84,14 +132,14 @@ namespace MyGame.Unit.Title
 
       if (cacheTransform.position.y < _EndY) 
       {
-        SoundManager.Instance.PlaySE("SE_Bound001");
+        SoundManager.Instance.PlaySE("SE.Bound001");
         cacheTransform.position = new Vector3(0, _EndY, 0);
         this.velocity.y *= -0.9f;
         this.boundCount++;
       }
 
       if (_BoundLimit <= this.boundCount) {
-        this.state.SetState(State.Fixed);
+        this.state.SetState(State.Usual);
       }
     }
 
@@ -100,7 +148,7 @@ namespace MyGame.Unit.Title
       this.CompletedBound?.Invoke();
     }
 
-    private void FixedEnter()
+    private void UsualEnter()
     {
       this.cacheTransform.position = new Vector3(0, _EndY, 0);
     }

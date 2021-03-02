@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using MyGame.InputManagement;
+using System;
 
 namespace MyGame.Unit.Cursor
 {
-
+  /// <summary>
+  /// 猫の肉球カーソルクラス
+  /// </summary>
   public class CatPaw : Unit<CatPaw.State>
   {
     /// <summary>
@@ -74,44 +77,67 @@ namespace MyGame.Unit.Cursor
     public int PadNo { private get; set; }
 
     //-------------------------------------------------------------------------
-    // メソッド
+    // Load, Unload
+
+    public static void Load(Action pre, Action done)
+    {
+      var rm = ResourceManager.Instance;
+      rm.Load<Sprite>("Cursor.Cat01.sprite", pre, done);
+      rm.Load<Sprite>("Cursor.Cat02.sprite", pre, done);
+    }
+
+    public static void Unload()
+    {
+      var rm = ResourceManager.Instance;
+      rm.Unload("Cursor.Cat01.sprite");
+      rm.Unload("Cursor.Cat02.sprite");
+    }
+
+    //-------------------------------------------------------------------------
+    // ライフサイクル
 
     protected override void MyAwake()
     {
       this.spriteRenderer = GetComponent<SpriteRenderer>();
-      this.state.Add(State.Idle, null, null, null);
-      this.state.Add(State.Operable, null, MovableUpdate, null);
+      this.state.Add(State.Idle);
+      this.state.Add(State.Operable, null, OperableUpdate);
       this.state.SetState(State.Idle);
 
-      this.Load();
-    }
-
-    private void Load()
-    {
-      var rm = ResourceManager.Instance;
-      this.sprites[Type.White] = rm.GetCache<Sprite>("SpriteCursorCat01");
-      this.sprites[Type.Black] = rm.GetCache<Sprite>("SpriteCursorCat02");
+      this.sprites[Type.White] = ResourceManager.Instance.GetCache<Sprite>("Cursor.Cat01.sprite");
+      this.sprites[Type.Black] = ResourceManager.Instance.GetCache<Sprite>("Cursor.Cat02.sprite");
     }
 
     protected override void OnMyDestory()
     {
-      this.sprites = null;
+      this.sprites.Clear();
     }
 
-    public void SetStateMovable()
+    //-------------------------------------------------------------------------
+    // 公開メソッド
+
+    /// <summary>
+    /// 操作可能に
+    /// </summary>
+    public void ToOperable()
     {
       this.state.SetState(State.Operable);
     }
 
+    /// <summary>
+    /// カーソルの種類を設定
+    /// </summary>
     public void SetType(Type type)
     {
       this.spriteRenderer.sprite = this.sprites[type];
     }
 
+    //-------------------------------------------------------------------------
+    // ステートマシン
+
     /// <summary>
     /// 操作可能状態(Update)
     /// </summary>
-    private void MovableUpdate()
+    private void OperableUpdate()
     {
       var deltaTime = TimeManager.Instance.DeltaTime;
       var cmdMove   = InputManager.Instance.GetCommand(Command.Move, this.PadNo);

@@ -18,15 +18,23 @@ MonoBehaviour:
   m_GUID: ef3e0f3be50bfb8458503bcbcf6c0c3c
   m_SerializeEntries:
   - m_GUID: 0d56d6b7cd34f07479393ad5af2cde56
-    m_Address: MenuOption
+    m_Address: Title.MenuOption.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
     m_MainAsset: {fileID: 900711172874927248, guid: 0d56d6b7cd34f07479393ad5af2cde56,
       type: 3}
     m_TargetAsset: {fileID: 900711172874927248, guid: 0d56d6b7cd34f07479393ad5af2cde56,
       type: 3}
+  - m_GUID: 53bdc1da75ef81141b6df6397d6cff30
+    m_Address: Title.EffectGenerator.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 1614190081463342165, guid: 53bdc1da75ef81141b6df6397d6cff30,
+      type: 3}
+    m_TargetAsset: {fileID: 1614190081463342165, guid: 53bdc1da75ef81141b6df6397d6cff30,
+      type: 3}
   - m_GUID: 756b3acdd3f8da94685c7610e4ead38f
-    m_Address: MenuVs
+    m_Address: Title.MenuVs.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
     m_MainAsset: {fileID: 3782885999087332905, guid: 756b3acdd3f8da94685c7610e4ead38f,
@@ -34,7 +42,7 @@ MonoBehaviour:
     m_TargetAsset: {fileID: 3782885999087332905, guid: 756b3acdd3f8da94685c7610e4ead38f,
       type: 3}
   - m_GUID: a6854cf4aa854054ab76a176d67f9720
-    m_Address: MenuDemo
+    m_Address: Title.MenuDemo.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
     m_MainAsset: {fileID: 6406850083098121858, guid: a6854cf4aa854054ab76a176d67f9720,
@@ -42,7 +50,7 @@ MonoBehaviour:
     m_TargetAsset: {fileID: 6406850083098121858, guid: a6854cf4aa854054ab76a176d67f9720,
       type: 3}
   - m_GUID: b820ff514dfef154598cbe92b6fb0746
-    m_Address: TitleLogo
+    m_Address: Title.Logo.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
     m_MainAsset: {fileID: 7866162105423889669, guid: b820ff514dfef154598cbe92b6fb0746,
@@ -50,7 +58,7 @@ MonoBehaviour:
     m_TargetAsset: {fileID: 7866162105423889669, guid: b820ff514dfef154598cbe92b6fb0746,
       type: 3}
   - m_GUID: bbe31c7eae2eaf949ab82dd6f58c9877
-    m_Address: MenuCpu
+    m_Address: Title.MenuCpu.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
     m_MainAsset: {fileID: 3779077432119014854, guid: bbe31c7eae2eaf949ab82dd6f58c9877,

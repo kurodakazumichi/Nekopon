@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
-  m_Name: AudioBGM
+  m_Name: BGM
   m_EditorClassIdentifier: 
-  m_GroupName: AudioBGM
+  m_GroupName: BGM
   m_Data:
     m_SerializedData: []
   m_GUID: 31f6df995e115eb43a979655ed8e6cba
   m_SerializeEntries:
   - m_GUID: b14ebd084bc168f499923e7d9500ba15
-    m_Address: BGM_001
+    m_Address: BGM.001
     m_ReadOnly: 0
     m_SerializedLabels: []
     m_MainAsset: {fileID: 8300000, guid: b14ebd084bc168f499923e7d9500ba15, type: 3}

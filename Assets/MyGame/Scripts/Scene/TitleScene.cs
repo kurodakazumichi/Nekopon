@@ -27,17 +27,19 @@ namespace MyGame.Scene
     // メンバ変数
 
     // Resource
-    private GameObject titleLogoPrefab = null;
+    private GameObject logoPrefab = null;
     private List<GameObject> menuPrefabs = new List<GameObject>();
     private GameObject cursorPrefab = null;
+    private GameObject effectPrefab = null;
     
     // GameObject
-    private TitleLogo titleLogo = null;
+    private TitleLogo logo = null;
     private List<Menu> menus = new List<Menu>();
     private CatPaw cursor = null;
+    private EffectGenerator effect = null;
 
     //-------------------------------------------------------------------------
-    // メソッド
+    // ライフサイクル
 
     protected override void MyStart()
     {
@@ -54,16 +56,18 @@ namespace MyGame.Scene
       System.Action done = waitForCount.dec;
 
       var rm = ResourceManager.Instance;
-      rm.Load<GameObject>("TitleLogo"   , pre, done, (res) => { this.titleLogoPrefab = res; });
-      rm.Load<GameObject>("CursorCatPaw", pre, done, (res) => { this.cursorPrefab = res;    });
-      rm.Load<GameObject>("MenuCpu"     , pre, done, (res) => { this.menuPrefabs.Add(res);  });
-      rm.Load<GameObject>("MenuVs"      , pre, done, (res) => { this.menuPrefabs.Add(res);  });
-      rm.Load<GameObject>("MenuDemo"    , pre, done, (res) => { this.menuPrefabs.Add(res);  });
-      rm.Load<GameObject>("MenuOption"  , pre, done, (res) => { this.menuPrefabs.Add(res);  });
-      rm.Load<Sprite>("SpriteCursorCat01", pre, done);
-      rm.Load<Sprite>("SpriteCursorCat02", pre, done);
-      rm.Load<AudioClip>("BGM_001", pre, done);
-      rm.Load<AudioClip>("SE_Bound001", pre, done);
+      rm.Load<GameObject>("Title.Logo.prefab", pre, done, (res) => { this.logoPrefab = res; });
+      rm.Load<GameObject>("Title.MenuCpu.prefab"     , pre, done, (res) => { this.menuPrefabs.Add(res);  });
+      rm.Load<GameObject>("Title.MenuVs.prefab", pre, done, (res) => { this.menuPrefabs.Add(res);  });
+      rm.Load<GameObject>("Title.MenuDemo.prefab", pre, done, (res) => { this.menuPrefabs.Add(res);  });
+      rm.Load<GameObject>("Title.MenuOption.prefab", pre, done, (res) => { this.menuPrefabs.Add(res);  });
+      rm.Load<GameObject>("Title.EffectGenerator.prefab", pre, done, (res) => { this.effectPrefab = res; });
+      rm.Load<GameObject>("Cursor.CatPaw.prefab", pre, done, (res) => { this.cursorPrefab = res; });
+      rm.Load<AudioClip>("BGM.001", pre, done);
+
+      TitleLogo.Load(pre, done);
+      CatPaw.Load(pre, done);
+      EffectGenerator.Load(pre, done);
 
       yield return waitForCount;
 
@@ -74,9 +78,22 @@ namespace MyGame.Scene
     protected override void OnMyDestory()
     {
       var rm = ResourceManager.Instance;
-      rm.Unload("TitleLogo");
-      
+      rm.Unload("Title.Logo.prefab");
+      rm.Unload("Title.MenuCpu.prefab");
+      rm.Unload("Title.MenuVs.prefab");
+      rm.Unload("Title.MenuDemo.prefab");
+      rm.Unload("Title.MenuOption.prefab");
+      rm.Unload("Title.EffectGenerator.prefab");
+      rm.Unload("Cursor.CatPaw.prefab");
+      rm.Unload("BGM.001");
+
+      TitleLogo.Unload();
+      CatPaw.Unload();
+      EffectGenerator.Unload();
     }
+
+    //-------------------------------------------------------------------------
+    // ステートマシン
 
     /// <summary>
     /// リソースからゲームオブジェクトを生成する
@@ -84,8 +101,8 @@ namespace MyGame.Scene
     private void SetupEnter()
     {
       // タイトルロゴ
-      this.titleLogo = Instantiate(this.titleLogoPrefab).GetComponent<TitleLogo>();
-      this.titleLogo.SetParent(this.cacheTransform).SetActive(false);
+      this.logo = Instantiate(this.logoPrefab).GetComponent<TitleLogo>();
+      this.logo.SetParent(this.cacheTransform).SetActive(false);
 
       // カーソル
       this.cursor = Instantiate(this.cursorPrefab).GetComponent<CatPaw>();
@@ -100,6 +117,10 @@ namespace MyGame.Scene
         this.menus.Add(menu);
       });
 
+      // エフェクト
+      this.effect = Instantiate(this.effectPrefab).GetComponent<EffectGenerator>();
+      this.effect.SetParent(this.cacheTransform);
+
       // Introへ
       this.state.SetState(State.Intro);
     }
@@ -110,18 +131,19 @@ namespace MyGame.Scene
     private void IntroEnter()
     {
       // BGM再生
-      SoundManager.Instance.PlayBGM("BGM_001");
+      SoundManager.Instance.PlayBGM("BGM.001");
 
-      // タイトルロゴをバウンド状態へ、バンド完了時に入力待ちになるようにコールバックを設定
-      this.titleLogo.SetActive(true);
-      this.titleLogo.SetBound();
-      this.titleLogo.CompletedBound = () => { this.state.SetState(State.MenuSelection); };
+      // タイトルロゴをバウンド状態へ、バウンド完了時に入力待ちになるようにコールバックを設定
+      this.logo.SetActive(true);
+      this.logo.ToBound();
+      this.logo.CompletedBound = () => { this.state.SetState(State.MenuSelection); };
 
-      // カーソルの設定
-      this.cursor.SetStateMovable();
+      // カーソルの初期設定
       this.cursor.SetType(CatPaw.Type.White);
-      this.cursor.SetActive(true);
       this.cursor.PadNo = 0;
+
+      // エフェクト開始
+      this.effect.ToUsual();
     }
 
     /// <summary>
@@ -130,8 +152,8 @@ namespace MyGame.Scene
     private void IntroUpdate()
     {
       if (InputManager.Instance.GetCommand(Command.PressAnyButton, 0).IsFixed) {
-        this.titleLogo.CompletedBound = null;
-        this.titleLogo.SetFixed();
+        this.logo.CompletedBound = null;
+        this.logo.ToUsual();
         this.state.SetState(State.MenuSelection);
       }
     }
@@ -141,6 +163,10 @@ namespace MyGame.Scene
     /// </summary>
     private void MenuSelectionEnter()
     {
+      // カーソルを操作可能にする
+      this.cursor.SetActive(true);
+      this.cursor.ToOperable();
+      
       this.menus.ForEach((menu) => { 
         menu.SetActive(true);
       });

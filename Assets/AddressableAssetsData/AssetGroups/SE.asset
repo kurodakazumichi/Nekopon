@@ -18,7 +18,7 @@ MonoBehaviour:
   m_GUID: 69378d01801fd8a49800d28370b8c79b
   m_SerializeEntries:
   - m_GUID: 6eb5412fe8d5dee4a872c4a0c2c0909e
-    m_Address: SE_Bound001
+    m_Address: SE.Bound001
     m_ReadOnly: 0
     m_SerializedLabels: []
     m_MainAsset: {fileID: 8300000, guid: 6eb5412fe8d5dee4a872c4a0c2c0909e, type: 3}
