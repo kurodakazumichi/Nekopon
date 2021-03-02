@@ -39,6 +39,16 @@ namespace MyGame
     /// </summary>
     private Dictionary<string, CachedResource> cache = new Dictionary<string, CachedResource>();
 
+    protected override void MyStart()
+    {
+      Debug.Manager.Instance.Regist(this);
+    }
+
+    protected override void OnMyDestory()
+    {
+      Debug.Manager.Instance.Discard(this);
+    }
+
     /// <summary>
     /// リソースの非同期ロードを行う
     /// </summary>
@@ -103,7 +113,7 @@ namespace MyGame
     }
 
 #if _DEBUG
-    private void OnGUI()
+    public override void OnDebug()
     {
       using (new GUILayout.VerticalScope(GUI.skin.box)) {
         Util.ForEach(this.cache, (key, value) => {

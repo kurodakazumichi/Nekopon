@@ -81,9 +81,9 @@ namespace MyGame.InputManagement
     }
 
 #if _DEBUG
-    public void OnGUIDebug()
+    public void OnDebug()
     {
-      using (new GUILayout.HorizontalScope(GUI.skin.box)) {
+      using (new GUILayout.HorizontalScope()) {
         GUILayout.Label(Enum.GetName(typeof(ButtonType), this.type));
         GUILayout.Label($"Down:{IsDown}");
         GUILayout.Label($"Up:{IsUp}");

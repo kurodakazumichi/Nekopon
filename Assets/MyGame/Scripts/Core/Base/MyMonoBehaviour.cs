@@ -52,5 +52,12 @@ namespace MyGame
       this.gameObject.SetActive(active);
       return this;
     }
+
+#if _DEBUG
+    public virtual void OnDebug()
+    {
+
+    }
+#endif
   }
 }

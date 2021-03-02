@@ -101,9 +101,9 @@ namespace MyGame.InputManagement
     }
 
 #if _DEBUG
-    public void OnGUIDebug()
+    public void OnDebug()
     {
-      using (new GUILayout.HorizontalScope(GUI.skin.box)) {
+      using (new GUILayout.HorizontalScope()) {
         GUILayout.Label(Enum.GetName(typeof(AxisType), this.type));
         GUILayout.Label($"Value:{MyMath.Round(Value, 3)}");
         GUILayout.Label($"Down:{IsDown}");

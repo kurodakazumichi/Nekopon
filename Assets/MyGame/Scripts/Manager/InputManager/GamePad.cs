@@ -271,14 +271,24 @@ namespace MyGame.InputManagement
     }
     
 #if _DEBUG
-    public void OnGUIDebug()
+    public void OnDebug()
     {
-      using (new GUILayout.VerticalScope(GUI.skin.box)) {
-        Util.ForEach(this.axes, (type, axis) => { axis.OnGUIDebug(); });
-      }
+      using (new GUILayout.VerticalScope()) 
+      {
+        using (new GUILayout.VerticalScope(GUI.skin.box)) {
+          GUILayout.Label("■ Axis");
+          Util.ForEach(this.axes, (type, axis) => { axis.OnDebug(); });
+        }
 
-      using (new GUILayout.VerticalScope(GUI.skin.box)) {
-        Util.ForEach(this.buttons, (type, button) => { button.OnGUIDebug(); });
+        using (new GUILayout.VerticalScope(GUI.skin.box)) {
+          GUILayout.Label("■ Button");
+          Util.ForEach(this.buttons, (type, button) => { button.OnDebug(); });
+        }
+
+        using (new GUILayout.VerticalScope(GUI.skin.box)) {
+          GUILayout.Label("■ Key");
+          Util.ForEach(this.keys, (type, key) => { key.OnDebug(); });
+        }
       }
     }
 #endif

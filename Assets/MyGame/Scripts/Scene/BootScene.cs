@@ -33,6 +33,7 @@ namespace MyGame.Scene
 
       // 常駐させたいシステムがあればここで生成
       SingletonManager.Instance
+        .Setup<Debug.Manager>(system)
         .Setup<TimeManager>(system)
         .Setup<SceneManager>(system)
         .Setup<ResourceManager>(system)

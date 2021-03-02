@@ -15,6 +15,8 @@ namespace MyGame
 
     protected override void MyStart()
     {
+      Debug.Manager.Instance.Regist(this);
+
       this.pads.Add(new GamePad(0));
       this.commands[Command.Move] = new MoveCommand();
       this.commands[Command.Decide] = new DecideCommand();
@@ -40,10 +42,20 @@ namespace MyGame
       this.pads.ForEach((pad) => { pad.Update(); });
     }
 
-#if _DEBUG
-    private void OnGUI()
+    protected override void OnMyDestory()
     {
-      //this.pads[0].OnGUIDebug();
+      Debug.Manager.Instance.Discard(this);
+    }
+
+#if _DEBUG
+    public override void OnDebug()
+    {
+      using (new GUILayout.VerticalScope(GUI.skin.box)) 
+      {
+        GUILayout.Label($"■PadCount:{PadCount}");
+
+        this.pads[0].OnDebug();
+      }
     }
 #endif
   }
