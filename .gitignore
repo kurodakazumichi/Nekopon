@@ -69,3 +69,6 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
+Assets/MyGame/Scripts/Unit/Title/EffectGenerator.cs
+Assets/AddressableAssetsData/AnalyzeData.meta
+Assets/MyGame/Scripts/Unit/Title/EffectGenerator.cs.meta
