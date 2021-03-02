@@ -89,14 +89,12 @@ namespace MyGame.Unit.Cursor
     private void Load()
     {
       var rm = ResourceManager.Instance;
-      this.sprites[Type.White] = rm.LoadSync<Sprite>("SpriteCursorCat01");
-      this.sprites[Type.Black] = rm.LoadSync<Sprite>("SpriteCursorCat02");
+      this.sprites[Type.White] = rm.GetCache<Sprite>("SpriteCursorCat01");
+      this.sprites[Type.Black] = rm.GetCache<Sprite>("SpriteCursorCat02");
     }
 
     protected override void OnMyDestory()
     {
-      ResourceManager.Instance.Unload(this.sprites[Type.White]);
-      ResourceManager.Instance.Unload(this.sprites[Type.Black]);
       this.sprites = null;
     }
 

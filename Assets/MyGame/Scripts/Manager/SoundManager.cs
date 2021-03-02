@@ -10,59 +10,49 @@ namespace MyGame
     private AudioSource bgmSource = null;
     private AudioSource seSource = null;
 
-    private Dictionary<string, AudioClip> audios = new Dictionary<string, AudioClip>();
-
-    /// <summary>
-    /// サウンドリソースのロード
-    /// </summary>
-    /// <param name="address">AddressableAssetsで設定したアドレス</param>
-    /// <param name="pre">ロード前に呼ばれるコールバック</param>
-    /// <param name="done">ロード後に呼ばれるコールバック</param>
-    public void Load(string address, Action pre, Action done) 
-    {
-      // 既に指定されたリソースがあればロードしない
-      if (this.audios.ContainsKey(address)) return;
-
-      ResourceManager.Instance.Load<AudioClip>(
-        address, (obj) => { this.audios[address] = obj; }, pre, done
-      );
-    }
-
     /// <summary>
     /// BGMを再生
     /// </summary>
     public void PlayBGM(string address, bool loop = true)
     {
-      if (!HasAudioClip(address)) {
-        Debug.Logger.Warn($"AudioClip is not exists. address = {address}");
+      var audio = GetAudio(address);
+
+      if (audio == null) {
+        Debug.Logger.Warn($"AudioClip is not loaded. address = {address}");
         return;
       }
 
-      this.bgmSource.clip = this.audios[address];
+      this.bgmSource.clip = audio;
       this.bgmSource.loop = loop;
       this.bgmSource.Play();
     }
 
+    /// <summary>
+    /// BGMの再生を止める
+    /// </summary>
     public void StopBGM()
     {
       this.bgmSource.Stop();
     }
 
+    /// <summary>
+    /// SEを再生する
+    /// </summary>
     public void PlaySE(string address)
     {
-      if (!HasAudioClip(address)) {
-        Debug.Logger.Warn($"AudioClip is not exists. address = {address}");
+      var audio = GetAudio(address);
+
+      if (audio == null) {
+        Debug.Logger.Warn($"AudioClip is not loaded. address = {address}");
         return;
       }
 
-      this.seSource.PlayOneShot(this.audios[address]);
+      this.seSource.PlayOneShot(audio);
     }
 
-    private bool HasAudioClip(string address)
+    private AudioClip GetAudio(string address)
     {
-      if (!this.audios.ContainsKey(address)) return false;
-      if (this.audios[address] == null) return false;
-      return true;
+      return ResourceManager.Instance.GetCache<AudioClip>(address);
     }
 
     protected override void MyStart()

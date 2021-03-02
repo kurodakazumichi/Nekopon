@@ -17,6 +17,7 @@ namespace MyGame.Scene
     /// </summary>
     public enum State
     {
+      Idle,
       Setup,
       Intro,
       MenuSelection,
@@ -40,6 +41,7 @@ namespace MyGame.Scene
 
     protected override void MyStart()
     {
+      this.state.Add(State.Idle);
       this.state.Add(State.Setup, SetupEnter, null, null);
       this.state.Add(State.Intro, IntroEnter, IntroUpdate, null);
       this.state.Add(State.MenuSelection, MenuSelectionEnter, MenuSelectionUpdate, null);
@@ -52,22 +54,28 @@ namespace MyGame.Scene
       System.Action done = waitForCount.dec;
 
       var rm = ResourceManager.Instance;
-      rm.Load<GameObject>("TitleLogo"   , (res) => { this.titleLogoPrefab = res; }, pre, done);
-      rm.Load<GameObject>("MenuCpu"     , (res) => { this.menuPrefabs.Add(res);  }, pre, done);
-      rm.Load<GameObject>("MenuVs"      , (res) => { this.menuPrefabs.Add(res);  }, pre, done);
-      rm.Load<GameObject>("MenuDemo"    , (res) => { this.menuPrefabs.Add(res);  }, pre, done);
-      rm.Load<GameObject>("MenuOption"  , (res) => { this.menuPrefabs.Add(res);  }, pre, done);
-      rm.Load<GameObject>("CursorCatPaw", (res) => { this.cursorPrefab = res;    }, pre, done);
-      rm.Load<Sprite>("SpriteCursorCat01", null, pre, done);
-      rm.Load<Sprite>("SpriteCursorCat02", null, pre, done);
-
-      SoundManager.Instance.Load("BGM_001", pre, done);
-      SoundManager.Instance.Load("SE_Bound001", waitForCount.inc, waitForCount.dec);
+      rm.Load<GameObject>("TitleLogo"   , pre, done, (res) => { this.titleLogoPrefab = res; });
+      rm.Load<GameObject>("CursorCatPaw", pre, done, (res) => { this.cursorPrefab = res;    });
+      rm.Load<GameObject>("MenuCpu"     , pre, done, (res) => { this.menuPrefabs.Add(res);  });
+      rm.Load<GameObject>("MenuVs"      , pre, done, (res) => { this.menuPrefabs.Add(res);  });
+      rm.Load<GameObject>("MenuDemo"    , pre, done, (res) => { this.menuPrefabs.Add(res);  });
+      rm.Load<GameObject>("MenuOption"  , pre, done, (res) => { this.menuPrefabs.Add(res);  });
+      rm.Load<Sprite>("SpriteCursorCat01", pre, done);
+      rm.Load<Sprite>("SpriteCursorCat02", pre, done);
+      rm.Load<AudioClip>("BGM_001", pre, done);
+      rm.Load<AudioClip>("SE_Bound001", pre, done);
 
       yield return waitForCount;
 
       this.isLoaded = true;
       this.state.SetState(State.Setup);
+    }
+
+    protected override void OnMyDestory()
+    {
+      var rm = ResourceManager.Instance;
+      rm.Unload("TitleLogo");
+      
     }
 
     /// <summary>
@@ -88,6 +96,7 @@ namespace MyGame.Scene
       this.menuPrefabs.ForEach((prefab) => {
         var menu = Instantiate(prefab).GetComponent<Menu>();
         menu.SetParent(this.cacheTransform).SetActive(false);
+        menu.SceneType = SceneManager.SceneType.Title;
         this.menus.Add(menu);
       });
 
@@ -142,7 +151,23 @@ namespace MyGame.Scene
     /// </summary>
     private void MenuSelectionUpdate()
     {
+      TryChangeReservedScene();
+    }
 
+    private void TryChangeReservedScene()
+    {
+      // 決定ボタンがおされていなければシーン変更しない
+      if (!InputManager.Instance.GetCommand(Command.Decide, 0).IsFixed) return;
+
+      // シーン予約がなければシーン遷移しない
+      if (!SceneManager.Instance.HasReservedScene) return;
+
+      // タイトルシーンを破棄して予約シーンへ遷移
+      SceneManager.Instance.UnloadSceneAsync(SceneManager.SceneType.Title, () => { 
+        SceneManager.Instance.LoadReservedSceneAdditive();
+      });
+
+      this.state.SetState(State.Idle);
     }
   }
 }

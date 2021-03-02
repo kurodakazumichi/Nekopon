@@ -10,9 +10,10 @@ namespace MyGame.Unit.Title
     public Vector4 Move = Vector4.zero;
     public Vector4 Scale = Vector4.zero;
     public Color SelectedColor = Color.white;
-    public SceneManager.SceneType _SceneType;
     private Vector3 startPos;
     private Vector3 startScale;
+
+    public SceneManager.SceneType SceneType { private get; set; } = SceneManager.SceneType.None;
 
 
     // Start is called before the first frame update
@@ -41,11 +42,13 @@ namespace MyGame.Unit.Title
     private void OnTriggerEnter2D(Collider2D collision)
     {
       GetComponent<SpriteRenderer>().material.color = SelectedColor;
+      SceneManager.Instance.ReservedScene = SceneType;
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
       GetComponent<SpriteRenderer>().material.color = Color.white;
+      SceneManager.Instance.ReservedScene = SceneManager.SceneType.None;
     }
   }
 }

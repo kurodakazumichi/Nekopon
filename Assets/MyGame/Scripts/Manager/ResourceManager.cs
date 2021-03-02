@@ -8,7 +8,36 @@ namespace MyGame
 {
   public class ResourceManager : SingletonMonobehaviour<ResourceManager>
   {
-    private Dictionary<string, UnityEngine.Object> cache = new Dictionary<string, UnityEngine.Object>();
+    /// <summary>
+    /// キャッシュリソース、参照カウンタとリソースの参照を保持するのみ
+    /// </summary>
+    private class CachedResource
+    {
+      /// <summary>
+      /// 参照カウンタ
+      /// </summary>
+      public uint Count = 0;
+
+      /// <summary>
+      /// リソース
+      /// </summary>
+      public UnityEngine.Object Resource = null;
+
+      /// <summary>
+      /// コンストラクタで参照カウンタを1に設定
+      /// </summary>
+      /// <param name="resource"></param>
+      public CachedResource(UnityEngine.Object resource)
+      {
+        this.Count    = 1;
+        this.Resource = resource;
+      }
+    }
+
+    /// <summary>
+    /// キャッシュ済リソース、keyはリソースのアドレス
+    /// </summary>
+    private Dictionary<string, CachedResource> cache = new Dictionary<string, CachedResource>();
 
     /// <summary>
     /// リソースの非同期ロードを行う
@@ -18,32 +47,70 @@ namespace MyGame
     /// <param name="pre">リソースロード前に呼ばれるコールバック関数</param>
     /// <param name="post">ロード完了したリソースを受け取る関数</param>
     /// <param name="done">ロード完了時に呼ばれる関数</param>
-    public void Load<T>(string address, Action<T> post, Action pre, Action done)
+    public void Load<T>(string address, Action pre, Action done, Action<T> post = null) where T : UnityEngine.Object
     {
-      // 既に読み込まれていたら何もしない
-      if (this.cache.ContainsKey(address)) return;
-
       pre();
-      Addressables.LoadAssetAsync<T>(address).Completed += op => {
+      Addressables.LoadAssetAsync<T>(address).Completed += op => 
+      {
+        // ロード完了時コールバックを実行
         post?.Invoke(op.Result);
         done();
-        this.cache[address] = op.Result as UnityEngine.Object;
+
+        // 未キャッシュであればキャッシュ、キャッシュ済であれば参照カウンタを更新
+        if (!this.cache.ContainsKey(address)) {
+          this.cache[address] = new CachedResource(op.Result);
+        } else {
+          this.cache[address].Count++;
+        }
       };
     }
 
-    public void Unload<T>(T obj)
+    /// <summary>
+    /// キャッシュ済のリソースを取得、参照カウンタは変化しない
+    /// </summary>
+    public T GetCache<T>(string address) where T : UnityEngine.Object
     {
-      Addressables.Release(obj);
-    }
-
-    public T LoadSync<T>(string address) where T : UnityEngine.Object
-    {
-#if _DEBUG
       if (!this.cache.ContainsKey(address)) {
         Debug.Logger.Log($"ResourceManager.LoadSync: {address} is not found.");
+        return null;
       }
-#endif
-      return this.cache[address] as T;
+      else {
+        return this.cache[address].Resource as T;
+      }
     }
+
+    /// <summary>
+    /// リソースの破棄、参照カウンタが0になるまでは実際の破棄は行われない
+    /// </summary>
+    /// <param name="address">破棄するリソースのアドレス</param>
+    public void Unload(string address)
+    {
+      // リソースが存在しなければ何もしない
+      if (!this.cache.ContainsKey(address)) { 
+        Debug.Logger.Warn($"ResourceManager.Unload:{address}は読み込まれていないか、すでに破棄されています。");
+        return;
+      }
+
+      // キャッシュリソースを取得し、参照カウントを下げる
+      var cache = this.cache[address];
+      cache.Count--;
+
+      // 参照カウントが0であればリソースを解放する
+      if (cache.Count == 0) {
+        Addressables.Release(cache.Resource);
+        this.cache.Remove(address);
+      }
+    }
+
+#if _DEBUG
+    private void OnGUI()
+    {
+      using (new GUILayout.VerticalScope(GUI.skin.box)) {
+        Util.ForEach(this.cache, (key, value) => {
+          GUILayout.Label($"{key}:{value.Count}");
+        });
+      }
+    }
+#endif
   }
 }
