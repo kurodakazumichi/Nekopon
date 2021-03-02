@@ -179,6 +179,15 @@ namespace MyGame.InputManagement
     }
 
     /// <summary>
+    /// ボタンが押されているかどうか
+    /// </summary>
+    public bool GetButtonHold(ButtonType type)
+    {
+      if (this.buttons.TryGetValue(type, out Button button)) return button.IsHold;
+      return false;
+    }
+
+    /// <summary>
     /// ボタンが押されている時間(秒)
     /// </summary>
     public float GetButtonTime(ButtonType type)
