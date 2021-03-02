@@ -64,8 +64,9 @@ namespace MyGame.Scene
       rm.Load<GameObject>("Title.EffectGenerator.prefab", pre, done, (res) => { this.effectPrefab = res; });
       rm.Load<GameObject>("Cursor.CatPaw.prefab", pre, done, (res) => { this.cursorPrefab = res; });
       rm.Load<AudioClip>("BGM.001", pre, done);
-
+      rm.Load<AudioClip>("SE.Select01", pre, done);
       TitleLogo.Load(pre, done);
+      Menu.Load(pre, done);
       CatPaw.Load(pre, done);
       EffectGenerator.Load(pre, done);
 
@@ -86,8 +87,10 @@ namespace MyGame.Scene
       rm.Unload("Title.EffectGenerator.prefab");
       rm.Unload("Cursor.CatPaw.prefab");
       rm.Unload("BGM.001");
+      rm.Unload("SE.Select01");
 
       TitleLogo.Unload();
+      Menu.Unload();
       CatPaw.Unload();
       EffectGenerator.Unload();
     }
@@ -187,6 +190,8 @@ namespace MyGame.Scene
 
       // シーン予約がなければシーン遷移しない
       if (!SceneManager.Instance.HasReservedScene) return;
+
+      SoundManager.Instance.PlaySE("SE.Select01");
 
       // タイトルシーンを破棄して予約シーンへ遷移
       SceneManager.Instance.UnloadSceneAsync(SceneManager.SceneType.Title, () => { 
