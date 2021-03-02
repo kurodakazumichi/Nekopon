@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 5583207759441737674}
   - component: {fileID: 5583207759441737675}
   m_Layer: 0
-  m_Name: Cursor
+  m_Name: CatPaw
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -96,9 +96,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3862ad674b02f0c4a85405f1feab246f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Acceleration: 2
-  SuspensionTime: 1
-  MovableRange: {x: 0.95, y: 0.7}
+  _Acceleration: 2
+  _SuspensionTime: 1
+  _MovableRange: {x: 0.95, y: 0.7}
 --- !u!50 &5583207759441737674
 Rigidbody2D:
   serializedVersion: 4

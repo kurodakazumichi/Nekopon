@@ -32,18 +32,18 @@ namespace MyGame.Unit.Cursor
     /// カーソルの加速度
     /// </summary>
     [Range(0.1f, 2.0f)]
-    public float Acceleration = 0;
+    public float _Acceleration = 0;
 
     /// <summary>
     /// カーソルが停止するまでの時間
     /// </summary>
     [Range(0.1f, 2.0f)]
-    public float SuspensionTime = 0;
+    public float _SuspensionTime = 0;
 
     /// <summary>
     /// カーソルが移動できる範囲
     /// </summary>
-    public Vector2 MovableRange = new Vector2(1, 0.75f);
+    public Vector2 _MovableRange = new Vector2(1, 0.75f);
 
     //-------------------------------------------------------------------------
     // メンバ変数
@@ -120,14 +120,14 @@ namespace MyGame.Unit.Cursor
       if (cmdMove.IsFixed) 
       {
         Vector3 v = cmdMove.Axis;
-        this.velocity += v * Acceleration * deltaTime;
+        this.velocity += v * _Acceleration * deltaTime;
         this.suspensionTimer = 0;
       } 
       
       // 非Moveコマンド中はカーソルを減速
       else 
       {
-        var rate = Mathf.Min(1.0f, this.suspensionTimer / SuspensionTime);
+        var rate = Mathf.Min(1.0f, this.suspensionTimer / _SuspensionTime);
         this.velocity = Vector3.Lerp(this.velocity, Vector3.zero, rate * rate);
         this.suspensionTimer += deltaTime;
       }
@@ -138,15 +138,15 @@ namespace MyGame.Unit.Cursor
       // 可動範囲を超えたら速度を反転、位置補正
       Vector3 pos = transform.position;
 
-      if (Mathf.Abs(MovableRange.x) <= Mathf.Abs(pos.x)) 
+      if (Mathf.Abs(_MovableRange.x) <= Mathf.Abs(pos.x)) 
       {
         this.velocity.x *= -1f;
-        pos.x = (pos.x < 0)? -MovableRange.x : MovableRange.x;
+        pos.x = (pos.x < 0)? -_MovableRange.x : _MovableRange.x;
       }
 
-      if (Mathf.Abs(MovableRange.y) <= Mathf.Abs(pos.y)) {
+      if (Mathf.Abs(_MovableRange.y) <= Mathf.Abs(pos.y)) {
         this.velocity.y *= -1f;
-        pos.y = (pos.y < 0)? -MovableRange.y : MovableRange.y;
+        pos.y = (pos.y < 0)? -_MovableRange.y : _MovableRange.y;
       }
 
       cacheTransform.position = pos;
