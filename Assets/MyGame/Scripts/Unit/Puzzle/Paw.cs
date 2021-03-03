@@ -16,8 +16,8 @@ namespace MyGame.Unit.Puzzle
     public enum State { 
       Idle,
       Vanish, // 消滅
-      Move,  // 移動
-      Moved, // 移動した
+      Move,   // 移動
+      Moved,  // 移動した
     }
 
     //-------------------------------------------------------------------------
@@ -44,6 +44,11 @@ namespace MyGame.Unit.Puzzle
     /// 属性
     /// </summary>
     private Attribute attribute = default;
+
+    /// <summary>
+    /// 移動時の動きの種類
+    /// </summary>
+    private Tween.Type tweenType = default;
 
     /// <summary>
     /// 移動前の座標
@@ -73,8 +78,8 @@ namespace MyGame.Unit.Puzzle
       this.spriteRenderer = CacheTransform.Find("Sprite").GetComponent<SpriteRenderer>();
 
       this.state.Add(State.Idle);
-      this.state.Add(State.Vanish, VanishEnter, VanishUpdate);
-      this.state.Add(State.Move, MoveEnter, MoveUpdate);
+      this.state.Add(State.Vanish, VanishEnter, VanishUpdate, VanishExit);
+      this.state.Add(State.Move, MoveEnter, MoveUpdate, MoveExit);
       this.state.Add(State.Moved);
       this.state.SetState(State.Idle);
     }
@@ -85,24 +90,32 @@ namespace MyGame.Unit.Puzzle
         ToVanish();
       }
       if (Input.GetKeyDown(KeyCode.B)) {
-        ToMove(new Vector3(Random.Range(-1f, 1f), Random.Range(-0.7f, 0.7f), 0));
+        ToMove(new Vector3(Random.Range(-1f, 1f), Random.Range(-0.7f, 0.7f), 0), 1f);
       }
       base.MyUpdate();
     }
 
     //-------------------------------------------------------------------------
-    // ライフサイクル
+    // Publicメソッド
 
     public void ToVanish()
     {
       this.state.SetState(State.Vanish);
     }
 
-    public void ToMove(Vector3 target)
+    public void ToMove(Vector3 target, float time, Tween.Type type = Tween.Type.EaseInSine)
     {
+      this.tweenType = type;
+      this.movingTime = time;
       this.moveEndPosition = target;
       this.state.SetState(State.Move);
     }
+
+    //-------------------------------------------------------------------------
+    // ステートマシン
+
+    //-------------------------------------------------------------------------
+    // 消滅
 
     private void VanishEnter()
     {
@@ -122,21 +135,38 @@ namespace MyGame.Unit.Puzzle
       this.timer += deltaTime;
     }
 
+    private void VanishExit()
+    {
+      CacheTransform.localScale = Vector3.zero;
+    }
+
+    //-------------------------------------------------------------------------
+    // 移動
+
     private void MoveEnter()
     {
       this.SetDefaultTransform();
       this.moveStartPosition = CacheTransform.position;
-      this.movingTime = (this.moveStartPosition - this.moveEndPosition).magnitude;
       this.timer = 0;
     }
 
     private void MoveUpdate()
     {
+      // 現在の進行度
       float t = this.timer/movingTime;
-      CacheTransform.position = Vector3.Lerp(this.moveStartPosition, this.moveEndPosition, Tween.EaseOutBounce(t));
+      t = Tween.easing(this.tweenType, t);
 
+      // 座標更新
+      CacheTransform.position = Vector3.Lerp(this.moveStartPosition, this.moveEndPosition, t);
+
+      // 時間経過していたら移動完了フェーズへ
       if (movingTime <= this.timer) { this.state.SetState(State.Moved); }
       this.timer += TimeManager.Instance.DeltaTime;
+    }
+
+    private void MoveExit()
+    {
+      CacheTransform.position = this.moveEndPosition;
     }
 
     /// <summary>
