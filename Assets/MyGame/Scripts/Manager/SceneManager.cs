@@ -13,7 +13,7 @@ namespace MyGame
       None = -1,
       Boot,
       Title,
-      Fight,
+      Versus,
     }
 
     /// <summary>
@@ -53,7 +53,7 @@ namespace MyGame
     {
       switch(type) {
         case SceneType.Boot : return "Boot";
-        case SceneType.Fight: return "Fight";
+        case SceneType.Versus: return "Versus";
         default: return "Title";
       }
     }

@@ -9,7 +9,7 @@ namespace MyGame.Scene
     public enum State { }
 #if _DEBUG
     // シーン遷移しないフラグ(デバッグ用)
-    public bool _NoSceneTransition = false;
+    public SceneManager.SceneType _FirstTransitionScene = SceneManager.SceneType.None;
     public int _TargetFrameRate = 60;
 #endif
 
@@ -41,7 +41,8 @@ namespace MyGame.Scene
         .Setup<InputManager>(system);
 
 #if _DEBUG
-      if (_NoSceneTransition) {
+      if (_FirstTransitionScene != SceneManager.SceneType.None) {
+        SceneManager.Instance.LoadSceneAdditive(_FirstTransitionScene);
         return;
       }
 #endif
