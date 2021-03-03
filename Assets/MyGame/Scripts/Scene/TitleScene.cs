@@ -57,7 +57,7 @@ namespace MyGame.Scene
 
       var rm = ResourceManager.Instance;
       rm.Load<GameObject>("Title.Logo.prefab", pre, done, (res) => { this.logoPrefab = res; });
-      rm.Load<GameObject>("Title.MenuCpu.prefab"     , pre, done, (res) => { this.menuPrefabs.Add(res);  });
+      rm.Load<GameObject>("Title.MenuCpu.prefab", pre, done, (res) => { this.menuPrefabs.Add(res);  });
       rm.Load<GameObject>("Title.MenuVs.prefab", pre, done, (res) => { this.menuPrefabs.Add(res);  });
       rm.Load<GameObject>("Title.MenuDemo.prefab", pre, done, (res) => { this.menuPrefabs.Add(res);  });
       rm.Load<GameObject>("Title.MenuOption.prefab", pre, done, (res) => { this.menuPrefabs.Add(res);  });
