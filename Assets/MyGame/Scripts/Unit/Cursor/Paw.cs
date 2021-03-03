@@ -7,9 +7,9 @@ using System;
 namespace MyGame.Unit.Cursor
 {
   /// <summary>
-  /// 猫の肉球カーソルクラス
+  /// 肉球カーソルクラス
   /// </summary>
-  public class CatPaw : Unit<CatPaw.State>
+  public class Paw : Unit<Paw.State>
   {
     /// <summary>
     /// 状態

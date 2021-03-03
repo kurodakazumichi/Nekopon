@@ -35,7 +35,7 @@ namespace MyGame.Scene
     // GameObject
     private TitleLogo logo = null;
     private List<Menu> menus = new List<Menu>();
-    private CatPaw cursor = null;
+    private Paw cursor = null;
     private EffectGenerator effect = null;
 
     //-------------------------------------------------------------------------
@@ -67,7 +67,7 @@ namespace MyGame.Scene
       rm.Load<AudioClip>("SE.Select01", pre, done);
       TitleLogo.Load(pre, done);
       Menu.Load(pre, done);
-      CatPaw.Load(pre, done);
+      Paw.Load(pre, done);
       EffectGenerator.Load(pre, done);
 
       yield return waitForCount;
@@ -91,7 +91,7 @@ namespace MyGame.Scene
 
       TitleLogo.Unload();
       Menu.Unload();
-      CatPaw.Unload();
+      Paw.Unload();
       EffectGenerator.Unload();
     }
 
@@ -108,7 +108,7 @@ namespace MyGame.Scene
       this.logo.SetParent(this.cacheTransform).SetActive(false);
 
       // カーソル
-      this.cursor = Instantiate(this.cursorPrefab).GetComponent<CatPaw>();
+      this.cursor = Instantiate(this.cursorPrefab).GetComponent<Paw>();
       this.cursor.SetParent(this.cacheTransform).SetActive(false);
       this.cursor.PadNo = 0;
 
@@ -142,7 +142,7 @@ namespace MyGame.Scene
       this.logo.CompletedBound = () => { this.state.SetState(State.MenuSelection); };
 
       // カーソルの初期設定
-      this.cursor.SetType(CatPaw.Type.White);
+      this.cursor.SetType(Paw.Type.White);
       this.cursor.PadNo = 0;
 
       // エフェクト開始
