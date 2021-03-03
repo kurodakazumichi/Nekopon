@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using MyGame.Define.Input;
+using MyGame.InputManagement;
 
 namespace MyGame.InputManagement
 {

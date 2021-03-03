@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace MyGame.Define.Input
+namespace MyGame.InputManagement
 {
 
   /// <summary>
