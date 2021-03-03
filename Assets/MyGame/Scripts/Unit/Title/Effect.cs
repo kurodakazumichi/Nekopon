@@ -63,8 +63,8 @@ namespace MyGame.Unit.Title
       // 移動、回転、タイマーの更新
       float deltaTime = TimeManager.Instance.DeltaTime;
 
-      this.cacheTransform.position += this.velocity * deltaTime;
-      this.cacheTransform.Rotate(0, 0, this.angularSpeed * deltaTime);
+      this.CacheTransform.position += this.velocity * deltaTime;
+      this.CacheTransform.Rotate(0, 0, this.angularSpeed * deltaTime);
 
       this.timer    -= Time.deltaTime;
       this.lifeTime -= TimeManager.Instance.DeltaTime;

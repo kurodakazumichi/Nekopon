@@ -159,7 +159,7 @@ namespace MyGame.Unit.Cursor
       }
 
       // 座標を更新
-      cacheTransform.position += this.velocity * deltaTime;
+      CacheTransform.position += this.velocity * deltaTime;
 
       // 可動範囲を超えたら速度を反転、位置補正
       Vector3 pos = transform.position;
@@ -175,7 +175,7 @@ namespace MyGame.Unit.Cursor
         pos.y = (pos.y < 0)? -_MovableRange.y : _MovableRange.y;
       }
 
-      cacheTransform.position = pos;
+      CacheTransform.position = pos;
     }
   }
 }

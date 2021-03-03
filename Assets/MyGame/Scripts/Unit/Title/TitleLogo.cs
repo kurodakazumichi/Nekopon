@@ -120,7 +120,7 @@ namespace MyGame.Unit.Title
 
     private void BoundEnter()
     {
-      this.cacheTransform.position = new Vector3(0, _StartY, 0);
+      this.CacheTransform.position = new Vector3(0, _StartY, 0);
       this.velocity = Vector3.zero;
       this.boundCount = 0;
     }
@@ -128,12 +128,12 @@ namespace MyGame.Unit.Title
     private void BoundUpdate()
     {
       this.velocity.y -= _Speed * TimeManager.Instance.DeltaTime;
-      cacheTransform.position += this.velocity * TimeManager.Instance.DeltaTime;
+      CacheTransform.position += this.velocity * TimeManager.Instance.DeltaTime;
 
-      if (cacheTransform.position.y < _EndY) 
+      if (CacheTransform.position.y < _EndY) 
       {
         SoundManager.Instance.PlaySE("SE.Bound001");
-        cacheTransform.position = new Vector3(0, _EndY, 0);
+        CacheTransform.position = new Vector3(0, _EndY, 0);
         this.velocity.y *= -0.9f;
         this.boundCount++;
       }
@@ -150,7 +150,7 @@ namespace MyGame.Unit.Title
 
     private void UsualEnter()
     {
-      this.cacheTransform.position = new Vector3(0, _EndY, 0);
+      this.CacheTransform.position = new Vector3(0, _EndY, 0);
     }
 
   }

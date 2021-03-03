@@ -9,12 +9,12 @@ namespace MyGame
     /// <summary>
     /// Transformコンポーネントのキャッシュ
     /// </summary>
-    public Transform cacheTransform { get; private set; }
+    public Transform CacheTransform { get; private set; }
 
     protected virtual void Awake()
     {
-      if (cacheTransform == null) {
-        cacheTransform = this.transform;
+      if (CacheTransform == null) {
+        CacheTransform = this.transform;
       }
 
       MyAwake();
@@ -43,7 +43,7 @@ namespace MyGame
 
     public MyMonoBehaviour SetParent(Transform parent)
     {
-      this.cacheTransform.parent = parent;
+      this.CacheTransform.parent = parent;
       return this;
     }
 

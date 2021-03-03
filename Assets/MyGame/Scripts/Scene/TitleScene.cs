@@ -105,24 +105,24 @@ namespace MyGame.Scene
     {
       // タイトルロゴ
       this.logo = Instantiate(this.logoPrefab).GetComponent<TitleLogo>();
-      this.logo.SetParent(this.cacheTransform).SetActive(false);
+      this.logo.SetParent(this.CacheTransform).SetActive(false);
 
       // カーソル
       this.cursor = Instantiate(this.cursorPrefab).GetComponent<Paw>();
-      this.cursor.SetParent(this.cacheTransform).SetActive(false);
+      this.cursor.SetParent(this.CacheTransform).SetActive(false);
       this.cursor.PadNo = 0;
 
       // メニュー
       this.menuPrefabs.ForEach((prefab) => {
         var menu = Instantiate(prefab).GetComponent<Menu>();
-        menu.SetParent(this.cacheTransform).SetActive(false);
+        menu.SetParent(this.CacheTransform).SetActive(false);
         menu.SceneType = SceneManager.SceneType.Title;
         this.menus.Add(menu);
       });
 
       // エフェクト
       this.effect = Instantiate(this.effectPrefab).GetComponent<EffectGenerator>();
-      this.effect.SetParent(this.cacheTransform);
+      this.effect.SetParent(this.CacheTransform);
 
       // Introへ
       this.state.SetState(State.Intro);
