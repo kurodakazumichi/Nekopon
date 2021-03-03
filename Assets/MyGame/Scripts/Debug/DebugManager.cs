@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Diagnostics;
-using MyGame.InputManagement;
+using MyGame.Define.Input;
 
 namespace MyGame.Debug
 {

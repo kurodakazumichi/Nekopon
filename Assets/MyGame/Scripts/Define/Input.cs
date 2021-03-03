@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace MyGame.InputManagement
+namespace MyGame.Define.Input
 {
+
   /// <summary>
   /// 軸の種類
   /// </summary>
