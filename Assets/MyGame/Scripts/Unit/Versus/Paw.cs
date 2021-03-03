@@ -1,9 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using MyGame.Define.Puzzle;
+using MyGame.Define;
 
-namespace MyGame.Unit.Puzzle
+namespace MyGame.Unit.Versus
 {
   /// <summary>
   /// パズル内の肉球
@@ -43,7 +43,7 @@ namespace MyGame.Unit.Puzzle
     /// <summary>
     /// 属性
     /// </summary>
-    private Attribute attribute = default;
+    private Define.App.Attribute attribute = default;
 
     /// <summary>
     /// 移動時の動きの種類
@@ -69,6 +69,39 @@ namespace MyGame.Unit.Puzzle
     /// 汎用タイマー
     /// </summary>
     private float timer = 0;
+
+    //-------------------------------------------------------------------------
+    // Load, Unload
+
+    /// <summary>
+    /// Spriteリソース
+    /// </summary>
+    private static Dictionary<Define.App.Attribute, Sprite> Sprites = new Dictionary<Define.App.Attribute, Sprite>(Define.App.AttributeCount);
+
+    public static void Load(System.Action pre, System.Action done)
+    {
+      var rm = ResourceManager.Instance;
+      rm.Load<Sprite>("Paw.Fir.sprite", pre, done, (res) => { Sprites.Add(Define.App.Attribute.Fir, res); });
+      rm.Load<Sprite>("Paw.Wat.sprite", pre, done, (res) => { Sprites.Add(Define.App.Attribute.Wat, res); });
+      rm.Load<Sprite>("Paw.Thu.sprite", pre, done, (res) => { Sprites.Add(Define.App.Attribute.Thu, res); });
+      rm.Load<Sprite>("Paw.Ice.sprite", pre, done, (res) => { Sprites.Add(Define.App.Attribute.Ice, res); });
+      rm.Load<Sprite>("Paw.Tre.sprite", pre, done, (res) => { Sprites.Add(Define.App.Attribute.Tre, res); });
+      rm.Load<Sprite>("Paw.Hol.sprite", pre, done, (res) => { Sprites.Add(Define.App.Attribute.Hol, res); });
+      rm.Load<Sprite>("Paw.Dar.sprite", pre, done, (res) => { Sprites.Add(Define.App.Attribute.Dar, res); });
+    }
+
+    public static void Unload()
+    {
+      var rm = ResourceManager.Instance;
+      rm.Unload("Paw.Fir.sprite");
+      rm.Unload("Paw.Wat.sprite");
+      rm.Unload("Paw.Thu.sprite");
+      rm.Unload("Paw.Ice.sprite");
+      rm.Unload("Paw.Tre.sprite");
+      rm.Unload("Paw.Hol.sprite");
+      rm.Unload("Paw.Dar.sprite");
+      Sprites.Clear();
+    }
 
     //-------------------------------------------------------------------------
     // ライフサイクル
@@ -109,6 +142,12 @@ namespace MyGame.Unit.Puzzle
       this.movingTime = time;
       this.moveEndPosition = target;
       this.state.SetState(State.Move);
+    }
+
+    public void RandomAttribute()
+    {
+      this.attribute = MyEnum.Random<Define.App.Attribute>();
+      this.spriteRenderer.sprite = Sprites[this.attribute];
     }
 
     //-------------------------------------------------------------------------
