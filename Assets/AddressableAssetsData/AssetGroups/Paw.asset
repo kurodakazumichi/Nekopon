@@ -1,0 +1,67 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Paw
+  m_EditorClassIdentifier: 
+  m_GroupName: Paw
+  m_Data:
+    m_SerializedData: []
+  m_GUID: a3ce198cbc2f21a45a376b915bf50a19
+  m_SerializeEntries:
+  - m_GUID: 09829f992e5049246a33becddd45e014
+    m_Address: Paw.Ice.sprite
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 2800000, guid: 09829f992e5049246a33becddd45e014, type: 3}
+    m_TargetAsset: {fileID: 2800000, guid: 09829f992e5049246a33becddd45e014, type: 3}
+  - m_GUID: 4aea8b75e33c36045add38eae39eabab
+    m_Address: Paw.Thu.sprite
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 2800000, guid: 4aea8b75e33c36045add38eae39eabab, type: 3}
+    m_TargetAsset: {fileID: 2800000, guid: 4aea8b75e33c36045add38eae39eabab, type: 3}
+  - m_GUID: 5bab632731efc514eab1a09c336af584
+    m_Address: Paw.Fir.sprite
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 2800000, guid: 5bab632731efc514eab1a09c336af584, type: 3}
+    m_TargetAsset: {fileID: 2800000, guid: 5bab632731efc514eab1a09c336af584, type: 3}
+  - m_GUID: 5fa823b361f8e3f4e8874d0497287a47
+    m_Address: Paw.Dar.sprite
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 2800000, guid: 5fa823b361f8e3f4e8874d0497287a47, type: 3}
+    m_TargetAsset: {fileID: 2800000, guid: 5fa823b361f8e3f4e8874d0497287a47, type: 3}
+  - m_GUID: 62b8811fe595a9342879f17cf2729c89
+    m_Address: Paw.Wat.sprite
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 2800000, guid: 62b8811fe595a9342879f17cf2729c89, type: 3}
+    m_TargetAsset: {fileID: 2800000, guid: 62b8811fe595a9342879f17cf2729c89, type: 3}
+  - m_GUID: ce05a486e4ee42c4d8c3212883d24e3d
+    m_Address: Paw.Hol.sprite
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 2800000, guid: ce05a486e4ee42c4d8c3212883d24e3d, type: 3}
+    m_TargetAsset: {fileID: 2800000, guid: ce05a486e4ee42c4d8c3212883d24e3d, type: 3}
+  - m_GUID: d166cfb2b7d835f4e8492bd3b1214dea
+    m_Address: Paw.Tre.sprite
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 2800000, guid: d166cfb2b7d835f4e8492bd3b1214dea, type: 3}
+    m_TargetAsset: {fileID: 2800000, guid: d166cfb2b7d835f4e8492bd3b1214dea, type: 3}
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 8c2478ab617b39d41897f31592ccbc8b, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 8609b654f381c824aa8dd6541c27560a, type: 2}
+    - {fileID: 11400000, guid: 2992bccf7725d1b45821954a3f296496, type: 2}
