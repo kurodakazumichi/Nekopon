@@ -30,8 +30,18 @@ namespace MyGame
     {
       if (type == SceneType.None) return;
 
+      Origin.SceneManager.sceneLoaded += LoadedCallback;
+
       Origin.SceneManager
         .LoadScene(this.getSceneNameOfType(type), Origin.LoadSceneMode.Additive);
+    }
+
+    private void LoadedCallback(Origin.Scene next, Origin.LoadSceneMode mode)
+    {
+      Debug.Logger.Log(VersusManager.Instance);
+
+
+      Origin.SceneManager.sceneLoaded -= LoadedCallback;
     }
 
     public void UnloadSceneAsync(SceneType type, Action completed)
