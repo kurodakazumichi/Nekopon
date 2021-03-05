@@ -19,6 +19,15 @@ namespace MyGame.Define
     }
 
     /// <summary>
+    /// プレイヤーの種類
+    /// </summary>
+    public enum Player
+    {
+      P1,
+      P2,
+    }
+
+    /// <summary>
     /// 属性の個数
     /// </summary>
     public static int AttributeCount => Enum.GetNames(typeof(Attribute)).Length;
