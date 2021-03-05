@@ -71,6 +71,9 @@ namespace MyGame.Unit.Cursor
     /// </summary>
     private Dictionary<Type, Sprite> sprites = new Dictionary<Type, Sprite>();
 
+    //-------------------------------------------------------------------------
+    // プロパティ
+
     /// <summary>
     /// パッド番号
     /// </summary>
