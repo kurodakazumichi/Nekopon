@@ -18,6 +18,8 @@ namespace MyGame.Unit.Versus
       Vanish, // 消滅
       Move,   // 移動
       Moved,  // 移動した
+      Usual,  // 通常
+      Selected, // 選択されている
     }
 
     //-------------------------------------------------------------------------
@@ -71,6 +73,16 @@ namespace MyGame.Unit.Versus
     private float timer = 0;
 
     //-------------------------------------------------------------------------
+    // プロパティ
+
+    /// <summary>
+    /// 肉球が選択されているかどうかの状態を表すフラグ
+    /// </summary>
+    public bool IsSelected {
+      get { return this.state.StateKey == State.Selected; }
+    }
+
+    //-------------------------------------------------------------------------
     // Load, Unload
 
     /// <summary>
@@ -81,13 +93,13 @@ namespace MyGame.Unit.Versus
     public static void Load(System.Action pre, System.Action done)
     {
       var rm = ResourceManager.Instance;
-      rm.Load<Sprite>("Paw.Fir.sprite", pre, done, (res) => { Sprites.Add(Define.App.Attribute.Fir, res); });
-      rm.Load<Sprite>("Paw.Wat.sprite", pre, done, (res) => { Sprites.Add(Define.App.Attribute.Wat, res); });
-      rm.Load<Sprite>("Paw.Thu.sprite", pre, done, (res) => { Sprites.Add(Define.App.Attribute.Thu, res); });
-      rm.Load<Sprite>("Paw.Ice.sprite", pre, done, (res) => { Sprites.Add(Define.App.Attribute.Ice, res); });
-      rm.Load<Sprite>("Paw.Tre.sprite", pre, done, (res) => { Sprites.Add(Define.App.Attribute.Tre, res); });
-      rm.Load<Sprite>("Paw.Hol.sprite", pre, done, (res) => { Sprites.Add(Define.App.Attribute.Hol, res); });
-      rm.Load<Sprite>("Paw.Dar.sprite", pre, done, (res) => { Sprites.Add(Define.App.Attribute.Dar, res); });
+      rm.Load<Sprite>("Paw.Fir.sprite", pre, done, (res) => { Sprites[Define.App.Attribute.Fir] = res; });
+      rm.Load<Sprite>("Paw.Wat.sprite", pre, done, (res) => { Sprites[Define.App.Attribute.Wat] = res; });
+      rm.Load<Sprite>("Paw.Thu.sprite", pre, done, (res) => { Sprites[Define.App.Attribute.Thu] = res; });
+      rm.Load<Sprite>("Paw.Ice.sprite", pre, done, (res) => { Sprites[Define.App.Attribute.Ice] = res; });
+      rm.Load<Sprite>("Paw.Tre.sprite", pre, done, (res) => { Sprites[Define.App.Attribute.Tre] = res; });
+      rm.Load<Sprite>("Paw.Hol.sprite", pre, done, (res) => { Sprites[Define.App.Attribute.Hol] = res; });
+      rm.Load<Sprite>("Paw.Dar.sprite", pre, done, (res) => { Sprites[Define.App.Attribute.Dar] = res; });
     }
 
     public static void Unload()
@@ -111,9 +123,11 @@ namespace MyGame.Unit.Versus
       this.spriteRenderer = CacheTransform.Find("Sprite").GetComponent<SpriteRenderer>();
 
       this.state.Add(State.Idle);
-      this.state.Add(State.Vanish, VanishEnter, VanishUpdate, VanishExit);
-      this.state.Add(State.Move, MoveEnter, MoveUpdate, MoveExit);
+      this.state.Add(State.Vanish, EnterVanish, UpdateVanish, ExitVanish);
+      this.state.Add(State.Move, EnterMove, UpdateMove, ExitMove);
       this.state.Add(State.Moved);
+      this.state.Add(State.Usual, EnterUsual);
+      this.state.Add(State.Selected, EnterSelected, UpdateSelected);
       this.state.SetState(State.Idle);
     }
 
@@ -144,6 +158,16 @@ namespace MyGame.Unit.Versus
       this.state.SetState(State.Move);
     }
 
+    public void ToUsual()
+    {
+      this.state.SetState(State.Usual);
+    }
+
+    public void ToSelected()
+    {
+      this.state.SetState(State.Selected);
+    }
+
     public void RandomAttribute()
     {
       this.attribute = MyEnum.Random<Define.App.Attribute>();
@@ -156,13 +180,13 @@ namespace MyGame.Unit.Versus
     //-------------------------------------------------------------------------
     // 消滅
 
-    private void VanishEnter()
+    private void EnterVanish()
     {
-      SetDefaultTransform();
+      SetDefaultParams();
       this.timer = 0;
     }
 
-    private void VanishUpdate()
+    private void UpdateVanish()
     {
       float deltaTime = TimeManager.Instance.DeltaTime;
       
@@ -174,7 +198,7 @@ namespace MyGame.Unit.Versus
       this.timer += deltaTime;
     }
 
-    private void VanishExit()
+    private void ExitVanish()
     {
       CacheTransform.localScale = Vector3.zero;
     }
@@ -182,14 +206,14 @@ namespace MyGame.Unit.Versus
     //-------------------------------------------------------------------------
     // 移動
 
-    private void MoveEnter()
+    private void EnterMove()
     {
-      this.SetDefaultTransform();
+      this.SetDefaultParams();
       this.moveStartPosition = CacheTransform.position;
       this.timer = 0;
     }
 
-    private void MoveUpdate()
+    private void UpdateMove()
     {
       // 現在の進行度
       float t = this.timer/movingTime;
@@ -203,19 +227,53 @@ namespace MyGame.Unit.Versus
       this.timer += TimeManager.Instance.DeltaTime;
     }
 
-    private void MoveExit()
+    private void ExitMove()
     {
       CacheTransform.position = this.moveEndPosition;
     }
 
+    //-------------------------------------------------------------------------
+    // 通常
+
+    private void EnterUsual()
+    {
+      SetDefaultParams();
+    }
+
+    //-------------------------------------------------------------------------
+    // 選択中
+
+    private void EnterSelected()
+    {
+      SetDefaultParams();
+      this.spriteRenderer.color = new Color(1f, 1f, 1f, 0.5f);
+      this.timer = 0;
+    }
+
+    private void UpdateSelected()
+    {
+      CacheTransform.localScale = Vector3.Lerp(
+        Vector3.one, 
+        Vector3.one * 0.9f, 
+        Tween.EaseInSine(Mathf.Abs(Mathf.Sin(this.timer * Mathf.PI)))
+      );
+
+      this.timer += TimeManager.Instance.DeltaTime;
+    }
+
+    //-------------------------------------------------------------------------
+    // その他
+
     /// <summary>
-    /// 回転、スケールをデフォルトにする
+    /// 各種パラメータをデフォルト状態にする
     /// </summary>
-    private void SetDefaultTransform()
+    private void SetDefaultParams()
     {
       CacheTransform.localScale = Vector3.one;
-      CacheTransform.rotation   = Quaternion.identity;
+      CacheTransform.rotation = Quaternion.identity;
+      this.spriteRenderer.color = Color.white;
     }
+
   }
 
 }

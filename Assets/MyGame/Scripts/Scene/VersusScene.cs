@@ -22,10 +22,20 @@ namespace MyGame.Scene
 
     // Resource
     private GameObject backGroundPrefab = null;
-    private GameObject pawPrefab = null;
 
     //-------------------------------------------------------------------------
     // ライフサイクル
+
+    protected override void MyAwake()
+    {
+      Debug.Logger.Log("VersusScene.MyAwake");
+      // VersusScene用のManagerを入れるオブジェクト
+      var system = new GameObject("system");
+      system.transform.parent = CacheTransform;
+
+      // 必要なシングルトンがあればココで定義
+      SingletonManager.Instance.Setup<VersusManager>(system);
+    }
 
     protected override void MyStart()
     {
@@ -41,9 +51,8 @@ namespace MyGame.Scene
 
       var rm = ResourceManager.Instance;
       rm.Load<GameObject>("VS.BackGround.prefab", pre, done, (res) => { this.backGroundPrefab = res; });
-      rm.Load<GameObject>("VS.Paw.prefab", pre, done, (res) => { this.pawPrefab = res; });
+      VersusManager.Load(pre, done);
 
-      Unit.Versus.Paw.Load(pre, done);
       yield return waitForCount;
 
       this.isLoaded = true;
@@ -54,8 +63,7 @@ namespace MyGame.Scene
     {
       var rm = ResourceManager.Instance;
       rm.Unload("VS.BackGround.prefab");
-      rm.Unload("VS.Paw.prefab");
-      Unit.Versus.Paw.Unload();
+      VersusManager.Unload();
     }
 
     //-------------------------------------------------------------------------
@@ -63,31 +71,11 @@ namespace MyGame.Scene
 
     private void SetupEnter()
     {
-      Transform trans = Instantiate(this.backGroundPrefab).transform;
-      trans.parent = CacheTransform;
+      var backGround = Instantiate(this.backGroundPrefab);
+      backGround.transform.parent = CacheTransform;
 
-      Vector3 locP1Paw = trans.Find("P1.Paw").transform.position;
-      Vector3 locP2Paw = trans.Find("P2.Paw").transform.position;
-
-      for(int i = 0; i < 12 * 6; ++i) {
-
-        int x = i % 6;
-        int y = i / 6;
-
-        var paw = Instantiate(this.pawPrefab).GetComponent<Unit.Versus.Paw>();
-        paw.RandomAttribute();
-        paw.CacheTransform.position = locP1Paw + new Vector3(Define.Versus.PAW_INTERVAL_X * x, Define.Versus.PAW_INTERVAL_Y * y, 0);
-      }
-
-      for (int i = 0; i < 12 * 6; ++i) {
-
-        int x = i % 6;
-        int y = i / 6;
-
-        var paw = Instantiate(this.pawPrefab).GetComponent<Unit.Versus.Paw>();
-        paw.RandomAttribute();
-        paw.CacheTransform.position = locP2Paw + new Vector3(Define.Versus.PAW_INTERVAL_X * x, Define.Versus.PAW_INTERVAL_Y * y, 0);
-      }
+      var vs = VersusManager.Instance;
+      vs.Setup(backGround);
     }
 
   }
