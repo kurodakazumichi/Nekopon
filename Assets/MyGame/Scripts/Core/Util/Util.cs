@@ -5,21 +5,21 @@ namespace MyGame
 {
   public static class Util
   {
-    /// <summary>
-    /// 列挙型の要素の数だけループする
-    /// </summary>
-    /// <param name="action">コールバック</param>
-    public static void ForEach<T>(Action<T> func) where T : Enum
+    public static void ForEach<T>(T[] array, Action<T> func)
     {
-      foreach(T value in Enum.GetValues(typeof(T))) {
-        func(value);
+      int count = array.Length;
+
+      for (int i = 0; i < count; ++i) {
+        func(array[i]);
       }
     }
 
-    public static void ForEach<T>(Action<T, string> func) where T : Enum
+    public static void ForEach<T>(T[] array, Func<T, bool> func)
     {
-      foreach(T value in Enum.GetValues(typeof(T))) {
-        func(value, Enum.GetName(typeof(T), value));
+      int count = array.Length;
+      for (int i = 0; i < count; ++i) {
+        bool completed = func(array[i]);
+        if (completed) break;
       }
     }
 

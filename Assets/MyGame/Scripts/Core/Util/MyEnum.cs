@@ -17,5 +17,27 @@ namespace MyGame
       var value = Enum.GetValues(typeof(T)).GetValue(index);
       return (T)value;
     }
+
+    /// <summary>
+    /// 列挙型の要素の数だけループする
+    /// </summary>
+    /// <param name="action">コールバック(value)</param>
+    public static void ForEach<T>(Action<T> func) where T : Enum
+    {
+      foreach (T value in Enum.GetValues(typeof(T))) {
+        func(value);
+      }
+    }
+
+    /// <summary>
+    /// 列挙型の要素の数だけループする
+    /// </summary>
+    /// <param name="func">func(value, key)</param>
+    public static void ForEach<T>(Action<T, string> func) where T : Enum
+    {
+      foreach (T value in Enum.GetValues(typeof(T))) {
+        func(value, Enum.GetName(typeof(T), value));
+      }
+    }
   }
 }
