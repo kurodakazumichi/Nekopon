@@ -6,6 +6,7 @@ namespace MyGame.Unit.Versus
 {
   /// <summary>
   /// Puzzle用のカーソル
+  /// 特に複雑な事はなく、ただスプライトを表示するだけのもの
   /// </summary>
   public class Cursor : Unit<Cursor.State>
   {
@@ -14,6 +15,12 @@ namespace MyGame.Unit.Versus
     /// </summary>
     public enum State { }
 
+    //-------------------------------------------------------------------------
+    // メンバ変数
+
+    /// <summary>
+    /// カーソルのスプライトを表示するため
+    /// </summary>
     private SpriteRenderer spriteRenderer = null;
 
     //-------------------------------------------------------------------------
@@ -36,6 +43,9 @@ namespace MyGame.Unit.Versus
       rm.Unload("Cursor.Puzzle.sprite");
       CursorSprite = null;
     }
+
+    //-------------------------------------------------------------------------
+    // ライフサイクル
 
     protected override void MyAwake()
     {

@@ -40,7 +40,7 @@ namespace MyGame.Scene
     protected override void MyStart()
     {
       this.state.Add(State.Idle);
-      this.state.Add(State.Setup, SetupEnter);
+      this.state.Add(State.Setup, EnterSetup);
     }
 
     protected override IEnumerator Load()
@@ -69,7 +69,7 @@ namespace MyGame.Scene
     //-------------------------------------------------------------------------
     // ステートマシン
 
-    private void SetupEnter()
+    private void EnterSetup()
     {
       var backGround = Instantiate(this.backGroundPrefab);
       backGround.transform.parent = CacheTransform;

@@ -44,9 +44,9 @@ namespace MyGame.Scene
     protected override void MyStart()
     {
       this.state.Add(State.Idle);
-      this.state.Add(State.Setup, SetupEnter, null, null);
-      this.state.Add(State.Intro, IntroEnter, IntroUpdate, null);
-      this.state.Add(State.MenuSelection, MenuSelectionEnter, MenuSelectionUpdate, null);
+      this.state.Add(State.Setup, EnterSetup, null, null);
+      this.state.Add(State.Intro, EnterIntro, UpdateIntro, null);
+      this.state.Add(State.MenuSelection, EnterMenuSelection, UpdateMenuSelection, null);
     }
 
     protected override IEnumerator Load()
@@ -101,7 +101,7 @@ namespace MyGame.Scene
     /// <summary>
     /// リソースからゲームオブジェクトを生成する
     /// </summary>
-    private void SetupEnter()
+    private void EnterSetup()
     {
       // タイトルロゴ
       this.logo = Instantiate(this.logoPrefab).GetComponent<TitleLogo>();
@@ -131,7 +131,7 @@ namespace MyGame.Scene
     /// <summary>
     /// タイトルシーンの最初の状態
     /// </summary>
-    private void IntroEnter()
+    private void EnterIntro()
     {
       // BGM再生
       SoundManager.Instance.PlayBGM("BGM.001");
@@ -152,7 +152,7 @@ namespace MyGame.Scene
     /// <summary>
     /// 何かしら入力があったらInputWaitへ遷移する
     /// </summary>
-    private void IntroUpdate()
+    private void UpdateIntro()
     {
       if (InputManager.Instance.GetCommand(Command.PressAnyButton, 0).IsFixed) {
         this.logo.CompletedBound = null;
@@ -164,7 +164,7 @@ namespace MyGame.Scene
     /// <summary>
     /// メニューの表示
     /// </summary>
-    private void MenuSelectionEnter()
+    private void EnterMenuSelection()
     {
       // カーソルを操作可能にする
       this.cursor.SetActive(true);
@@ -178,7 +178,7 @@ namespace MyGame.Scene
     /// <summary>
     /// メニュー選択
     /// </summary>
-    private void MenuSelectionUpdate()
+    private void UpdateMenuSelection()
     {
       TryChangeReservedScene();
     }
