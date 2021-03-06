@@ -86,8 +86,8 @@ namespace MyGame.Unit.Title
     {
       this.state = new StateMachine<State>();
       this.state.Add(State.Idle);
-      this.state.Add(State.Bound, EnterBound, UpdateBound, ExitBound);
-      this.state.Add(State.Usual, EnterUsual);
+      this.state.Add(State.Bound, OnBoundEnter, OnBoundUpdate, OnBoundExit);
+      this.state.Add(State.Usual, OnUsualEnter);
       this.state.SetState(State.Idle);
     }
 
@@ -118,14 +118,14 @@ namespace MyGame.Unit.Title
     //-------------------------------------------------------------------------
     // ステートマシン
 
-    private void EnterBound()
+    private void OnBoundEnter()
     {
       this.CacheTransform.position = new Vector3(0, _StartY, 0);
       this.velocity = Vector3.zero;
       this.boundCount = 0;
     }
 
-    private void UpdateBound()
+    private void OnBoundUpdate()
     {
       this.velocity.y -= _Speed * TimeManager.Instance.DeltaTime;
       CacheTransform.position += this.velocity * TimeManager.Instance.DeltaTime;
@@ -143,12 +143,12 @@ namespace MyGame.Unit.Title
       }
     }
 
-    private void ExitBound()
+    private void OnBoundExit()
     {
       this.CompletedBound?.Invoke();
     }
 
-    private void EnterUsual()
+    private void OnUsualEnter()
     {
       this.CacheTransform.position = new Vector3(0, _EndY, 0);
     }

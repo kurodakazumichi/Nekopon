@@ -103,7 +103,7 @@ namespace MyGame.Unit.Cursor
     {
       this.spriteRenderer = GetComponent<SpriteRenderer>();
       this.state.Add(State.Idle);
-      this.state.Add(State.Operable, null, UpdateOperable);
+      this.state.Add(State.Operable, null, OnOperableUpdate);
       this.state.SetState(State.Idle);
 
       this.sprites[Type.White] = ResourceManager.Instance.GetCache<Sprite>("Cursor.Cat01.sprite");
@@ -140,7 +140,7 @@ namespace MyGame.Unit.Cursor
     /// <summary>
     /// 操作可能状態(Update)
     /// </summary>
-    private void UpdateOperable()
+    private void OnOperableUpdate()
     {
       var deltaTime = TimeManager.Instance.DeltaTime;
       var cmdMove   = InputManager.Instance.GetCommand(Command.Move, this.PadNo);

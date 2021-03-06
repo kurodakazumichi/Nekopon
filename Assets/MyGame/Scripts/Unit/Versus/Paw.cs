@@ -126,11 +126,11 @@ namespace MyGame.Unit.Versus
       this.spriteRenderer = CacheTransform.Find("Sprite").GetComponent<SpriteRenderer>();
 
       this.state.Add(State.Idle);
-      this.state.Add(State.Vanish, EnterVanish, UpdateVanish, ExitVanish);
-      this.state.Add(State.Move, EnterMove, UpdateMove, ExitMove);
+      this.state.Add(State.Vanish, OnVanishEnter, OnVanishUpdate, OnVanishExit);
+      this.state.Add(State.Move, OnMoveEnter, OnMoveUpdate, OnMoveExit);
       this.state.Add(State.Moved);
-      this.state.Add(State.Usual, EnterUsual);
-      this.state.Add(State.Selected, EnterSelected, UpdateSelected);
+      this.state.Add(State.Usual, OnUsualEnter);
+      this.state.Add(State.Selected, OnSelectedEnter, OnSelectedUpdate);
       this.state.SetState(State.Idle);
     }
 
@@ -172,13 +172,13 @@ namespace MyGame.Unit.Versus
     //-------------------------------------------------------------------------
     // 消滅
 
-    private void EnterVanish()
+    private void OnVanishEnter()
     {
       SetDefaultParams();
       this.timer = 0;
     }
 
-    private void UpdateVanish()
+    private void OnVanishUpdate()
     {
       float deltaTime = TimeManager.Instance.DeltaTime;
       
@@ -190,7 +190,7 @@ namespace MyGame.Unit.Versus
       this.timer += deltaTime;
     }
 
-    private void ExitVanish()
+    private void OnVanishExit()
     {
       CacheTransform.localScale = Vector3.zero;
     }
@@ -198,14 +198,14 @@ namespace MyGame.Unit.Versus
     //-------------------------------------------------------------------------
     // 移動
 
-    private void EnterMove()
+    private void OnMoveEnter()
     {
       this.SetDefaultParams();
       this.moveStartPosition = CacheTransform.position;
       this.timer = 0;
     }
 
-    private void UpdateMove()
+    private void OnMoveUpdate()
     {
       // 現在の進行度
       float t = this.timer/movingTime;
@@ -219,7 +219,7 @@ namespace MyGame.Unit.Versus
       this.timer += TimeManager.Instance.DeltaTime;
     }
 
-    private void ExitMove()
+    private void OnMoveExit()
     {
       CacheTransform.position = this.moveEndPosition;
     }
@@ -227,7 +227,7 @@ namespace MyGame.Unit.Versus
     //-------------------------------------------------------------------------
     // 通常
 
-    private void EnterUsual()
+    private void OnUsualEnter()
     {
       SetDefaultParams();
     }
@@ -235,14 +235,14 @@ namespace MyGame.Unit.Versus
     //-------------------------------------------------------------------------
     // 選択中
 
-    private void EnterSelected()
+    private void OnSelectedEnter()
     {
       SetDefaultParams();
       this.spriteRenderer.color = new Color(1f, 1f, 1f, 0.5f);
       this.timer = 0;
     }
 
-    private void UpdateSelected()
+    private void OnSelectedUpdate()
     {
       CacheTransform.localScale = Vector3.Lerp(
         Vector3.one, 
