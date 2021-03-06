@@ -14,11 +14,11 @@ namespace MyGame.Unit.Versus
     /// 状態
     /// </summary>
     public enum State { 
-      Idle,
-      Vanish, // 消滅
-      Move,   // 移動
-      Moved,  // 移動した
-      Usual,  // 通常
+      Idle,     // アイドル
+      Vanish,   // 消滅
+      Move,     // 移動
+      Moved,    // 移動した
+      Usual,    // 通常
       Selected, // 選択されている
     }
 
@@ -31,6 +31,9 @@ namespace MyGame.Unit.Versus
     [SerializeField]
     private float _VanishingTime = 0.5f;
 
+    /// <summary>
+    /// 消滅時に回転するけど、その時の回転スピード
+    /// </summary>
     [SerializeField]
     private float _VanishingAngularSpeed = 1080f;
 
@@ -129,17 +132,6 @@ namespace MyGame.Unit.Versus
       this.state.Add(State.Usual, EnterUsual);
       this.state.Add(State.Selected, EnterSelected, UpdateSelected);
       this.state.SetState(State.Idle);
-    }
-
-    protected override void MyUpdate()
-    {
-      if (Input.GetKeyDown(KeyCode.A)) {
-        ToVanish();
-      }
-      if (Input.GetKeyDown(KeyCode.B)) {
-        ToMove(new Vector3(Random.Range(-1f, 1f), Random.Range(-0.7f, 0.7f), 0), 1f);
-      }
-      base.MyUpdate();
     }
 
     //-------------------------------------------------------------------------
