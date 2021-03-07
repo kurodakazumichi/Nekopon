@@ -39,12 +39,26 @@ namespace MyGame
       this.puzzle1 = new Puzzle(CacheTransform, this.locations[Define.App.Player.P1].Paw);
       this.puzzle2 = new Puzzle(CacheTransform, this.locations[Define.App.Player.P2].Paw);
 
+      this.puzzle1.Init();
+      this.puzzle2.Init();
+
       this.puzzle1.Setup();
       this.puzzle2.Setup();
     }
 
     protected override void MyUpdate()
     {
+      if (Input.GetKeyDown(KeyCode.Alpha2)) {
+        this.puzzle1.ShowCursor();
+      }
+      if (Input.GetKeyDown(KeyCode.Alpha3)) {
+        this.puzzle1.HideCursor();
+      }
+
+      if (Input.GetKeyDown(KeyCode.D)) {
+        Debug.Logger.Log(this.puzzle1.HasMovingPaw);
+      }
+
       // カーソル移動(上下左右)
       if (Input.GetKeyDown(KeyCode.LeftArrow)) {
         this.puzzle1.MoveCursorL();
@@ -76,6 +90,18 @@ namespace MyGame
       // 肉球選択の解除
       if (Input.GetKeyDown(KeyCode.X)) {
         this.puzzle1.ReleasePaw();
+      }
+
+      // 連鎖
+      if (Input.GetKeyDown(KeyCode.S)) {
+        this.puzzle1.StartChain();
+      }
+      if (this.puzzle1 != null && this.puzzle1.IsInChain) {
+        this.puzzle1.UpdateChain();
+
+        if (this.puzzle1.IsFinishedChain) {
+          this.puzzle1.EndChain();
+        }
       }
     }
   }

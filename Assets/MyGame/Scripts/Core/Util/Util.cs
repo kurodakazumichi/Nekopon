@@ -5,20 +5,20 @@ namespace MyGame
 {
   public static class Util
   {
-    public static void ForEach<T>(T[] array, Action<T> func)
+    public static void ForEach<T>(T[] array, Action<T, int> func)
     {
       int count = array.Length;
 
       for (int i = 0; i < count; ++i) {
-        func(array[i]);
+        func(array[i], i);
       }
     }
 
-    public static void ForEach<T>(T[] array, Func<T, bool> func)
+    public static void ForEach<T>(T[] array, Func<T, int, bool> func)
     {
       int count = array.Length;
       for (int i = 0; i < count; ++i) {
-        bool completed = func(array[i]);
+        bool completed = func(array[i], i);
         if (completed) break;
       }
     }

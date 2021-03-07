@@ -91,10 +91,9 @@ namespace MyGame
         this.current.Exit();
       }
 
+      this.currentKey = key;
       this.current = this.table[key];
       this.current.Enter();
-
-      this.currentKey = key;
     }
 
     /// <summary>

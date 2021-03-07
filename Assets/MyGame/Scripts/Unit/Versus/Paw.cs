@@ -13,11 +13,10 @@ namespace MyGame.Unit.Versus
     /// <summary>
     /// 状態
     /// </summary>
-    public enum State { 
+    public enum State {
       Idle,     // アイドル
       Vanish,   // 消滅
       Move,     // 移動
-      Moved,    // 移動した
       Usual,    // 通常
       Selected, // 選択されている
     }
@@ -85,6 +84,47 @@ namespace MyGame.Unit.Versus
       get { return this.state.StateKey == State.Selected; }
     }
 
+    /// <summary>
+    /// 連鎖時に使用する、評価済フラグ
+    /// </summary>
+    public bool IsEvaluated { get; set; } = false;
+
+    /// <summary>
+    /// 消滅可能かどうか、状態によっては消滅状態へ遷移できないなどの判定をここで行う
+    /// </summary>
+    public bool canVanish {
+      get {
+        return !IsEvaluated; // まだ評価されてない
+      }
+    }
+
+    /// <summary>
+    /// アイドルです
+    /// </summary>
+    public bool IsIdle => (this.state.StateKey == State.Idle);
+
+    /// <summary>
+    /// 移動中です
+    /// </summary>
+    public bool IsMoving => (this.state.StateKey == State.Move);
+
+    /// <summary>
+    /// 消失中です
+    /// </summary>
+    public bool IsVanishing => (this.state.StateKey == State.Vanish);
+    
+    /// <summary>
+    /// 消滅状態へ移行可能かどうか
+    /// </summary>
+    private bool CanToVanish
+    {
+      get {
+        if (this.state.StateKey == State.Usual) return true;
+        if (this.state.StateKey == State.Selected) return true;
+        return false;
+      }
+    }
+
     //-------------------------------------------------------------------------
     // Load, Unload
 
@@ -128,7 +168,6 @@ namespace MyGame.Unit.Versus
       this.state.Add(State.Idle);
       this.state.Add(State.Vanish, OnVanishEnter, OnVanishUpdate, OnVanishExit);
       this.state.Add(State.Move, OnMoveEnter, OnMoveUpdate, OnMoveExit);
-      this.state.Add(State.Moved);
       this.state.Add(State.Usual, OnUsualEnter);
       this.state.Add(State.Selected, OnSelectedEnter, OnSelectedUpdate);
       this.state.SetState(State.Idle);
@@ -137,8 +176,10 @@ namespace MyGame.Unit.Versus
     //-------------------------------------------------------------------------
     // Publicメソッド
 
+
     public void ToVanish()
     {
+      if (!CanToVanish) return;
       this.state.SetState(State.Vanish);
     }
 
@@ -164,6 +205,20 @@ namespace MyGame.Unit.Versus
     {
       this.attribute = MyEnum.Random<Define.App.Attribute>();
       this.spriteRenderer.sprite = Sprites[this.attribute];
+    }
+
+    /// <summary>
+    /// 指定された肉球と繋がる事ができるかどうか
+    /// </summary>
+    public bool CanConnect(Paw paw)
+    {
+      // 属性が異なるなら繋がれない
+      if (this.attribute != paw.attribute) return false;
+
+      // Idle状態なら繋がれない
+      if (this.state.StateKey == State.Idle) return false;
+
+      return true;
     }
 
     //-------------------------------------------------------------------------
@@ -215,7 +270,7 @@ namespace MyGame.Unit.Versus
       CacheTransform.position = Vector3.Lerp(this.moveStartPosition, this.moveEndPosition, t);
 
       // 時間経過していたら移動完了フェーズへ
-      if (movingTime <= this.timer) { this.state.SetState(State.Moved); }
+      if (movingTime <= this.timer) { this.state.SetState(State.Usual); }
       this.timer += TimeManager.Instance.DeltaTime;
     }
 
