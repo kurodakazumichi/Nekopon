@@ -44,5 +44,11 @@ namespace MyGame.Define
     /// 連鎖に必要な肉球の数
     /// </summary>
     public const int CHAIN_PAW_COUNT = 4;
+
+    /// <summary>
+    /// 連鎖後、肉球を補充するために落下させるが、その落下にかかる最小、及び最大時間の定義
+    /// </summary>
+    public const float STAFF_MIN_TIME = 0.3f;
+    public const float STAFF_MAX_TIME = 0.8f;
   }
 }

@@ -14,7 +14,7 @@ namespace MyGame.VersusManagement
     {
       Idle,
       Vanish,
-      Replenish,
+      Refill,
       Finish,
     }
 
@@ -150,7 +150,7 @@ namespace MyGame.VersusManagement
 
       this.state.Add(State.Idle);
       this.state.Add(State.Vanish, OnVanishEnter, OnVanishUpdate);
-      this.state.Add(State.Replenish, OnReplenishEnter, OnReplenishUpdate);
+      this.state.Add(State.Refill, OnRefillEnter, OnRefillUpdate);
       this.state.Add(State.Finish);
       this.state.SetState(State.Idle);
     }
@@ -454,29 +454,34 @@ namespace MyGame.VersusManagement
     private void OnVanishUpdate()
     {
       if (HasVanishingPaw) return;
-      this.state.SetState(State.Replenish);
+      this.state.SetState(State.Refill);
     }
 
     /// <summary>
     /// 肉球の補充開始
     /// </summary>
-    private void OnReplenishEnter()
+    private void OnRefillEnter()
     {
+      // 消えてない肉球を詰められるだけ下に詰める、消えてる肉球は必然的に上に集まる
       Util.ForEach(this.paws, (paw, index) => {
-        if (paw.IsIdle) return;
-        FallPaw(index);
+        if (!paw.IsIdle) StaffPawDown(index);
       });
 
-      Util.ForEach(this.paws, (paw, index) => {
-        var pos = PositionBy(index);
-        var time = Random.Range(0.5f, 0.8f);
+      // 上の処理により肉球配置が変わったので、適切な場所に動かす
+      Util.ForEach(this.paws, (paw, index) => 
+      {
+        // 移動に関するパラメータを定義
+        var pos  = PositionBy(index);
+        var time = Random.Range(Define.Versus.STAFF_MIN_TIME, Define.Versus.STAFF_MAX_TIME);
         var type = Tween.Type.EaseOutBounce;
 
+        // 消えてる肉球が画面外の上の方に配置し、ランダムに属性を変更
         if (paw.IsIdle) {
           paw.CacheTransform.position = new Vector3(pos.x, 1f, 0);
           paw.RandomAttribute();
         }
 
+        // 移動開始
         paw.ToMove(pos, time, type);
       });
     }
@@ -484,7 +489,7 @@ namespace MyGame.VersusManagement
     /// <summary>
     /// 肉球の補充中
     /// </summary>
-    private void OnReplenishUpdate()
+    private void OnRefillUpdate()
     {
       if (HasMovingPaw) return;
       this.state.SetState(State.Vanish);
@@ -572,21 +577,25 @@ namespace MyGame.VersusManagement
     }
 
     /// <summary>
-    /// 肉球を落下させる
+    /// 連鎖すると肉球が消え場所が空くので、消えてない肉球を下に詰める。
     /// </summary>
-    private void FallPaw(int srcIndex)
+    private void StaffPawDown(int srcIndex)
     {
+      // 消えてる肉球は対象外
+      if (this.paws[srcIndex].IsIdle) return;
+
+      // 肉球の移動先を調べる
       var srcCoord = CoordBy(srcIndex);
       var dstCoord = srcCoord;
 
-      // 現在のYの位置から一番下に向かってIdleじゃない肉球の手前の位置を探す
-      for (int y = srcCoord.y - 1; 0 <= y; --y) {
-        // Idleじゃない肉球だったらループ抜ける
+      // 現在のY座標から下に向かって消えてない(Idleじゃない)肉球の一個上のY座標を求める
+      for (int y = srcCoord.y - 1; 0 <= y; --y) 
+      {
         if (!this.paws[IndexBy(srcCoord.x, y)].IsIdle) break;
-
         dstCoord.y = y;
       }
 
+      // 移動先が同じならなにもしない
       if (srcCoord == dstCoord) return;
 
       // 肉球の入れ替え
