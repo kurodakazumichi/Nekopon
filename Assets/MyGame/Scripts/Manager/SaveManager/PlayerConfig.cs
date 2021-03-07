@@ -5,16 +5,36 @@ using UnityEditor;
 using MyGame.Define;
 namespace MyGame.SaveManagement
 {
-  /**
-   * プレイヤーのHPやMPなどのステータスに関する設定
-   */
-  [CreateAssetMenu(menuName ="MyGame/Create/PlayerConfig")]
-  public class PlayerConfig : ScriptableObject
+  /// <summary>
+  /// PlayerConfigインターフェース
+  /// </summary>
+  public interface IPlayerConfig
   {
     /// <summary>
     /// 最大HP
     /// </summary>
-    public int MaxHp = 0;
+    int MaxHp { get; }
+
+    /// <summary>
+    /// 最大MP
+    /// </summary>
+    int GetMaxMp(App.Attribute attribute);
+
+    /// <summary>
+    /// 使用MP
+    /// </summary>
+    int GetUseMp(App.Attribute attribute);
+  }
+  /**
+   * プレイヤーのHPやMPなどのステータスに関する設定
+   */
+  [CreateAssetMenu(menuName = "MyGame/Create/PlayerConfig")]
+  public class PlayerConfig : ScriptableObject, IPlayerConfig
+  {
+    /// <summary>
+    /// 最大HP
+    /// </summary>
+    public int MaxHp { get; set; } = 0;
     
     /// <summary>
     /// 最大MP
@@ -39,19 +59,33 @@ namespace MyGame.SaveManagement
       });
     }
 
+    /// <summary>
+    /// 最大MPを取得
+    /// </summary>
     public int GetMaxMp(App.Attribute attribute)
     {
       return this.maxMp[(int)attribute];
     }
+
+    /// <summary>
+    /// 最大MPを設定
+    /// </summary>
     public void SetMaxMp(App.Attribute attribute, int mp)
     {
       this.maxMp[(int)attribute] = mp;
     }
 
+    /// <summary>
+    /// 使用MPを取得
+    /// </summary>
     public int GetUseMp(App.Attribute attribute)
     {
       return this.useMp[(int)attribute];
     }
+
+    /// <summary>
+    /// 使用MPを設定
+    /// </summary>
     public void SetUseMp(App.Attribute attribute, int mp)
     {
       this.useMp[(int)attribute] = mp;
@@ -65,39 +99,41 @@ namespace MyGame.SaveManagement
   /// PlayerConfigのInspector拡張
   /// </summary>
   [CustomEditor(typeof(PlayerConfig))]
-  public class PlayerConfigEditor : Editor 
+  public class PlayerConfigEditor : ScriptableObjectInspectorEditorBase<PlayerConfig> 
   {
-    private PlayerConfig config;
+    private bool isOpenedMaxMp = false;
+    private bool isOpenedUseMp = false;
 
     public override void OnInspectorGUI()
     {
-      config = target as PlayerConfig;
-
       // 最大HP
       config.MaxHp = EditorGUILayout.IntField("最大HP", config.MaxHp);
 
-      // 最大MP(属性ごと)
-      EditorGUILayout.LabelField("最大MP");
-      MaxMpField("火", App.Attribute.Fir);
-      MaxMpField("水", App.Attribute.Wat);
-      MaxMpField("雷", App.Attribute.Thu);
-      MaxMpField("氷", App.Attribute.Ice);
-      MaxMpField("木", App.Attribute.Tre);
-      MaxMpField("聖", App.Attribute.Hol);
-      MaxMpField("闇", App.Attribute.Dar);
-
-      EditorGUILayout.LabelField("使用MP(スキル使用に必要なMPの設定)");
-      UseMpField("火", App.Attribute.Fir);
-      UseMpField("水", App.Attribute.Wat);
-      UseMpField("雷", App.Attribute.Thu);
-      UseMpField("氷", App.Attribute.Ice);
-      UseMpField("木", App.Attribute.Tre);
-      UseMpField("聖", App.Attribute.Hol);
-      UseMpField("闇", App.Attribute.Dar);
-
-      if (GUILayout.Button("Test")) {
-        Debug.Logger.Log(UnityEngine.JsonUtility.ToJson(config));
+      // 最大MP(属性別)
+      this.isOpenedMaxMp = EditorGUILayout.Foldout(this.isOpenedMaxMp, "最大MP");
+      if (this.isOpenedMaxMp) { 
+        MaxMpField("火", App.Attribute.Fir);
+        MaxMpField("水", App.Attribute.Wat);
+        MaxMpField("雷", App.Attribute.Thu);
+        MaxMpField("氷", App.Attribute.Ice);
+        MaxMpField("木", App.Attribute.Tre);
+        MaxMpField("聖", App.Attribute.Hol);
+        MaxMpField("闇", App.Attribute.Dar);
       }
+
+      // 使用MP(属性別)
+      this.isOpenedUseMp = EditorGUILayout.Foldout(this.isOpenedUseMp, "使用MP(スキル使用に必要なMPの設定)");
+      if (this.isOpenedUseMp) {
+        UseMpField("火", App.Attribute.Fir);
+        UseMpField("水", App.Attribute.Wat);
+        UseMpField("雷", App.Attribute.Thu);
+        UseMpField("氷", App.Attribute.Ice);
+        UseMpField("木", App.Attribute.Tre);
+        UseMpField("聖", App.Attribute.Hol);
+        UseMpField("闇", App.Attribute.Dar);
+      }
+
+      SaveButton();
     }
 
     /// <summary>
