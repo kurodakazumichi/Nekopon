@@ -7,15 +7,18 @@ namespace MyGame.Define
 {
   public static class App
   {
+    /// <summary>
+    /// 属性の種類、配列の添え字としても利用するため0からの連番で定義
+    /// </summary>
     public enum Attribute
     {
-      Fir, // 火
-      Wat, // 水
-      Thu, // 雷
-      Ice, // 氷
-      Tre, // 木
-      Hol, // 聖
-      Dar, // 闇
+      Fir = 0, // 火
+      Wat = 1, // 水
+      Thu = 2, // 雷
+      Ice = 3, // 氷
+      Tre = 4, // 木
+      Hol = 5, // 聖
+      Dar = 6, // 闇
     }
 
     /// <summary>

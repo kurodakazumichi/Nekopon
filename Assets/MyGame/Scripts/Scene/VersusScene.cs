@@ -15,6 +15,7 @@ namespace MyGame.Scene
     {
       Idle,
       Setup,
+      Main,
     }
 
     //-------------------------------------------------------------------------
@@ -41,6 +42,7 @@ namespace MyGame.Scene
     {
       this.state.Add(State.Idle);
       this.state.Add(State.Setup, OnSetupEnter);
+      this.state.Add(State.Main, null, OnMainUpdate);
     }
 
     protected override IEnumerator Load()
@@ -76,7 +78,15 @@ namespace MyGame.Scene
 
       var vs = VersusManager.Instance;
       vs.Setup(backGround);
+
+      this.state.SetState(State.Main);
     }
+
+    private void OnMainUpdate()
+    {
+      VersusManager.Instance.UpdatePlayer();
+    }
+
 
   }
 }

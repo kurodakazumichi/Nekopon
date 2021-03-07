@@ -27,7 +27,7 @@ namespace MyGame.VersusManagement
     private Transform parent = null;
 
     /// <summary>
-    /// Puzzle内のゲームオブジェクトを格納しておくｒゲームオブジェクト
+    /// Puzzle内のゲームオブジェクトを格納しておくゲームオブジェクト
     /// </summary>
     private Transform folder = null;
 
@@ -184,10 +184,13 @@ namespace MyGame.VersusManagement
     /// </summary>
     private void PreparePaws()
     {
-      for (int i = 0; i < Define.Versus.PAW_TOTAL; ++i) {
-        this.paws[i] = Object.Instantiate(PawPrefab).GetComponent<Paw>();
-        this.paws[i].SetParent(this.folder);
-        this.paws[i].RandomAttribute();
+      // 肉球を生成
+      for (int i = 0; i < Define.Versus.PAW_TOTAL; ++i) 
+      {
+        var paw = Object.Instantiate(PawPrefab).GetComponent<Paw>();
+        paw.RandomAttribute();
+        paw.SetParent(this.folder).SetActive(false);
+        this.paws[i] = paw;
       }
     }
 
@@ -319,7 +322,9 @@ namespace MyGame.VersusManagement
       Util.ForEach(this.paws, (paw, index) => 
       {
         Vector3 pos = PositionBy(index);
-        float time = Random.Range(1f, 2f);
+        float time  = Random.Range(Define.Versus.PAW_SETUP_MIN_TIME, Define.Versus.PAW_SETUP_MAX_TIME);
+
+        paw.SetActive(true);
         paw.CacheTransform.position = new Vector3(pos.x, 1f, 0);
         paw.ToMove(pos, time, Tween.Type.EaseOutBounce);
       });
@@ -472,7 +477,7 @@ namespace MyGame.VersusManagement
       {
         // 移動に関するパラメータを定義
         var pos  = PositionBy(index);
-        var time = Random.Range(Define.Versus.STAFF_MIN_TIME, Define.Versus.STAFF_MAX_TIME);
+        var time = Random.Range(Define.Versus.PAW_STAFF_MIN_TIME, Define.Versus.PAW_STAFF_MAX_TIME);
         var type = Tween.Type.EaseOutBounce;
 
         // 消えてる肉球が画面外の上の方に配置し、ランダムに属性を変更

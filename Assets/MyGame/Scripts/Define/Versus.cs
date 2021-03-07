@@ -46,9 +46,16 @@ namespace MyGame.Define
     public const int CHAIN_PAW_COUNT = 4;
 
     /// <summary>
-    /// 連鎖後、肉球を補充するために落下させるが、その落下にかかる最小、及び最大時間の定義
+    /// 対戦開始時に肉球が揃うのにかかる時間
     /// </summary>
-    public const float STAFF_MIN_TIME = 0.3f;
-    public const float STAFF_MAX_TIME = 0.8f;
+    public const float PAW_SETUP_MIN_TIME = 1f;
+    public const float PAW_SETUP_MAX_TIME = 2f;
+
+    /// <summary>
+    /// 1回あたりの補充にかける最小時間、及び最大時間
+    /// 連鎖後、肉球を補充するために落下させるが、その落下にかかる時間
+    /// </summary>
+    public const float PAW_STAFF_MIN_TIME = 0.3f;
+    public const float PAW_STAFF_MAX_TIME = 0.8f;
   }
 }
