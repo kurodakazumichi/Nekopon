@@ -31,11 +31,15 @@ namespace MyGame.SaveManagement
   [CreateAssetMenu(menuName = "MyGame/Create/PlayerConfig")]
   public class PlayerConfig : ScriptableObject, IPlayerConfig
   {
+    //-------------------------------------------------------------------------
+    // メンバ変数
+
     /// <summary>
     /// 最大HP
     /// </summary>
-    public int MaxHp { get; set; } = 0;
-    
+    [SerializeField]
+    private int maxHp = 0;
+
     /// <summary>
     /// 最大MP
     /// </summary>
@@ -48,15 +52,29 @@ namespace MyGame.SaveManagement
     [SerializeField]
     private List<int> useMp = new List<int>(App.AttributeCount);
 
+    //-------------------------------------------------------------------------
+    // ライフサイクル
+
     /// <summary>
     /// 右クリックメニューから生成されたときに一度動作する
     /// </summary>
     private void Awake()
     {
-      MyEnum.ForEach<App.Attribute>((attribute) => { 
+      MyEnum.ForEach<App.Attribute>((attribute) => {
         this.maxMp.Add(0);
         this.useMp.Add(0);
       });
+    }
+
+    //-------------------------------------------------------------------------
+    // アクセッサ
+
+    /// <summary>
+    /// アクセッサ
+    /// </summary>
+    public int MaxHp {
+      get { return this.maxHp; }
+      set { this.maxHp = value; }
     }
 
     /// <summary>
@@ -91,9 +109,31 @@ namespace MyGame.SaveManagement
       this.useMp[(int)attribute] = mp;
     }
 
+#if _DEBUG
+
+    /// <summary>
+    /// デバッグ
+    /// </summary>
+    public void OnDebug()
+    {
+      using (new GUILayout.VerticalScope(GUI.skin.box)) 
+      {
+        // HP
+        GUILayout.Label($"最大HP:{MaxHp}");
+
+        // MP
+        GUILayout.Label("MP:Use / Max");
+        MyEnum.ForEach<App.Attribute>((attribute) => { 
+          GUILayout.Label($"{attribute}:{GetUseMp(attribute)}/{GetUseMp(attribute)}");
+        });
+      }
+    }
+#endif
   }
 
 #if UNITY_EDITOR
+  //---------------------------------------------------------------------------
+  // Inspector拡張
 
   /// <summary>
   /// PlayerConfigのInspector拡張

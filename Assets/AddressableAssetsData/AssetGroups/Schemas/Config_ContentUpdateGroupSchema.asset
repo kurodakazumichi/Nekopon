@@ -9,9 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 201a53ba292c664419a328514c08c5ce, type: 3}
-  m_Name: PlayerConfig
+  m_Script: {fileID: 11500000, guid: 5834b5087d578d24c926ce20cd31e6d6, type: 3}
+  m_Name: Config_ContentUpdateGroupSchema
   m_EditorClassIdentifier: 
-  maxHp: 2000
-  maxMp: 1e0000001e0000001e0000001e0000001e0000001e0000001e000000
-  useMp: 1e0000001e0000001e0000001e0000001e0000001e0000001e000000
+  m_Group: {fileID: 11400000, guid: 539b4fe838e98f24998dba59a84e279b, type: 2}
+  m_StaticContent: 0

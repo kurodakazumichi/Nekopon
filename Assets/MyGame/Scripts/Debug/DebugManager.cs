@@ -49,7 +49,7 @@ namespace MyGame.Debug
     {
       var pad = InputManager.Instance.GetPad(0);
 
-      if (1f < pad.GetButtonTime(ButtonType.Back) && pad.GetButtonDown(ButtonType.Start)) {
+      if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.D)) {
         this.isShow = !this.isShow;
       }
     }

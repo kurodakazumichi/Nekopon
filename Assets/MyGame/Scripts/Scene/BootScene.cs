@@ -6,23 +6,33 @@ namespace MyGame.Scene
 {
   public class BootScene : SceneBase<BootScene.State>
   {
-    public enum State { }
+    public enum State { 
+      Idle,
+      Usual,
+    }
+
+    //-------------------------------------------------------------------------
+    // メンバ変数
+
 #if _DEBUG
     // シーン遷移しないフラグ(デバッグ用)
     public SceneManager.SceneType _FirstTransitionScene = SceneManager.SceneType.None;
     public int _TargetFrameRate = 60;
 #endif
 
+    //-------------------------------------------------------------------------
+    // ライフサイクル
+
     protected override void MyAwake()
     {
 #if _DEBUG
       Application.targetFrameRate = _TargetFrameRate;
 #endif
-    }
+      // Stateのセットアップ
+      this.state.Add(State.Idle);
+      this.state.Add(State.Usual, OnUsualEnter);
+      this.state.SetState(State.Idle);
 
-    // Start is called before the first frame update
-    protected override void MyStart()
-    {
       var system = new GameObject("GlobalSystem");
       // ゲーム終了時に先にManagerが消えてしまうとエラーがでるため、その対策
       DontDestroyOnLoad(system);
@@ -34,11 +44,39 @@ namespace MyGame.Scene
       // 常駐させたいシステムがあればここで生成
       SingletonManager.Instance
         .Setup<Debug.Manager>(system)
+        .Setup<SaveManager>(system)
         .Setup<TimeManager>(system)
         .Setup<SceneManager>(system)
         .Setup<ResourceManager>(system)
         .Setup<SoundManager>(system)
         .Setup<InputManager>(system);
+    }
+
+    protected override IEnumerator Load()
+    {
+      var waitForCount = new WaitForCount();
+      System.Action pre  = waitForCount.inc;
+      System.Action done = waitForCount.dec;
+
+      SaveManager.Instance.Load(pre, done);
+
+      yield return waitForCount;
+
+      this.isLoaded = true;
+      this.state.SetState(State.Usual);
+    }
+
+    protected override void MyUpdate()
+    {
+      base.MyUpdate();
+    }
+
+    //-------------------------------------------------------------------------
+    // ステートマシン
+
+    private void OnUsualEnter()
+    {
+      SaveManager.Instance.Init();
 
 #if _DEBUG
       if (_FirstTransitionScene != SceneManager.SceneType.None) {
@@ -48,6 +86,7 @@ namespace MyGame.Scene
 #endif
       SceneManager.Instance.LoadSceneAdditive(SceneManager.SceneType.Title);
     }
+
   }
 }
 

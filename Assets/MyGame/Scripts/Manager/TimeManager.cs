@@ -20,5 +20,7 @@ namespace MyGame
     public float DeltaTime {
       get { return this.timeScale * Time.deltaTime; }
     }
+    
+    public long Ticks => (System.DateTime.Now.Ticks);
   }
 }
