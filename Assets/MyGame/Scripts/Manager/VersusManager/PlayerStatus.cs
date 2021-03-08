@@ -68,8 +68,10 @@ namespace MyGame.VersusManagement
 
     public void OnDebug()
     {
-      using (new GUILayout.VerticalScope()) {
+      using (new GUILayout.VerticalScope(GUI.skin.box)) 
+      {
         GUILayout.Label($"HP:{Hp.Now}");
+
         Util.ForEach(this.mp, (attr, mp) => {
           GUILayout.Label($"MP_{attr}:{mp.Now}");
         });

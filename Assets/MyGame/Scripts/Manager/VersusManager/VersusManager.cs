@@ -32,13 +32,19 @@ namespace MyGame
       Puzzle.Unload();
     }
 
+    //-------------------------------------------------------------------------
+    // ライフサイクル
+
     protected override void MyAwake()
     {
       Debug.Manager.Instance.Regist(this);
     }
 
+    //-------------------------------------------------------------------------
+    // 生成・準備に関するモノ
+
     /// <summary>
-    /// ロケーションをセットアップする、ロケーション情報を持ったオブジェクトを受け取る。
+    /// 対戦に要するオブジェクトの準備、ロケーション情報を持ったオブジェクトを受け取る。
     /// </summary>
     public void Setup(GameObject locations)
     {
@@ -52,12 +58,6 @@ namespace MyGame
       this.players[Define.App.Player.P2].Setup();
     }
 
-    public void UpdatePlayer()
-    {
-      this.players[Define.App.Player.P1].Update();
-      this.players[Define.App.Player.P2].Update();
-    }
-
     /// <summary>
     /// プレイヤーを生成
     /// </summary>
@@ -69,6 +69,18 @@ namespace MyGame
       props.config   = SaveManager.Instance.GetPlayerConfig(type);
 
       this.players.Add(type, new Player(props).Init());
+    }
+
+    //-------------------------------------------------------------------------
+    // プレイヤー関係
+
+    /// <summary>
+    /// プレイヤーの更新
+    /// </summary>
+    public void UpdatePlayer()
+    {
+      this.players[Define.App.Player.P1].Update();
+      this.players[Define.App.Player.P2].Update();
     }
 
 #if _DEBUG

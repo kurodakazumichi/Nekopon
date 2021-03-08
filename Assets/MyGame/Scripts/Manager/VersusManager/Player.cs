@@ -179,7 +179,10 @@ namespace MyGame.VersusManagement
 #if _DEBUG
     public void OnDebug()
     {
-      this.status.OnDebug();
+      using (new GUILayout.VerticalScope()) {
+        this.status.OnDebug();
+        this.puzzle.OnDebug();
+      }
     }
 #endif
   }

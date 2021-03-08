@@ -45,11 +45,6 @@ namespace MyGame.Unit.Versus
     private SpriteRenderer spriteRenderer = null;
 
     /// <summary>
-    /// 属性
-    /// </summary>
-    private Define.App.Attribute attribute = default;
-
-    /// <summary>
     /// 移動時の動きの種類
     /// </summary>
     private Tween.Type tweenType = default;
@@ -76,6 +71,11 @@ namespace MyGame.Unit.Versus
 
     //-------------------------------------------------------------------------
     // プロパティ
+
+    /// <summary>
+    /// 属性
+    /// </summary>
+    public Define.App.Attribute Attribute { get; private set; } = default;
 
     /// <summary>
     /// 肉球が選択されているかどうかの状態を表すフラグ
@@ -203,8 +203,8 @@ namespace MyGame.Unit.Versus
 
     public void RandomAttribute()
     {
-      this.attribute = MyEnum.Random<Define.App.Attribute>();
-      this.spriteRenderer.sprite = Sprites[this.attribute];
+      this.Attribute = MyEnum.Random<Define.App.Attribute>();
+      this.spriteRenderer.sprite = Sprites[this.Attribute];
     }
 
     /// <summary>
@@ -213,7 +213,7 @@ namespace MyGame.Unit.Versus
     public bool CanConnect(Paw paw)
     {
       // 属性が異なるなら繋がれない
-      if (this.attribute != paw.attribute) return false;
+      if (this.Attribute != paw.Attribute) return false;
 
       // Idle状態なら繋がれない
       if (this.state.StateKey == State.Idle) return false;

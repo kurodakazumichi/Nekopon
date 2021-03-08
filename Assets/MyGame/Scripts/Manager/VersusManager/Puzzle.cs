@@ -61,6 +61,11 @@ namespace MyGame.VersusManagement
     /// </summary>
     private StateMachine<State> state = new StateMachine<State>();
 
+    /// <summary>
+    /// 消えた肉球の数を保持する
+    /// </summary>
+    private List<int> vanishCount = new List<int>(Define.App.AttributeCount);
+
     //-------------------------------------------------------------------------
     // プロパティ
 
@@ -112,6 +117,11 @@ namespace MyGame.VersusManagement
     /// </summary>
     public Define.Versus.ChainMode ChainMode { get; set; } = Define.Versus.ChainMode.Single;
 
+    /// <summary>
+    /// 連鎖数
+    /// </summary>
+    public int ChainCount { get; private set; } = 0;
+
     //-------------------------------------------------------------------------
     // Load, Unload
 
@@ -148,11 +158,17 @@ namespace MyGame.VersusManagement
       this.parent = parent;
       this.basePosition = basePosition;
 
+      // 状態の初期化
       this.state.Add(State.Idle);
       this.state.Add(State.Vanish, OnVanishEnter, OnVanishUpdate);
       this.state.Add(State.Refill, OnRefillEnter, OnRefillUpdate);
       this.state.Add(State.Finish);
       this.state.SetState(State.Idle);
+
+      // リストの初期化
+      MyEnum.ForEach<Define.App.Attribute>((attribute) => {
+        this.vanishCount.Add(0);
+      });
     }
 
     /// <summary>
@@ -379,7 +395,7 @@ namespace MyGame.VersusManagement
     }
 
     //-------------------------------------------------------------------------
-    // 連鎖状態管理
+    // 連鎖関連
 
     /// <summary>
     /// 連鎖開始(肉球を消失させる)
@@ -388,6 +404,7 @@ namespace MyGame.VersusManagement
     {
       // 連鎖中に連鎖は開始できない
       if (IsInChain) return;
+      ResetChainScore();
       this.state.SetState(State.Vanish);
     }
 
@@ -404,6 +421,7 @@ namespace MyGame.VersusManagement
     /// </summary>
     public void EndChain()
     {
+      ResetChainScore();
       this.state.SetState(State.Idle);
     }
 
@@ -425,9 +443,13 @@ namespace MyGame.VersusManagement
           if (there_are_vanished_paws) break;
         }
 
-        for (int x = 0; x < Define.Versus.PAW_COL; ++x) {
+        for (int x = 0; x < Define.Versus.PAW_COL; ++x) 
+        {
+          // 評価対象の肉球
+          var paw = this.paws[IndexBy(x, y)];
+
           // 既に評価済のパネルであればスキップ
-          if (this.paws[IndexBy(x, y)].IsEvaluated) continue;
+          if (paw.IsEvaluated) continue;
 
           // 肉球のつながりを調べる
           int count = 0;
@@ -436,6 +458,9 @@ namespace MyGame.VersusManagement
           // 肉球の連結数が連鎖可能な数を超えている場合は肉球を消滅状態にする
           if (Define.Versus.CHAIN_PAW_COUNT <= count) {
             there_are_vanished_paws = true;
+
+            // 消滅数を加算して、消滅へ
+            AddVanishCount(paw.Attribute, count);
             Vanish(x, y);
 
             // 連鎖モードがSingleならこの時点で連鎖判定を抜ける
@@ -447,8 +472,10 @@ namespace MyGame.VersusManagement
       // 評価済フラグを落とす
       Util.ForEach(this.paws, (paw, _) => { paw.IsEvaluated = false; });
 
-      // 連鎖したのに消失する肉球がない場合は連鎖終了
-      if (!HasVanishingPaw) {
+      // 消えるのがある場合は連鎖数をUP、ない場合は連鎖終了へ
+      if (HasVanishingPaw) {
+        this.ChainCount++;
+      } else {
         this.state.SetState(State.Finish);
       }
     }
@@ -610,6 +637,48 @@ namespace MyGame.VersusManagement
       this.paws[dstIndex] = src;
       this.paws[srcIndex] = dst;
     }
+
+    /// <summary>
+    /// 連鎖に関する記録をリセット
+    /// </summary>
+    private void ResetChainScore()
+    {
+      // 連鎖数をリセット
+      this.ChainCount = 0;
+
+      // 消去数をリセット
+      MyEnum.ForEach<Define.App.Attribute>((attribute) => {
+        this.vanishCount[(int)attribute] = 0;
+      });
+    }
+
+    /// <summary>
+    /// 消滅数を加算
+    /// </summary>
+    private void AddVanishCount(Define.App.Attribute attribute, int count)
+    {
+      this.vanishCount[(int)attribute] += count;
+    }
+
+#if _DEBUG
+    //-------------------------------------------------------------------------
+    // デバッグ
+    public void OnDebug()
+    {
+      
+      using (new GUILayout.VerticalScope(GUI.skin.box)) 
+      {
+        GUILayout.Label($"連鎖数:{ChainCount}");
+
+        using (new GUILayout.HorizontalScope()) {
+          MyEnum.ForEach<Define.App.Attribute>((attribute) => {
+            GUILayout.Label($"{attribute}:{this.vanishCount[(int)attribute]}");
+          });
+        }
+      }
+
+    }
+#endif
   }
 }
 
