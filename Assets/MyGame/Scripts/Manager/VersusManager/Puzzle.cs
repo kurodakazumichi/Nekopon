@@ -62,12 +62,22 @@ namespace MyGame.VersusManagement
     private StateMachine<State> state = new StateMachine<State>();
 
     /// <summary>
-    /// 消えた肉球の数を保持する
+    /// 消えた肉球の数(合計)を保持する
     /// </summary>
     private List<int> vanishCount = new List<int>(Define.App.AttributeCount);
 
+    /// <summary>
+    /// 連鎖の記録
+    /// </summary>
+    public ChainInfo ChainScore { get; private set; } = new ChainInfo();
+
+    /// <summary>
+    /// 連鎖モード
+    /// </summary>
+    public Define.Versus.ChainMode ChainMode { get; set; } = Define.Versus.ChainMode.Single;
+
     //-------------------------------------------------------------------------
-    // プロパティ
+    // プロパティ(導出項目)
 
     /// <summary>
     /// 選択された肉球をもっているかどうか
@@ -111,16 +121,6 @@ namespace MyGame.VersusManagement
     /// 連鎖が終了したか
     /// </summary>
     public bool IsFinishedChain => (this.state.StateKey == State.Finish);
-
-    /// <summary>
-    /// 連鎖モード
-    /// </summary>
-    public Define.Versus.ChainMode ChainMode { get; set; } = Define.Versus.ChainMode.Single;
-
-    /// <summary>
-    /// 連鎖数
-    /// </summary>
-    public int ChainCount { get; private set; } = 0;
 
     //-------------------------------------------------------------------------
     // Load, Unload
@@ -404,7 +404,7 @@ namespace MyGame.VersusManagement
     {
       // 連鎖中に連鎖は開始できない
       if (IsInChain) return;
-      ResetChainScore();
+      ChainScore.Reset();
       this.state.SetState(State.Vanish);
     }
 
@@ -421,7 +421,7 @@ namespace MyGame.VersusManagement
     /// </summary>
     public void EndChain()
     {
-      ResetChainScore();
+      ChainScore.Reset();
       this.state.SetState(State.Idle);
     }
 
@@ -459,8 +459,8 @@ namespace MyGame.VersusManagement
           if (Define.Versus.CHAIN_PAW_COUNT <= count) {
             there_are_vanished_paws = true;
 
-            // 消滅数を加算して、消滅へ
-            AddVanishCount(paw.Attribute, count);
+            // 消失の記録を更新
+            ChainScore.UpdateVanish(paw.Attribute, count);
             Vanish(x, y);
 
             // 連鎖モードがSingleならこの時点で連鎖判定を抜ける
@@ -474,7 +474,7 @@ namespace MyGame.VersusManagement
 
       // 消えるのがある場合は連鎖数をUP、ない場合は連鎖終了へ
       if (HasVanishingPaw) {
-        this.ChainCount++;
+        ChainScore.UpdateChainCount();
       } else {
         this.state.SetState(State.Finish);
       }
@@ -638,45 +638,12 @@ namespace MyGame.VersusManagement
       this.paws[srcIndex] = dst;
     }
 
-    /// <summary>
-    /// 連鎖に関する記録をリセット
-    /// </summary>
-    private void ResetChainScore()
-    {
-      // 連鎖数をリセット
-      this.ChainCount = 0;
-
-      // 消去数をリセット
-      MyEnum.ForEach<Define.App.Attribute>((attribute) => {
-        this.vanishCount[(int)attribute] = 0;
-      });
-    }
-
-    /// <summary>
-    /// 消滅数を加算
-    /// </summary>
-    private void AddVanishCount(Define.App.Attribute attribute, int count)
-    {
-      this.vanishCount[(int)attribute] += count;
-    }
-
 #if _DEBUG
     //-------------------------------------------------------------------------
     // デバッグ
     public void OnDebug()
     {
-      
-      using (new GUILayout.VerticalScope(GUI.skin.box)) 
-      {
-        GUILayout.Label($"連鎖数:{ChainCount}");
-
-        using (new GUILayout.HorizontalScope()) {
-          MyEnum.ForEach<Define.App.Attribute>((attribute) => {
-            GUILayout.Label($"{attribute}:{this.vanishCount[(int)attribute]}");
-          });
-        }
-      }
-
+      this.ChainScore.OnDebug();
     }
 #endif
   }
