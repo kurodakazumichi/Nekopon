@@ -5,7 +5,7 @@ using MyGame.VersusManagement;
 
 namespace MyGame
 {
-  public class VersusManager : SingletonMonobehaviour<VersusManager>
+  public class VersusManager : SingletonMonoBehaviour<VersusManager>
   {
     /// <summary>
     /// 対戦画面の各種ロケーション

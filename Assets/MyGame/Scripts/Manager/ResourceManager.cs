@@ -6,7 +6,7 @@ using UnityEngine.AddressableAssets;
 
 namespace MyGame
 {
-  public class ResourceManager : SingletonMonobehaviour<ResourceManager>
+  public class ResourceManager : SingletonMonoBehaviour<ResourceManager>
   {
     /// <summary>
     /// キャッシュリソース、参照カウンタとリソースの参照を保持するのみ

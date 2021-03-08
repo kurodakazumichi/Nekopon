@@ -6,7 +6,7 @@ using Origin = UnityEngine.SceneManagement;
 
 namespace MyGame
 {
-  public class SceneManager : SingletonMonobehaviour<SceneManager>
+  public class SceneManager : SingletonMonoBehaviour<SceneManager>
   {
     public enum SceneType
     {

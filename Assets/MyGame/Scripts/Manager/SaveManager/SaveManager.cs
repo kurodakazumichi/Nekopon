@@ -9,7 +9,7 @@ namespace MyGame
   /// <summary>
   /// セーブデータ管理
   /// </summary>
-  public class SaveManager : SingletonMonobehaviour<SaveManager>
+  public class SaveManager : SingletonMonoBehaviour<SaveManager>
   {
     //-------------------------------------------------------------------------
     // メンバ変数

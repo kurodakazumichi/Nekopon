@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace MyGame
 {
-  public class SingletonMonobehaviour<T> : MyMonoBehaviour where T : MyMonoBehaviour
+  public class SingletonMonoBehaviour<T> : MyMonoBehaviour where T : MyMonoBehaviour
   {
     /// <summary>
     /// Singleton Instance

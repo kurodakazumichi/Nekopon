@@ -5,7 +5,7 @@ using MyGame.InputManagement;
 
 namespace MyGame
 {
-  public class InputManager : SingletonMonobehaviour<InputManager>
+  public class InputManager : SingletonMonoBehaviour<InputManager>
   {
     private List<GamePad> pads = new List<GamePad>();
 

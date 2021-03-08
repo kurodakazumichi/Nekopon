@@ -6,7 +6,7 @@ using MyGame.InputManagement;
 
 namespace MyGame.Debug
 {
-  public class Manager : SingletonMonobehaviour<Manager>
+  public class Manager : SingletonMonoBehaviour<Manager>
   {
     /// <summary>
     /// デバッグマネージャーに対称を登録
