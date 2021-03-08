@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using MyGame.SaveManagement;
 
 namespace MyGame.VersusManagement
 {
@@ -10,39 +11,27 @@ namespace MyGame.VersusManagement
   public class Player
   {
     //-------------------------------------------------------------------------
-    // プレイヤーステータスクラス
-    public class Status
+    // クラス
+
+    /// <summary>
+    /// プレイヤー生成時に必要なパラメータ
+    /// </summary>
+    public class Props
     {
       /// <summary>
-      /// HP
+      /// Playerの親に該当するオブジェクト
       /// </summary>
-      public LimitedFloat HP = new LimitedFloat();
+      public Transform parent;
 
       /// <summary>
-      /// MP
+      /// 各種画面の配置情報
       /// </summary>
-      private Dictionary<Define.App.Attribute, LimitedFloat> mp = new Dictionary<Define.App.Attribute, LimitedFloat>();
+      public Location location;
 
       /// <summary>
-      /// コンストラクタ
+      /// プレイヤー設定
       /// </summary>
-      public Status()
-      {
-        MyEnum.ForEach<Define.App.Attribute>((attribute) => { 
-          this.mp.Add(attribute, new LimitedFloat());
-        });
-      }
-#if _DEBUG
-      public void OnDebug()
-      {
-        using (new GUILayout.VerticalScope()) {
-          GUILayout.Label($"HP:{HP.Now}");
-          Util.ForEach(this.mp, (attr, mp) => { 
-            GUILayout.Label($"MP_{attr}:{mp.Now}");
-          });
-        }
-      }
-#endif
+      public IPlayerConfig config;
     }
 
     //-------------------------------------------------------------------------
@@ -66,12 +55,17 @@ namespace MyGame.VersusManagement
     /// <summary>
     /// ステータス
     /// </summary>
-    private Status status = null;
+    private PlayerStatus status = null;
 
     /// <summary>
     /// パズル
     /// </summary>
     private Puzzle puzzle = null;
+
+    /// <summary>
+    /// プレイヤー設定
+    /// </summary>
+    private IPlayerConfig config = null;
 
     //-------------------------------------------------------------------------
     // Load, Unload
@@ -92,17 +86,18 @@ namespace MyGame.VersusManagement
     /// <summary>
     /// コンストラクタ
     /// </summary>
-    public Player(Transform parent, Location location)
+    public Player(Props props)
     {
-      this.parent   = parent;
-      this.location = location;
-      this.status   = new Status();
+      this.parent   = props.parent;
+      this.location = props.location;
+      this.config   = props.config;
+      this.status   = new PlayerStatus().Setup(config);
     }
 
     /// <summary>
     /// 各種オブジェクトの生成、初期化
     /// </summary>
-    public void Init()
+    public Player Init()
     {
       // プレースフォルダーを作成
       this.folder = new GameObject("Player").transform;
@@ -111,6 +106,8 @@ namespace MyGame.VersusManagement
       // パズルを作成
       this.puzzle = new Puzzle(this.folder, this.location.Paw);
       this.puzzle.Init();
+
+      return this;
     }
 
     /// <summary>

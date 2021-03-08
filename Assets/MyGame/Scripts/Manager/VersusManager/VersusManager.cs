@@ -63,9 +63,12 @@ namespace MyGame
     /// </summary>
     private void CreatePlayer(Define.App.Player type)
     {
-      var player = new Player(CacheTransform, this.locations[type]);
-      player.Init();
-      this.players.Add(type, player);
+      Player.Props props = new Player.Props();
+      props.parent   = CacheTransform;
+      props.location = this.locations[type];
+      props.config   = SaveManager.Instance.GetPlayerConfig(type);
+
+      this.players.Add(type, new Player(props).Init());
     }
 
 #if _DEBUG
