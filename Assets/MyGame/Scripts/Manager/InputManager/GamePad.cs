@@ -70,10 +70,10 @@ namespace MyGame.InputManagement
         .SetupKey(KeyType.Y, KeyCode.S)
         .SetupKey(KeyType.L1, KeyCode.LeftShift)
         .SetupKey(KeyType.R1, KeyCode.LeftControl)
-        .SetupKey(KeyType.L, KeyCode.LeftArrow)
-        .SetupKey(KeyType.R, KeyCode.RightArrow)
         .SetupKey(KeyType.U, KeyCode.UpArrow)
-        .SetupKey(KeyType.D, KeyCode.DownArrow);
+        .SetupKey(KeyType.D, KeyCode.DownArrow)
+        .SetupKey(KeyType.L, KeyCode.LeftArrow)
+        .SetupKey(KeyType.R, KeyCode.RightArrow);
     }
 
     /// <summary>
