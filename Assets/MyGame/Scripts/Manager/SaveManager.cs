@@ -21,12 +21,20 @@ namespace MyGame
     /// <summary>
     /// プレイヤー設定データ
     /// </summary>
-    private Dictionary<App.Player, PlayerConfig> players = new Dictionary<App.Player, PlayerConfig>();
+    private Dictionary<App.Player, PlayerConfig> players 
+      = new Dictionary<App.Player, PlayerConfig>();
 
     /// <summary>
-    /// キーボードの操作タイプ設定
+    /// JoyConfigデータ
     /// </summary>
-    private Dictionary<App.OperationMethod, KeyConfig> keyConfigs = new Dictionary<App.OperationMethod, KeyConfig>();
+    private Dictionary<App.JoyType, JoyConfig> joyConfigs 
+      = new Dictionary<App.JoyType, JoyConfig>();
+
+    /// <summary>
+    /// キーボードの操作方法データ
+    /// </summary>
+    private Dictionary<App.OperationMethod, KeyConfig> keyConfigs 
+      = new Dictionary<App.OperationMethod, KeyConfig>();
 
     //-------------------------------------------------------------------------
     // Load, Unload
@@ -40,7 +48,15 @@ namespace MyGame
         this.defaultPlayerConfig = res; 
       });
 
-      // キーコンフィグ
+      // JoyConfig
+      rm.Load<JoyConfig>("Config.Joy.X360.asset", pre, done, (res) => { 
+        this.joyConfigs.Add(App.JoyType.X360, res);
+      });
+      rm.Load<JoyConfig>("Config.Joy.PS4.asset", pre, done, (res) => { 
+        this.joyConfigs.Add(App.JoyType.PS4, res);
+      });
+
+      // KeyConfig
       rm.Load<KeyConfig>("Config.Key.Standard.asset", pre, done, (res) => { 
         this.keyConfigs.Add(App.OperationMethod.Standard, res);
       });
@@ -105,19 +121,23 @@ namespace MyGame
     //-------------------------------------------------------------------------
     // デバッグ
 
-    private string[] __Type = new string[] {"Default", "Save" };
     private int __SelectedTypeIndex = 0;
+    private int __SelectedKeyConfigIndex = 0;
+    private int __SelectedJoyConfigIndex = 0;
 
     public override void OnDebug()
     {
-      using (new GUILayout.VerticalScope(GUI.skin.box)) {
-        __SelectedTypeIndex = GUILayout.SelectionGrid(__SelectedTypeIndex, __Type, __Type.Length);
+      string[] menus = new string[] { "Default", "Save" };
 
-        string type = __Type[__SelectedTypeIndex];
+      using (new GUILayout.VerticalScope(GUI.skin.box)) {
+        __SelectedTypeIndex = GUILayout.SelectionGrid(__SelectedTypeIndex, menus, menus.Length);
+
+        string type = menus[__SelectedTypeIndex];
 
         if (type == "Default") {
           this.defaultPlayerConfig.OnDebug();
-          this.keyConfigs[App.OperationMethod.Standard].OnDebug();
+          OnDebugKeyConfig();
+          OnDebugJoyConfig();
         }
 
         if (type == "Save") {
@@ -132,9 +152,39 @@ namespace MyGame
             }
           }
         }
-        
       }
-        
+    }
+
+    private void OnDebugKeyConfig()
+    {
+      var menus = MyEnum.GetNames<App.OperationMethod>();
+
+      using (new GUILayout.HorizontalScope()) 
+      {
+        GUILayout.Label("KeyConfig");
+        __SelectedKeyConfigIndex
+        = GUILayout.SelectionGrid(__SelectedKeyConfigIndex, menus, menus.Length);
+      }
+
+        App.OperationMethod type
+        = MyEnum.Parse<App.OperationMethod>(menus[__SelectedKeyConfigIndex]);
+
+      this.keyConfigs[type].OnDebug();
+    }
+
+    private void OnDebugJoyConfig()
+    {
+      var menus = MyEnum.GetNames<App.JoyType>();
+
+      using (new GUILayout.HorizontalScope()) 
+      {
+        GUILayout.Label("JoyConfig");
+        __SelectedJoyConfigIndex
+          = GUILayout.SelectionGrid(__SelectedJoyConfigIndex, menus, menus.Length);
+      }
+      
+      App.JoyType type = MyEnum.Parse<App.JoyType>(menus[__SelectedJoyConfigIndex]);
+      this.joyConfigs[type].OnDebug();
     }
 #endif
   }

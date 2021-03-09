@@ -44,5 +44,14 @@ namespace MyGame.Define
       Player1,  // 対戦時：1P
       Player2,  // 対戦時：2P
     }
+
+    /// <summary>
+    /// 想定するゲームパッドの種類
+    /// </summary>
+    public enum JoyType
+    {
+      X360,
+      PS4,
+    }
   }
 }

@@ -93,10 +93,10 @@ namespace MyGame
     {
       using (new GUILayout.VerticalScope(GUI.skin.box)) {
         this.axisMap.ForEach((map) => {
-          GUILayout.Label($"{map.Type}:{map.No}");
+          GUILayout.Label($"{map.Type}:axis {map.No}");
         });
         this.buttonMap.ForEach((map) => { 
-          GUILayout.Label($"{map.Type}:{map.No}");
+          GUILayout.Label($"{map.Type}:button {map.No}");
         });
       }
     }

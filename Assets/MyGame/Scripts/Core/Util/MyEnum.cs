@@ -51,5 +51,21 @@ namespace MyGame
         func(value, Enum.GetName(typeof(T), value));
       }
     }
+
+    /// <summary>
+    /// Enum要素の文字列配列を取得
+    /// </summary>
+    public static string[] GetNames<T>() where T : Enum
+    {
+      return Enum.GetNames(typeof(T));
+    }
+
+    /// <summary>
+    /// 文字列をEnumに強制変換する
+    /// </summary>
+    public static T Parse<T>(string name) where T : Enum
+    {
+      return (T)Enum.Parse(typeof(T), name);
+    }
   }
 }
