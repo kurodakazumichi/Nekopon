@@ -7,7 +7,7 @@ using MyGame.Define;
 namespace MyGame
 {
   /// <summary>
-  /// キーボードとゲーム内のKeyTypeの紐づけを保持する
+  /// ゲーム内の仮想KeyとUnityのKeyCodeとのマッピング
   /// </summary>
   [CreateAssetMenu(menuName = "MyGame/Create/KeyConfig")]
   public class KeyConfig : ScriptableObject
@@ -90,7 +90,7 @@ namespace MyGame
     [CustomEditor(typeof(KeyConfig))]
     public class KeyConfigEditor : ScriptableObjectInspectorEditorBase<KeyConfig>
     {
-      public override void OnInspectorGUI()
+      protected override void OnMyInspectorGUI()
       {
         MyEnum.ForEach<KeyType>((type, index) => 
         {
@@ -100,8 +100,6 @@ namespace MyGame
             config.keyMap[index].Code = (KeyCode)EditorGUILayout.EnumPopup(config.keyMap[index].Code);
           }
         });
-
-        SaveButton();
       }
     }
 #endif

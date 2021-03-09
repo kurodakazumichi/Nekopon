@@ -10,7 +10,7 @@ namespace MyGame
   /// <summary>
   /// ScriptableObjectのInspector拡張をする際に継承するベースクラス
   /// </summary>
-  public class ScriptableObjectInspectorEditorBase<T> : Editor where T : ScriptableObject
+  public abstract class ScriptableObjectInspectorEditorBase<T> : Editor where T : ScriptableObject
   {
     /// <summary>
     /// Inspectorで操作する対称
@@ -26,14 +26,28 @@ namespace MyGame
     }
 
     /// <summary>
-    /// 保存ボタン
+    /// 基底のOnInspectorGUIは封印
     /// </summary>
-    protected void SaveButton()
+    public sealed override void OnInspectorGUI()
     {
-      if (GUILayout.Button("Save")) {
-        EditorUtility.SetDirty(config);
-        AssetDatabase.SaveAssets();
+      EditorGUI.BeginChangeCheck();
+
+      OnMyInspectorGUI();
+
+      if (EditorGUI.EndChangeCheck()) {
+        Save();
       }
+    }
+
+    /// <summary>
+    /// 継承先で実装すること
+    /// </summary>
+    protected abstract void OnMyInspectorGUI();
+
+    private void Save()
+    {
+      EditorUtility.SetDirty(config);
+      AssetDatabase.SaveAssets();
     }
   }
 }

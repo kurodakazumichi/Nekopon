@@ -145,7 +145,7 @@ namespace MyGame
     private bool isOpenedMaxMp = false;
     private bool isOpenedUseMp = false;
 
-    public override void OnInspectorGUI()
+    protected override void OnMyInspectorGUI()
     {
       // 最大HP
       config.MaxHp = EditorGUILayout.IntField("最大HP", config.MaxHp);
@@ -173,8 +173,6 @@ namespace MyGame
         UseMpField("聖", App.Attribute.Hol);
         UseMpField("闇", App.Attribute.Dar);
       }
-
-      SaveButton();
     }
 
     /// <summary>
