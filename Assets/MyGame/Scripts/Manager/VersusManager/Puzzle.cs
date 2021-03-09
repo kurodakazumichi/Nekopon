@@ -76,6 +76,11 @@ namespace MyGame.VersusManagement
     /// </summary>
     public Define.Versus.ChainMode ChainMode { get; set; } = Define.Versus.ChainMode.Single;
 
+    /// <summary>
+    /// 肉球が消滅し終わったタイミングで呼ばれるコールバック
+    /// </summary>
+    public System.Action<ChainInfo> OnVanished = null;
+
     //-------------------------------------------------------------------------
     // プロパティ(導出項目)
 
@@ -494,6 +499,9 @@ namespace MyGame.VersusManagement
     /// </summary>
     private void OnRefillEnter()
     {
+      // 補充開始=消滅直後なのでここで消滅後のコールバックを呼び出す
+      OnVanished?.Invoke(ChainScore);
+
       // 消えてない肉球を詰められるだけ下に詰める、消えてる肉球は必然的に上に集まる
       Util.ForEach(this.paws, (paw, index) => {
         if (!paw.IsIdle) StaffPawDown(index);

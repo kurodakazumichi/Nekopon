@@ -106,7 +106,10 @@ namespace MyGame.VersusManagement
       // パズルを作成
       this.puzzle = new Puzzle(this.folder, this.location.Paw);
       this.puzzle.Init();
-
+      this.puzzle.OnVanished = (ChainInfo score) => { 
+        Debug.Logger.Log(score.ChainCount);
+        Debug.Logger.Log(score.CurrentAttribute);
+      };
       return this;
     }
 

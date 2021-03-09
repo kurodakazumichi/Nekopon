@@ -32,6 +32,17 @@ namespace MyGame.VersusManagement
     /// </summary>
     public int CurrentCount { get; private set; } = 0;
 
+    /// <summary>
+    /// 消滅した肉球の総数
+    /// </summary>
+    public int TotalVanishCount {
+      get {
+        int sum = 0;
+        this.vanishCounts.ForEach((count) => { sum += count; });
+        return sum;
+      }
+    }
+
     //-------------------------------------------------------------------------
     // publicメソッド
 
@@ -81,6 +92,14 @@ namespace MyGame.VersusManagement
       CurrentCount     = count;
     }
 
+    /// <summary>
+    /// 消滅数を取得
+    /// </summary>
+    public int GetVanishCount(Define.App.Attribute attribute)
+    {
+      return this.vanishCounts[(int)attribute];
+    }
+
 #if _DEBUG
     //-------------------------------------------------------------------------
     // デバッグ
@@ -97,6 +116,7 @@ namespace MyGame.VersusManagement
         }
 
         GUILayout.Label($"現在の消失:{this.CurrentAttribute}/{this.CurrentCount}");
+        GUILayout.Label($"総数:{TotalVanishCount}");
       }
     }
 #endif
