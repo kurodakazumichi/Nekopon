@@ -23,6 +23,12 @@ MonoBehaviour:
     m_SerializedLabels: []
     m_MainAsset: {fileID: 11400000, guid: 37ee6a0802084074c873f1dbe22ca351, type: 2}
     m_TargetAsset: {fileID: 11400000, guid: 37ee6a0802084074c873f1dbe22ca351, type: 2}
+  - m_GUID: fc2463b023bbb694195d5b0eb3fbff1a
+    m_Address: Config.KeyStandard
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 11400000, guid: fc2463b023bbb694195d5b0eb3fbff1a, type: 2}
+    m_TargetAsset: {fileID: 11400000, guid: fc2463b023bbb694195d5b0eb3fbff1a, type: 2}
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 8c2478ab617b39d41897f31592ccbc8b, type: 2}
   m_SchemaSet:
