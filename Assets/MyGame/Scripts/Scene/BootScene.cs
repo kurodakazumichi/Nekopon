@@ -78,6 +78,8 @@ namespace MyGame.Scene
     {
       SaveManager.Instance.Init();
 
+      SetupGamePad();
+
 #if _DEBUG
       if (_FirstTransitionScene != SceneManager.SceneType.None) {
         SceneManager.Instance.LoadSceneAdditive(_FirstTransitionScene);
@@ -87,6 +89,14 @@ namespace MyGame.Scene
       SceneManager.Instance.LoadSceneAdditive(SceneManager.SceneType.Title);
     }
 
+    /// <summary>
+    /// ゲームパッドの設定
+    /// </summary>
+    private void SetupGamePad()
+    {
+      KeyConfig standard = SaveManager.Instance.GetKeyConfig(Define.App.OperationMethod.Standard);
+      InputManager.Instance.GetPad(0).Setup(standard);
+    }
   }
 }
 

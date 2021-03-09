@@ -54,6 +54,11 @@ namespace MyGame
       Debug.Manager.Instance.Regist(this);
     }
 
+    protected override void OnMyDestory()
+    {
+      Debug.Manager.Instance.Discard(this);
+    }
+
     //-------------------------------------------------------------------------
     // publicメソッド
 

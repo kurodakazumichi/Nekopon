@@ -37,5 +37,17 @@ namespace MyGame
         if (completed) break;
       }
     }
+
+    /// <summary>
+    /// List型のTryGet
+    /// </summary>
+    public static T TryGet<T>(List<T> list, int index) where T : class
+    {
+      if (0 <= index && index < list.Count) {
+        return list[index];
+      }
+
+      return null;
+    }
   }
 }
