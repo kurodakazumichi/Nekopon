@@ -19,14 +19,14 @@ namespace MyGame
     private PlayerConfig defaultPlayerConfig = null;
 
     /// <summary>
-    /// 1人プレイ時用のキーボード入力設定
-    /// </summary>
-    private KeyConfig defaultKeyConfigStandard = null;
-
-    /// <summary>
     /// プレイヤー設定データ
     /// </summary>
     private Dictionary<App.Player, PlayerConfig> players = new Dictionary<App.Player, PlayerConfig>();
+
+    /// <summary>
+    /// キーボードの操作タイプ設定
+    /// </summary>
+    private Dictionary<App.OperationMethod, KeyConfig> keyConfigs = new Dictionary<App.OperationMethod, KeyConfig>();
 
     //-------------------------------------------------------------------------
     // Load, Unload
@@ -35,7 +35,9 @@ namespace MyGame
     {
       var rm = ResourceManager.Instance;
       rm.Load<PlayerConfig>("Config.Player.asset", pre, done, (res) => { this.defaultPlayerConfig = res; });
-      rm.Load<KeyConfig>("Config.KeyStandard.asset", pre, done, (res) => { this.defaultKeyConfigStandard = res; });
+      rm.Load<KeyConfig>("Config.KeyStandard.asset", pre, done, (res) => { 
+        this.keyConfigs.Add(App.OperationMethod.Standard, res);
+      });
     }
 
     public void Unload()
@@ -73,6 +75,14 @@ namespace MyGame
       return this.players[type];
     }
 
+    /// <summary>
+    /// KeyConfigを取得
+    /// </summary>
+    public KeyConfig GetKeyConfig(App.OperationMethod type)
+    {
+      return this.keyConfigs[type];
+    }
+
 #if _DEBUG
 
     //-------------------------------------------------------------------------
@@ -90,7 +100,7 @@ namespace MyGame
 
         if (type == "Default") {
           this.defaultPlayerConfig.OnDebug();
-          this.defaultKeyConfigStandard.OnDebug();
+          this.keyConfigs[App.OperationMethod.Standard].OnDebug();
         }
 
         if (type == "Save") {

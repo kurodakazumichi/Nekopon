@@ -35,7 +35,12 @@ namespace MyGame.Define
     /// </summary>
     public static int AttributeCount => Enum.GetNames(typeof(Attribute)).Length;
 
+    /// <summary>
+    /// 操作方法(キーボード操作の種類)
+    /// </summary>
+    public enum OperationMethod
+    {
+      Standard, // 1人プレイ時
+    }
   }
-
-
 }
