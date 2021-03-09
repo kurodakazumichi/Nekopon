@@ -74,6 +74,9 @@ namespace MyGame.InputManagement
     /// </summary>
     public void Update()
     {
+      // キーコードが設定されてないなら何もしない
+      if (this.code == KeyCode.None) return;
+
       // 軸の入力を受け取る
       var value = Input.GetKey(this.code);
 

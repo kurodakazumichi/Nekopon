@@ -197,19 +197,22 @@ namespace MyGame.InputManagement
       return 0;
     }
 
-    public Button GetInputedButton()
+    /// <summary>
+    /// 何かしら押されたボタンを返す
+    /// </summary>
+    public Button GetPressedButton()
     {
-      Button inputed = null;
+      Button pressed = null;
       Util.ForEach(this.buttons, (type, button) => 
       {
         if (button.IsHold) { 
-          inputed = button;
+          pressed = button;
           return true; 
         } 
         return false;
       });
 
-      return inputed;
+      return pressed;
     }
 
     /// <summary>

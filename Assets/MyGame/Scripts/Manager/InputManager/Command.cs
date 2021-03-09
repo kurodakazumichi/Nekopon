@@ -73,7 +73,7 @@ namespace MyGame.InputManagement
   {
     public override void Execute(GamePad pad)
     {
-      this.IsFixed = (pad.GetInputedButton() != null);
+      this.IsFixed = (pad.GetPressedButton() != null);
     }
   }
 }
