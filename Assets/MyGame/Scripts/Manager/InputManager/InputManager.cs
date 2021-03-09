@@ -41,8 +41,8 @@ namespace MyGame
       Debug.Manager.Instance.Regist(this);
       this.ConnectedPadCount = Input.GetJoystickNames().Length;
 
-      this.pads.Add(new GamePad(0));
-      this.pads.Add(new GamePad(1));
+      this.pads.Add(new GamePad());
+      this.pads.Add(new GamePad());
       this.commands[Command.Move] = new MoveCommand();
       this.commands[Command.Decide] = new DecideCommand();
       this.commands[Command.PressAnyButton] = new PressAnyButton();

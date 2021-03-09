@@ -6,6 +6,9 @@ namespace MyGame.Scene
 {
   public class BootScene : SceneBase<BootScene.State>
   {
+    /// <summary>
+    /// 状態
+    /// </summary>
     public enum State { 
       Idle,
       Usual,
@@ -95,7 +98,11 @@ namespace MyGame.Scene
     private void SetupGamePad()
     {
       KeyConfig standard = SaveManager.Instance.GetKeyConfig(Define.App.OperationMethod.Standard);
-      InputManager.Instance.GetPad(0).Setup(standard);
+      JoyConfig x360 = SaveManager.Instance.GetJoyConfig(Define.App.JoyType.X360);
+      var im = InputManager.Instance;
+
+      im.GetPad(0).Setup(standard);
+      im.GetPad(0).Setup(x360, 0);
     }
   }
 }

@@ -116,6 +116,14 @@ namespace MyGame
       return this.keyConfigs[type];
     }
 
+    /// <summary>
+    /// JoyConfigを取得
+    /// </summary>
+    public JoyConfig GetJoyConfig(App.JoyType type)
+    {
+      return this.joyConfigs[type];
+    }
+
 #if _DEBUG
 
     //-------------------------------------------------------------------------

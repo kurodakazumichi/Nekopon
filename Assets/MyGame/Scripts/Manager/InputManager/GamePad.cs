@@ -37,35 +37,32 @@ namespace MyGame.Define
     /// <summary>
     /// コンストラクタ
     /// </summary>
-    public GamePad(int padNo)
+    public GamePad()
     {
-      // 接続されているパッドがあるかどうかのフラグ
-      IsConnectedPad = padNo <= (Input.GetJoystickNames().Length - 1);
+      //// 軸のセットアップ
+      //this
+      //  .SetupAxis(padNo, AxisType.LX, 1, false)
+      //  .SetupAxis(padNo, AxisType.LY, 2, true)
+      //  .SetupAxis(padNo, AxisType.RX, 4, false)
+      //  .SetupAxis(padNo, AxisType.RY, 5, true)
+      //  .SetupAxis(padNo, AxisType.DX, 6, false)
+      //  .SetupAxis(padNo, AxisType.DY, 7, false)
+      //  .SetupAxis(padNo, AxisType.LR, 3, false)
+      //  .SetupAxis(padNo, AxisType.LT, 9, false)
+      //  .SetupAxis(padNo, AxisType.RT, 10, false);
 
-      // 軸のセットアップ
-      this
-        .SetupAxis(padNo, AxisType.LX, 1, false)
-        .SetupAxis(padNo, AxisType.LY, 2, true)
-        .SetupAxis(padNo, AxisType.RX, 4, false)
-        .SetupAxis(padNo, AxisType.RY, 5, true)
-        .SetupAxis(padNo, AxisType.DX, 6, false)
-        .SetupAxis(padNo, AxisType.DY, 7, false)
-        .SetupAxis(padNo, AxisType.LR, 3, false)
-        .SetupAxis(padNo, AxisType.LT, 9, false)
-        .SetupAxis(padNo, AxisType.RT, 10, false);
-
-      // ボタンのセットアップ
-      this
-        .SetupButton(padNo, ButtonType.A, 0)
-        .SetupButton(padNo, ButtonType.B, 1)
-        .SetupButton(padNo, ButtonType.X, 2)
-        .SetupButton(padNo, ButtonType.Y, 3)
-        .SetupButton(padNo, ButtonType.L1, 4)
-        .SetupButton(padNo, ButtonType.R1, 5)
-        .SetupButton(padNo, ButtonType.LS, 8)
-        .SetupButton(padNo, ButtonType.RS, 9)
-        .SetupButton(padNo, ButtonType.Back, 6)
-        .SetupButton(padNo, ButtonType.Start, 7);
+      //// ボタンのセットアップ
+      //this
+      //  .SetupButton(padNo, ButtonType.A, 0)
+      //  .SetupButton(padNo, ButtonType.B, 1)
+      //  .SetupButton(padNo, ButtonType.X, 2)
+      //  .SetupButton(padNo, ButtonType.Y, 3)
+      //  .SetupButton(padNo, ButtonType.L1, 4)
+      //  .SetupButton(padNo, ButtonType.R1, 5)
+      //  .SetupButton(padNo, ButtonType.LS, 8)
+      //  .SetupButton(padNo, ButtonType.RS, 9)
+      //  .SetupButton(padNo, ButtonType.Back, 6)
+      //  .SetupButton(padNo, ButtonType.Start, 7);
 
       //// キーのセットアップ
       //this
@@ -83,6 +80,26 @@ namespace MyGame.Define
 
     //-------------------------------------------------------------------------
     // コントローラーの設定に関する部分
+
+    public void Setup(JoyConfig config, int padNo)
+    {
+      // 接続されているパッドがあるかどうかのフラグ
+      IsConnectedPad = padNo <= (Input.GetJoystickNames().Length - 1);
+
+      // 対応するパッドがない,、configがnullなら何もしない
+      if (!IsConnectedPad) return;
+      if (!config) return;
+
+      // 軸の設定を作成
+      config.GetAxes((type, no, invert) => { 
+        if (0 <= no) SetupAxis(padNo, type, no, invert);
+      });
+
+      // ボタンの設定を作成
+      config.GetButtons((type, no) => { 
+        if (0 <= no) SetupButton(padNo, type, no);
+      });
+    }
 
     /// <summary>
     /// セットアップ(KeyConfigを元に設定をする
@@ -102,7 +119,14 @@ namespace MyGame.Define
     /// </summary>
     private GamePad SetupAxis(int padNo, AxisType type, int no, bool invert)
     {
-      this.axes[type] = new Axis(type, $"Joy{padNo + 1}_Axis{no}", invert);
+      var name = $"Joy{padNo + 1}_Axis{no}";
+
+      if (this.axes.TryGetValue(type, out Axis axis)) {
+        axis.Setup(type, name, invert);
+      } else {
+        this.axes[type] = new Axis(type, name, invert);
+      }
+      
       return this;
     }
 
@@ -111,7 +135,14 @@ namespace MyGame.Define
     /// </summary>
     private GamePad SetupButton(int padNo, ButtonType type, int no)
     {
-      this.buttons[type] = new Button(type, $"Joy{padNo + 1}_Button{no}");
+      var name = $"Joy{padNo + 1}_Button{no}";
+
+      if (this.buttons.TryGetValue(type, out Button button)) {
+        button.Setup(type, name);
+      } else {
+        this.buttons[type] = new Button(type, name);
+      }
+      
       return this;
     }
 
@@ -122,8 +153,7 @@ namespace MyGame.Define
     {
       if (this.keys.TryGetValue(type, out Key key)) {
         key.Setup(type, code);
-      }
-      else {
+      } else {
         this.keys[type] = new Key(type, code);
       }
 
