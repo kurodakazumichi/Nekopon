@@ -16,48 +16,48 @@ MonoBehaviour:
   - Type: 0
     No: 1
     Invert: 0
-  - Type: 0
+  - Type: 1
     No: 2
     Invert: 1
-  - Type: 0
+  - Type: 2
     No: 3
     Invert: 0
-  - Type: 0
+  - Type: 3
     No: 6
     Invert: 1
-  - Type: 0
+  - Type: 4
     No: 7
     Invert: 0
-  - Type: 0
+  - Type: 5
     No: 8
     Invert: 1
-  - Type: 0
+  - Type: 6
     No: -1
     Invert: 0
-  - Type: 0
+  - Type: 7
     No: 4
     Invert: 0
-  - Type: 0
+  - Type: 8
     No: 5
     Invert: 0
   buttonMap:
   - Type: 0
     No: 2
-  - Type: 0
+  - Type: 1
     No: 1
-  - Type: 0
+  - Type: 2
     No: 0
-  - Type: 0
+  - Type: 3
     No: 3
-  - Type: 0
+  - Type: 4
     No: 4
-  - Type: 0
+  - Type: 5
     No: 5
-  - Type: 0
+  - Type: 6
     No: 10
-  - Type: 0
+  - Type: 7
     No: 11
-  - Type: 0
+  - Type: 8
     No: 13
-  - Type: 0
+  - Type: 9
     No: -1

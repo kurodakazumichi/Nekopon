@@ -20,6 +20,11 @@ namespace MyGame
       public AxisType Type = default;
       public int No = -1;
       public bool Invert = false;
+
+      public AxisMap(AxisType type)
+      {
+        Type = type;
+      }
     }
 
     [System.Serializable]
@@ -27,6 +32,11 @@ namespace MyGame
     {
       public ButtonType Type = default;
       public int No = -1;
+
+      public ButtonMap (ButtonType type)
+      {
+        Type = type;
+      }
     }
 
     //-------------------------------------------------------------------------
@@ -52,12 +62,12 @@ namespace MyGame
     /// </summary>
     private void Awake()
     {
-      MyEnum.ForEach<AxisType>((_) => {
-        this.axisMap.Add(new AxisMap());
+      MyEnum.ForEach<AxisType>((type) => {
+        this.axisMap.Add(new AxisMap(type));
       });
 
-      MyEnum.ForEach<ButtonType>((_) => { 
-        this.buttonMap.Add(new ButtonMap());
+      MyEnum.ForEach<ButtonType>((type) => { 
+        this.buttonMap.Add(new ButtonMap(type));
       });
     }
 
@@ -118,25 +128,29 @@ namespace MyGame
       {
         // Axisの設定
         EditorGUILayout.LabelField("Axes");
-        MyEnum.ForEach<AxisType>((type, index) => {
-          
-          using (new EditorGUILayout.HorizontalScope()) {
-            EditorGUILayout.LabelField($"{type}");
-            config.axisMap[index].No =EditorGUILayout.IntField(config.axisMap[index].No);
+
+        config.axisMap.ForEach((axis) => 
+        {
+          using (new EditorGUILayout.HorizontalScope()) 
+          {
+            EditorGUILayout.LabelField($"{axis.Type}");
+            axis.No = EditorGUILayout.IntField(axis.No);
             GUILayout.Label("Invert");
-            config.axisMap[index].Invert = EditorGUILayout.Toggle(config.axisMap[index].Invert);
+            axis.Invert = EditorGUILayout.Toggle(axis.Invert);
           }
-          
         });
 
         EditorGUILayout.Separator();
 
         // Buttonの設定
         EditorGUILayout.LabelField("Buttons");
-        MyEnum.ForEach<ButtonType>((type, index) => {
-          using (new EditorGUILayout.HorizontalScope()) {
-            EditorGUILayout.LabelField($"{type}");
-            config.buttonMap[index].No = EditorGUILayout.IntField(config.buttonMap[index].No);
+
+        config.buttonMap.ForEach((button) => 
+        {
+          using (new EditorGUILayout.HorizontalScope()) 
+          {
+            EditorGUILayout.LabelField($"{button.Type}");
+            button.No = EditorGUILayout.IntField(button.No);
           }
         });
       }

@@ -17,12 +17,6 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: b5de51aef08c1ca4c87a4f5c3f9f67f4
   m_SerializeEntries:
-  - m_GUID: 027eecdd85ca2604e8d80a8067c3d7d0
-    m_Address: Config.Joy.PS4.asset
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    m_MainAsset: {fileID: 11400000, guid: 027eecdd85ca2604e8d80a8067c3d7d0, type: 2}
-    m_TargetAsset: {fileID: 11400000, guid: 027eecdd85ca2604e8d80a8067c3d7d0, type: 2}
   - m_GUID: 1cb39dc0ddbdadc46a04ca8e2a97a6b4
     m_Address: Config.Key.Player1.asset
     m_ReadOnly: 0
@@ -35,18 +29,24 @@ MonoBehaviour:
     m_SerializedLabels: []
     m_MainAsset: {fileID: 11400000, guid: 37ee6a0802084074c873f1dbe22ca351, type: 2}
     m_TargetAsset: {fileID: 11400000, guid: 37ee6a0802084074c873f1dbe22ca351, type: 2}
-  - m_GUID: 627aa2fb778669a419629296aa2fc699
-    m_Address: Config.Joy.X360.asset
+  - m_GUID: 4422bbffe1ea76940af043b4b70d92b1
+    m_Address: Config.Joy.PS4.asset
     m_ReadOnly: 0
     m_SerializedLabels: []
-    m_MainAsset: {fileID: 11400000, guid: 627aa2fb778669a419629296aa2fc699, type: 2}
-    m_TargetAsset: {fileID: 11400000, guid: 627aa2fb778669a419629296aa2fc699, type: 2}
+    m_MainAsset: {fileID: 11400000, guid: 4422bbffe1ea76940af043b4b70d92b1, type: 2}
+    m_TargetAsset: {fileID: 11400000, guid: 4422bbffe1ea76940af043b4b70d92b1, type: 2}
   - m_GUID: 7ac0185cc8e49b54ebef383434c1b77c
     m_Address: Config.Key.Player2.asset
     m_ReadOnly: 0
     m_SerializedLabels: []
     m_MainAsset: {fileID: 11400000, guid: 7ac0185cc8e49b54ebef383434c1b77c, type: 2}
     m_TargetAsset: {fileID: 11400000, guid: 7ac0185cc8e49b54ebef383434c1b77c, type: 2}
+  - m_GUID: d89dc05ef48d7744fa2bf9bb6a2eceba
+    m_Address: Config.Joy.X360.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 11400000, guid: d89dc05ef48d7744fa2bf9bb6a2eceba, type: 2}
+    m_TargetAsset: {fileID: 11400000, guid: d89dc05ef48d7744fa2bf9bb6a2eceba, type: 2}
   - m_GUID: fc2463b023bbb694195d5b0eb3fbff1a
     m_Address: Config.Key.Standard.asset
     m_ReadOnly: 0
