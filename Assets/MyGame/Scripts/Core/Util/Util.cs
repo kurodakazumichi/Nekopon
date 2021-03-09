@@ -43,7 +43,7 @@ namespace MyGame
     /// </summary>
     public static T TryGet<T>(T[] array, int index, T def = default)
     {
-      if(0 <= index && index < array.Length - 1) {
+      if(0 <= index && index < array.Length) {
         return array[index];
       }
 

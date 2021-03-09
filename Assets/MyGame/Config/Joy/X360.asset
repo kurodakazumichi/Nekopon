@@ -30,7 +30,7 @@ MonoBehaviour:
     Invert: 0
   - Type: 5
     No: 7
-    Invert: 1
+    Invert: 0
   - Type: 6
     No: 3
     Invert: 0

@@ -38,43 +38,6 @@ namespace MyGame.InputManagement
     /// </summary>
     public GamePad()
     {
-      //// 軸のセットアップ
-      //this
-      //  .SetupAxis(padNo, AxisType.LX, 1, false)
-      //  .SetupAxis(padNo, AxisType.LY, 2, true)
-      //  .SetupAxis(padNo, AxisType.RX, 4, false)
-      //  .SetupAxis(padNo, AxisType.RY, 5, true)
-      //  .SetupAxis(padNo, AxisType.DX, 6, false)
-      //  .SetupAxis(padNo, AxisType.DY, 7, false)
-      //  .SetupAxis(padNo, AxisType.LR, 3, false)
-      //  .SetupAxis(padNo, AxisType.LT, 9, false)
-      //  .SetupAxis(padNo, AxisType.RT, 10, false);
-
-      //// ボタンのセットアップ
-      //this
-      //  .SetupButton(padNo, ButtonType.A, 0)
-      //  .SetupButton(padNo, ButtonType.B, 1)
-      //  .SetupButton(padNo, ButtonType.X, 2)
-      //  .SetupButton(padNo, ButtonType.Y, 3)
-      //  .SetupButton(padNo, ButtonType.L1, 4)
-      //  .SetupButton(padNo, ButtonType.R1, 5)
-      //  .SetupButton(padNo, ButtonType.LS, 8)
-      //  .SetupButton(padNo, ButtonType.RS, 9)
-      //  .SetupButton(padNo, ButtonType.Back, 6)
-      //  .SetupButton(padNo, ButtonType.Start, 7);
-
-      //// キーのセットアップ
-      //this
-      //  .SetupKey(KeyType.A, KeyCode.Z)
-      //  .SetupKey(KeyType.B, KeyCode.X)
-      //  .SetupKey(KeyType.X, KeyCode.A)
-      //  .SetupKey(KeyType.Y, KeyCode.S)
-      //  .SetupKey(KeyType.L1, KeyCode.LeftShift)
-      //  .SetupKey(KeyType.R1, KeyCode.LeftControl)
-      //  .SetupKey(KeyType.U, KeyCode.UpArrow)
-      //  .SetupKey(KeyType.D, KeyCode.DownArrow)
-      //  .SetupKey(KeyType.L, KeyCode.LeftArrow)
-      //  .SetupKey(KeyType.R, KeyCode.RightArrow);
     }
 
     //-------------------------------------------------------------------------
