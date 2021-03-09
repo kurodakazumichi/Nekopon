@@ -21,9 +21,15 @@ MonoBehaviour:
     m_Address: VS.Paw.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
-    m_MainAsset: {fileID: 1819955925432867880, guid: 3c8bbfb3ed24e3e4c9ca2ad7277722ed,
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 93744e8425f344345be0b63b44219a4e
+    m_Address: VS.Gauge.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 2035971313129764813, guid: 93744e8425f344345be0b63b44219a4e,
       type: 3}
-    m_TargetAsset: {fileID: 1819955925432867880, guid: 3c8bbfb3ed24e3e4c9ca2ad7277722ed,
+    m_TargetAsset: {fileID: 2035971313129764813, guid: 93744e8425f344345be0b63b44219a4e,
       type: 3}
   - m_GUID: f6a4ca0f6a20d6f449a204edf0755de9
     m_Address: VS.BackGround.prefab
