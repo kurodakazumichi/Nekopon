@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-using MyGame.InputManagement;
+using MyGame.Define;
 
-namespace MyGame.InputManagement
+namespace MyGame.Define
 {
   /// <summary>
   /// ゲームパッドのスティック(軸)に該当するクラス

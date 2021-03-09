@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using MyGame.InputManagement;
+using MyGame.Define;
 using System;
 
 namespace MyGame.Unit.Cursor

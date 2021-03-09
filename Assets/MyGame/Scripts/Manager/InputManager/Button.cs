@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-namespace MyGame.InputManagement
+namespace MyGame.Define
 {
   /// <summary>
   /// ゲームパッドのボタンに該当するクラス
