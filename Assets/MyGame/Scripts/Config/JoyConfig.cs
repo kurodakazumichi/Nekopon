@@ -19,6 +19,7 @@ namespace MyGame
     {
       public AxisType Type = default;
       public int No = -1;
+      public bool Invert = false;
     }
 
     [System.Serializable]
@@ -66,10 +67,10 @@ namespace MyGame
     /// <summary>
     /// axisMapの要素をコールバックを指定して取得する
     /// </summary>
-    public void GetAxes(System.Action<AxisType, int> func)
+    public void GetAxes(System.Action<AxisType, int, bool> func)
     {
       this.axisMap.ForEach((map) => {
-        func(map.Type, map.No);
+        func(map.Type, map.No, map.Invert);
       });
     }
 
@@ -118,10 +119,14 @@ namespace MyGame
         // Axisの設定
         EditorGUILayout.LabelField("Axes");
         MyEnum.ForEach<AxisType>((type, index) => {
+          
           using (new EditorGUILayout.HorizontalScope()) {
             EditorGUILayout.LabelField($"{type}");
             config.axisMap[index].No =EditorGUILayout.IntField(config.axisMap[index].No);
+            GUILayout.Label("Invert");
+            config.axisMap[index].Invert = EditorGUILayout.Toggle(config.axisMap[index].Invert);
           }
+          
         });
 
         EditorGUILayout.Separator();

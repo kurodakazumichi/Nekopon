@@ -15,22 +15,31 @@ MonoBehaviour:
   axisMap:
   - Type: 0
     No: 1
+    Invert: 0
   - Type: 0
     No: 2
+    Invert: 1
   - Type: 0
     No: 4
+    Invert: 0
   - Type: 0
     No: 5
+    Invert: 1
   - Type: 0
     No: 6
+    Invert: 0
   - Type: 0
     No: 7
+    Invert: 1
   - Type: 0
     No: 3
+    Invert: 0
   - Type: 0
     No: 9
+    Invert: 0
   - Type: 0
     No: 10
+    Invert: 0
   buttonMap:
   - Type: 0
     No: 0
