@@ -24,7 +24,7 @@ MonoBehaviour:
     m_MainAsset: {fileID: 11400000, guid: 37ee6a0802084074c873f1dbe22ca351, type: 2}
     m_TargetAsset: {fileID: 11400000, guid: 37ee6a0802084074c873f1dbe22ca351, type: 2}
   - m_GUID: fc2463b023bbb694195d5b0eb3fbff1a
-    m_Address: Config.KeyStandard.asset
+    m_Address: Config.Key.Standard.asset
     m_ReadOnly: 0
     m_SerializedLabels: []
     m_MainAsset: {fileID: 11400000, guid: fc2463b023bbb694195d5b0eb3fbff1a, type: 2}

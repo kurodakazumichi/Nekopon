@@ -35,7 +35,7 @@ namespace MyGame
     {
       var rm = ResourceManager.Instance;
       rm.Load<PlayerConfig>("Config.Player.asset", pre, done, (res) => { this.defaultPlayerConfig = res; });
-      rm.Load<KeyConfig>("Config.KeyStandard.asset", pre, done, (res) => { 
+      rm.Load<KeyConfig>("Config.Key.Standard.asset", pre, done, (res) => { 
         this.keyConfigs.Add(App.OperationMethod.Standard, res);
       });
     }
