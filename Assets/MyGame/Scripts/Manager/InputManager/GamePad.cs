@@ -8,6 +8,9 @@ namespace MyGame.Define
 
   public class GamePad
   {
+    //-------------------------------------------------------------------------
+    // メンバ変数
+
     /// <summary>
     /// パッドに存在する軸のテーブル
     /// </summary>
@@ -27,6 +30,9 @@ namespace MyGame.Define
     /// 接続されているパッドがあるかどうかのフラグ
     /// </summary>
     public bool IsConnectedPad { get; private set; } = false;
+
+    //-------------------------------------------------------------------------
+    // ライフサイクル
 
     /// <summary>
     /// コンストラクタ
@@ -61,29 +67,71 @@ namespace MyGame.Define
         .SetupButton(padNo, ButtonType.Back, 6)
         .SetupButton(padNo, ButtonType.Start, 7);
 
-      // キーのセットアップ
-      this
-        .SetupKey(KeyType.A, KeyCode.Z)
-        .SetupKey(KeyType.B, KeyCode.X)
-        .SetupKey(KeyType.X, KeyCode.A)
-        .SetupKey(KeyType.Y, KeyCode.S)
-        .SetupKey(KeyType.L1, KeyCode.LeftShift)
-        .SetupKey(KeyType.R1, KeyCode.LeftControl)
-        .SetupKey(KeyType.U, KeyCode.UpArrow)
-        .SetupKey(KeyType.D, KeyCode.DownArrow)
-        .SetupKey(KeyType.L, KeyCode.LeftArrow)
-        .SetupKey(KeyType.R, KeyCode.RightArrow);
+      //// キーのセットアップ
+      //this
+      //  .SetupKey(KeyType.A, KeyCode.Z)
+      //  .SetupKey(KeyType.B, KeyCode.X)
+      //  .SetupKey(KeyType.X, KeyCode.A)
+      //  .SetupKey(KeyType.Y, KeyCode.S)
+      //  .SetupKey(KeyType.L1, KeyCode.LeftShift)
+      //  .SetupKey(KeyType.R1, KeyCode.LeftControl)
+      //  .SetupKey(KeyType.U, KeyCode.UpArrow)
+      //  .SetupKey(KeyType.D, KeyCode.DownArrow)
+      //  .SetupKey(KeyType.L, KeyCode.LeftArrow)
+      //  .SetupKey(KeyType.R, KeyCode.RightArrow);
     }
+
+    //-------------------------------------------------------------------------
+    // コントローラーの設定に関する部分
 
     /// <summary>
     /// セットアップ(KeyConfigを元に設定をする
     /// </summary>
     public void Setup(KeyConfig config)
     {
+      if (!config) return;
+
+      // キーボード入力の設定
       config.Gets((type, code) => { 
-        SetupKey(type, code);
+        if (code != KeyCode.None) SetupKey(type, code);
       });
     }
+
+    /// <summary>
+    /// 軸インスタンスを生成し、軸の設定をする。
+    /// </summary>
+    private GamePad SetupAxis(int padNo, AxisType type, int no, bool invert)
+    {
+      this.axes[type] = new Axis(type, $"Joy{padNo + 1}_Axis{no}", invert);
+      return this;
+    }
+
+    /// <summary>
+    /// ボタンインスタンスを生成し、ボタンの設定をする。
+    /// </summary>
+    private GamePad SetupButton(int padNo, ButtonType type, int no)
+    {
+      this.buttons[type] = new Button(type, $"Joy{padNo + 1}_Button{no}");
+      return this;
+    }
+
+    /// <summary>
+    /// キーボードのキーインスタンスを生成し、ボタンの設定をする。
+    /// </summary>
+    private GamePad SetupKey(KeyType type, KeyCode code)
+    {
+      if (this.keys.TryGetValue(type, out Key key)) {
+        key.Setup(type, code);
+      }
+      else {
+        this.keys[type] = new Key(type, code);
+      }
+
+      return this;
+    }
+
+    //-------------------------------------------------------------------------
+    // コントローラーの入力を受け取る部分
 
     /// <summary>
     /// パッドの入力状態を更新
@@ -98,7 +146,16 @@ namespace MyGame.Define
 
       // キーボード入力の状態を更新
       Util.ForEach(this.keys, (type, key) => { key.Update(); });
+      
+      // キーボード入力をJoy入力にマージ
+      Merge();
+    }
 
+    /// <summary>
+    /// キーボードの入力をAxisやButtonの入力としてマージする
+    /// </summary>
+    private void Merge()
+    {
       // キーボード入力をAxisにマージ
       this
         .MergeKeyToAxis(KeyType.L, AxisType.DX, -1.0f)
@@ -113,8 +170,54 @@ namespace MyGame.Define
         .MergeKeyToButton(KeyType.X, ButtonType.X)
         .MergeKeyToButton(KeyType.Y, ButtonType.Y)
         .MergeKeyToButton(KeyType.L1, ButtonType.L1)
-        .MergeKeyToButton(KeyType.R1, ButtonType.R1);
+        .MergeKeyToButton(KeyType.R1, ButtonType.R1)
+        .MergeKeyToButton(KeyType.Start, ButtonType.Start)
+        .MergeKeyToButton(KeyType.Back, ButtonType.Back);
     }
+
+    /// <summary>
+    /// キーボードの入力があった場合に、入力内容をボタン入力にマージする
+    /// </summary>
+    private GamePad MergeKeyToButton(KeyType keyType, ButtonType buttonType)
+    {
+      Key    key;
+      Button button;
+
+      if (!this.keys.TryGetValue(keyType, out key)) return this;
+      if (!this.buttons.TryGetValue(buttonType, out button)) return this;
+
+      if (key.HasInput) {
+        button.IsDown = key.IsDown;
+        button.IsUp = key.IsUp;
+        button.Time = key.Time;
+      }
+
+      return this;
+    }
+
+    /// <summary>
+    /// キーボードの入力があった場合に、入力内容を軸入力にマージする
+    /// </summary>
+    private GamePad MergeKeyToAxis(KeyType keyType, AxisType axisType, float value)
+    {
+      Key key;
+      Axis axis;
+
+      if (!this.keys.TryGetValue(keyType, out key)) return this;
+      if (!this.axes.TryGetValue(axisType, out axis)) return this;
+
+      if (key.HasInput) {
+        axis.IsDown = key.IsDown;
+        axis.IsUp = key.IsUp;
+        axis.Time = key.Time;
+        axis.Value = value;
+      }
+
+      return this;
+    }
+
+    //-------------------------------------------------------------------------
+    // 入力取得関係
 
     /// <summary>
     /// 軸の入力値を取得
@@ -224,80 +327,10 @@ namespace MyGame.Define
       return pressed;
     }
 
-    /// <summary>
-    /// キーボードの入力があった場合に、入力内容をボタン入力にマージする
-    /// </summary>
-    private GamePad MergeKeyToButton(KeyType keyType, ButtonType buttonType)
-    {
-      Key    key;
-      Button button;
-
-      if(!this.keys.TryGetValue(keyType, out key)) return this;
-      if(!this.buttons.TryGetValue(buttonType, out button)) return this;
-
-      if (key.HasInput) {
-        button.IsDown = key.IsDown;
-        button.IsUp   = key.IsUp;
-        button.Time   = key.Time;
-      }
-
-      return this;
-    }
-
-    /// <summary>
-    /// キーボードの入力があった場合に、入力内容を軸入力にマージする
-    /// </summary>
-    private GamePad MergeKeyToAxis(KeyType keyType, AxisType axisType, float value)
-    {
-      Key key;
-      Axis axis;
-
-      if (!this.keys.TryGetValue(keyType, out key)) return this;
-      if (!this.axes.TryGetValue(axisType, out axis)) return this;
-
-      if (key.HasInput) {
-        axis.IsDown = key.IsDown;
-        axis.IsUp   = key.IsUp;
-        axis.Time   = key.Time;
-        axis.Value  = value;
-      }
-
-      return this;
-    }
-
-    /// <summary>
-    /// 軸インスタンスを生成し、軸の設定をする。
-    /// </summary>
-    private GamePad SetupAxis(int padNo, AxisType type, int no, bool invert)
-    {
-      this.axes[type] = new Axis(type, $"Joy{padNo + 1}_Axis{no}", invert);
-      return this;
-    }
-
-    /// <summary>
-    /// ボタンインスタンスを生成し、ボタンの設定をする。
-    /// </summary>
-    private GamePad SetupButton(int padNo, ButtonType type, int no)
-    {
-      this.buttons[type] = new Button(type, $"Joy{padNo + 1}_Button{no}");
-      return this;
-    }
-
-    /// <summary>
-    /// キーボードのキーインスタンスを生成し、ボタンの設定をする。
-    /// </summary>
-    private GamePad SetupKey(KeyType type, KeyCode code)
-    {
-      if (this.keys.TryGetValue(type, out Key key)) {
-        key.Setup(type, code);
-      } else {
-        this.keys[type] = new Key(type, code);
-      }
-      
-      return this;
-    }
-    
 #if _DEBUG
+    //-------------------------------------------------------------------------
+    // デバッグ
+
     public void OnDebug()
     {
       using (new GUILayout.VerticalScope()) 

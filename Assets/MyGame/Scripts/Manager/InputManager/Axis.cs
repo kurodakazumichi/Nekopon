@@ -1,8 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
-using System;
-using MyGame.Define;
 
 namespace MyGame.Define
 {
