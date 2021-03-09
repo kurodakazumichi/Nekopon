@@ -72,6 +72,33 @@ namespace MyGame
       return Util.TryGet(this.pads, padNo);
     }
 
+    /// <summary>
+    /// Joystickの名前を取得する
+    /// </summary>
+    public string GetJoyName(int no)
+    {
+      return Util.TryGet(Input.GetJoystickNames(), no, "");
+    }
+
+    /// <summary>
+    /// Joystickの名前からJoyPadの種類を取得する
+    /// </summary>
+    public App.JoyType GetJoyType(string name)
+    {
+      switch(name) {
+        case "Wireless Controller": return App.JoyType.PS4;
+        default  : return App.JoyType.X360;
+      }
+    }
+
+    /// <summary>
+    /// パッド番号からJoyTypeの種類を取得する
+    /// </summary>
+    public App.JoyType GetJoyType(int no)
+    {
+      return GetJoyType(GetJoyName(no));
+    }
+
     //-------------------------------------------------------------------------
     // コマンド関連
 

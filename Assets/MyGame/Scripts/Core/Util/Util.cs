@@ -39,6 +39,18 @@ namespace MyGame
     }
 
     /// <summary>
+    /// 配列の指定したindexの要素を取得を試みる
+    /// </summary>
+    public static T TryGet<T>(T[] array, int index, T def = default)
+    {
+      if(0 <= index && index < array.Length - 1) {
+        return array[index];
+      }
+
+      return default;
+    }
+
+    /// <summary>
     /// List型のTryGet
     /// </summary>
     public static T TryGet<T>(List<T> list, int index) where T : class

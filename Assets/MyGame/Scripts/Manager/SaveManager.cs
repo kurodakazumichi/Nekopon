@@ -124,6 +124,15 @@ namespace MyGame
       return this.joyConfigs[type];
     }
 
+    public JoyConfig GetJoyConfig(string name)
+    {
+      var names = Input.GetJoystickNames();
+      for (int i = 0; i < names.Length; ++i) { 
+        Debug.Logger.Log(names[i]);
+      }
+      return null;
+    }
+
 #if _DEBUG
 
     //-------------------------------------------------------------------------

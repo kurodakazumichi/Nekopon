@@ -97,12 +97,21 @@ namespace MyGame.Scene
     /// </summary>
     private void SetupGamePad()
     {
-      KeyConfig standard = SaveManager.Instance.GetKeyConfig(Define.App.OperationMethod.Standard);
-      JoyConfig x360 = SaveManager.Instance.GetJoyConfig(Define.App.JoyType.X360);
+      // Singleton取得
+      var sm = SaveManager.Instance;
       var im = InputManager.Instance;
 
-      im.GetPad(0).Setup(standard);
-      im.GetPad(0).Setup(x360, 0);
+      // GamePadの設定
+      InputManagement.GamePad pad;
+      
+      // 1P GamePadの設定
+      pad = im.GetPad(0);
+      pad.Setup(sm.GetJoyConfig(im.GetJoyType(0)), 0);
+      pad.Setup(sm.GetKeyConfig(Define.App.OperationMethod.Standard));
+
+      // 2P GamePadの設定
+      pad = im.GetPad(1);
+      pad.Setup(sm.GetJoyConfig(im.GetJoyType(1)), 1);
     }
   }
 }
