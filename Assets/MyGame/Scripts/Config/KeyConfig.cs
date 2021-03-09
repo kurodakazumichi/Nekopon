@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEditor;
 using MyGame.InputManagement;
 
-namespace MyGame.SaveManagement
+namespace MyGame
 {
   /// <summary>
   /// キーボードとゲーム内のKeyTypeの紐づけを保持する

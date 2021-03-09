@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using MyGame.Define;
-namespace MyGame.SaveManagement
+
+namespace MyGame
 {
   /// <summary>
   /// PlayerConfigインターフェース
