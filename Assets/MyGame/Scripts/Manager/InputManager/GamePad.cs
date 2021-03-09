@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-using MyGame.InputManagement;
+using MyGame.SaveManagement;
 
 namespace MyGame.InputManagement
 {
@@ -74,6 +74,16 @@ namespace MyGame.InputManagement
         .SetupKey(KeyType.D, KeyCode.DownArrow)
         .SetupKey(KeyType.L, KeyCode.LeftArrow)
         .SetupKey(KeyType.R, KeyCode.RightArrow);
+    }
+
+    /// <summary>
+    /// セットアップ(KeyConfigを元に設定をする
+    /// </summary>
+    public void Setup(KeyConfig config)
+    {
+      config.Gets((type, code) => { 
+        SetupKey(type, code);
+      });
     }
 
     /// <summary>
@@ -279,7 +289,12 @@ namespace MyGame.InputManagement
     /// </summary>
     private GamePad SetupKey(KeyType type, KeyCode code)
     {
-      this.keys[type] = new Key(type, code);
+      if (this.keys.TryGetValue(type, out Key key)) {
+        key.Setup(type, code);
+      } else {
+        this.keys[type] = new Key(type, code);
+      }
+      
       return this;
     }
     

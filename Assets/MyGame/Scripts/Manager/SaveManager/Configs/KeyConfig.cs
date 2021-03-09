@@ -62,6 +62,24 @@ namespace MyGame.SaveManagement
       });
     }
 
+#if _DEBUG
+
+    //-------------------------------------------------------------------------
+    // デバッグ
+
+    public void OnDebug()
+    {
+      using (new GUILayout.VerticalScope(GUI.skin.box)) 
+      {
+        this.keyMap.ForEach((map) => 
+        {
+          GUILayout.Label($"{map.Type}:{map.Code}");
+        });
+      }
+    }
+
+#endif
+
 #if UNITY_EDITOR
     //---------------------------------------------------------------------------
     // Inspector拡張

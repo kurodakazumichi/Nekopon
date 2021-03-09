@@ -20,6 +20,11 @@ namespace MyGame
     private PlayerConfig defaultPlayerConfig = null;
 
     /// <summary>
+    /// 1人プレイ時用のキーボード入力設定
+    /// </summary>
+    private KeyConfig defaultKeyConfigStandard = null;
+
+    /// <summary>
     /// プレイヤー設定データ
     /// </summary>
     private Dictionary<App.Player, PlayerConfig> players = new Dictionary<App.Player, PlayerConfig>();
@@ -31,6 +36,7 @@ namespace MyGame
     {
       var rm = ResourceManager.Instance;
       rm.Load<PlayerConfig>("Config.Player.asset", pre, done, (res) => { this.defaultPlayerConfig = res; });
+      rm.Load<KeyConfig>("Config.KeyStandard.asset", pre, done, (res) => { this.defaultKeyConfigStandard = res; });
     }
 
     public void Unload()
@@ -85,6 +91,7 @@ namespace MyGame
 
         if (type == "Default") {
           this.defaultPlayerConfig.OnDebug();
+          this.defaultKeyConfigStandard.OnDebug();
         }
 
         if (type == "Save") {
