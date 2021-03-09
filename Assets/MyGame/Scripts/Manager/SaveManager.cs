@@ -34,9 +34,21 @@ namespace MyGame
     public void Load(System.Action pre, System.Action done)
     {
       var rm = ResourceManager.Instance;
-      rm.Load<PlayerConfig>("Config.Player.asset", pre, done, (res) => { this.defaultPlayerConfig = res; });
+
+      // プレイヤー設定(HP,MPなど)
+      rm.Load<PlayerConfig>("Config.Player.asset", pre, done, (res) => { 
+        this.defaultPlayerConfig = res; 
+      });
+
+      // キーコンフィグ
       rm.Load<KeyConfig>("Config.Key.Standard.asset", pre, done, (res) => { 
         this.keyConfigs.Add(App.OperationMethod.Standard, res);
+      });
+      rm.Load<KeyConfig>("Config.Key.Player1.asset", pre, done, (res) => {
+        this.keyConfigs.Add(App.OperationMethod.Player1, res);
+      });
+      rm.Load<KeyConfig>("Config.Key.Player2.asset", pre, done, (res) => {
+        this.keyConfigs.Add(App.OperationMethod.Player2, res);
       });
     }
 

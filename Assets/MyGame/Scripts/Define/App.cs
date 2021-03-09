@@ -41,6 +41,8 @@ namespace MyGame.Define
     public enum OperationMethod
     {
       Standard, // 1人プレイ時
+      Player1,  // 対戦時：1P
+      Player2,  // 対戦時：2P
     }
   }
 }
