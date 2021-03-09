@@ -1,9 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using System;
+using MyGame.Define;
 
-namespace MyGame.Define
+namespace MyGame.InputManagement
 {
 
   public class GamePad

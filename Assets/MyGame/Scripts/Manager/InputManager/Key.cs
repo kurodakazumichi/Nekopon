@@ -1,10 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
-using System;
 using MyGame.Define;
 
-namespace MyGame.Define
+namespace MyGame.InputManagement
 {
   /// <summary>
   /// キーボードのキーに該当するクラス

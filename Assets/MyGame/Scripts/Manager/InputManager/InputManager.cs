@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using MyGame.Define;
+using MyGame.InputManagement;
 
 namespace MyGame
 {

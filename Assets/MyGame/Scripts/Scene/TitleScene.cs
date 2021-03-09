@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using MyGame.Unit.Title;
 using MyGame.Unit.Cursor;
-using MyGame.Define;
+using MyGame.InputManagement;
 
 namespace MyGame.Scene
 {

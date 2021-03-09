@@ -1,9 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using MyGame.Define;
 
-namespace MyGame.Define
+namespace MyGame.InputManagement
 {
   /// <summary>
   /// ゲーム内で利用するコマンドの一覧を定義

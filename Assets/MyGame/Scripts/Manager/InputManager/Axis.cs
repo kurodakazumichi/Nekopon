@@ -1,7 +1,8 @@
 ﻿using System;
 using UnityEngine;
+using MyGame.Define;
 
-namespace MyGame.Define
+namespace MyGame.InputManagement
 {
   /// <summary>
   /// ゲームパッドのスティック(軸)に該当するクラス
