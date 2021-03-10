@@ -62,11 +62,6 @@ namespace MyGame.VersusManagement
     private StateMachine<State> state = new StateMachine<State>();
 
     /// <summary>
-    /// 消えた肉球の数(合計)を保持する
-    /// </summary>
-    private List<int> vanishCount = new List<int>(Define.App.AttributeCount);
-
-    /// <summary>
     /// 連鎖の記録
     /// </summary>
     public ChainInfo ChainScore { get; private set; } = new ChainInfo();
@@ -169,11 +164,6 @@ namespace MyGame.VersusManagement
       this.state.Add(State.Refill, OnRefillEnter, OnRefillUpdate);
       this.state.Add(State.Finish);
       this.state.SetState(State.Idle);
-
-      // リストの初期化
-      MyEnum.ForEach<Define.App.Attribute>((attribute) => {
-        this.vanishCount.Add(0);
-      });
     }
 
     /// <summary>
@@ -196,7 +186,7 @@ namespace MyGame.VersusManagement
     private void PrepareCursor()
     {
       this.cursor = new GameObject("curosr").AddComponent<Unit.Versus.Cursor>();
-      this.cursor.SetParent(this.folder);
+      this.cursor.SetParent(this.folder).SetActive(false);
       SyncCursorPosition();
     }
 
@@ -517,7 +507,7 @@ namespace MyGame.VersusManagement
 
         // 消えてる肉球が画面外の上の方に配置し、ランダムに属性を変更
         if (paw.IsIdle) {
-          paw.CacheTransform.position = new Vector3(pos.x, 1f, 0);
+          paw.CacheTransform.position = new Vector3(pos.x, 0.8f, 0);
           paw.RandomAttribute();
         }
 

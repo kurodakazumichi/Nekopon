@@ -15,18 +15,26 @@ namespace MyGame.Scene
     {
       Idle,
       Setup,
-      Ready,
-      Go,
       Usual,
-      Result,
-      Continue,
     }
 
     //-------------------------------------------------------------------------
     // メンバ変数
 
-    // Resource
+    /// <summary>
+    /// 背景Prefab
+    /// </summary>
     private GameObject backGroundPrefab = null;
+
+    /// <summary>
+    /// SceneManager
+    /// </summary>
+    private SceneManager scene = null;
+
+    /// <summary>
+    /// VersusManager
+    /// </summary>
+    private VersusManager vs = null;
 
     //-------------------------------------------------------------------------
     // ライフサイクル
@@ -49,7 +57,8 @@ namespace MyGame.Scene
 
     protected override void MyStart()
     {
-
+      this.scene = SceneManager.Instance;
+      this.vs    = VersusManager.Instance;
     }
 
     protected override IEnumerator Load()
@@ -84,20 +93,24 @@ namespace MyGame.Scene
 
     private void OnSetupEnter()
     {
+      // 背景を生成
       var backGround = Instantiate(this.backGroundPrefab);
       backGround.transform.parent = CacheTransform;
 
-      var vs = VersusManager.Instance;
-      vs.Setup(backGround);
-
+      // VersusManagerをセットアップしてあとはお任せ
+      this.vs.Setup(backGround);
       this.state.SetState(State.Usual);
     }
 
     private void OnUsualUpdate()
     {
-      VersusManager.Instance.UpdatePlayer();
+      // 対戦が終わるまでループ
+      if (!this.vs.Move()) {
+        this.scene.UnloadSceneAsync(SceneManager.SceneType.Versus, () => {
+          this.scene.LoadSceneAdditive(SceneManager.SceneType.Title);
+        });
+      }
     }
-
 
   }
 }

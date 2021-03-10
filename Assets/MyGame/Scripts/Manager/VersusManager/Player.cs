@@ -159,6 +159,14 @@ namespace MyGame.VersusManagement
       this.puzzle.Setup();
     }
 
+    /// <summary>
+    /// プレイヤー始動
+    /// </summary>
+    public void Start()
+    {
+      this.puzzle.ShowCursor();
+    }
+
     public void Update()
     {
       this.status.Update();

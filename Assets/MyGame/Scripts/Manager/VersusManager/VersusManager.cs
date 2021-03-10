@@ -1,21 +1,41 @@
-﻿using System.Collections;
+﻿using MyGame.Define;
+using MyGame.VersusManagement;
 using System.Collections.Generic;
 using UnityEngine;
-using MyGame.VersusManagement;
 
 namespace MyGame
 {
   public class VersusManager : SingletonMonoBehaviour<VersusManager>
   {
+    private enum State
+    {
+      Idle,
+      Ready,
+      Go,
+      Usual,
+      Result,
+      Continue,
+    }
+
+    //-------------------------------------------------------------------------
+    // メンバ変数
+
+    private StateMachine<State> state = new StateMachine<State>();
+
     /// <summary>
     /// 対戦画面の各種ロケーション
     /// </summary>
-    private Dictionary<Define.App.Player, Location> locations = new Dictionary<Define.App.Player, Location>();
+    private Dictionary<App.Player, Location> locations = new Dictionary<App.Player, Location>();
 
     /// <summary>
-    /// プレイヤー
+    /// プレイヤー１
     /// </summary>
-    private Dictionary<Define.App.Player, Player> players = new Dictionary<Define.App.Player, Player>();
+    private Player p1 = null;
+
+    /// <summary>
+    /// プレイヤー２
+    /// </summary>
+    private Player p2 = null;
 
     //-------------------------------------------------------------------------
     // Load, Unload
@@ -38,6 +58,15 @@ namespace MyGame
     protected override void MyAwake()
     {
       Debug.Manager.Instance.Regist(this);
+
+      // 状態のセットアップ
+      this.state.Add(State.Idle);
+      this.state.Add(State.Ready, OnReadyEnter, OnReadyUpdate);
+      this.state.Add(State.Go, OnGoEnter, OnGoUpdate);
+      this.state.Add(State.Usual, OnUsualEnter, OnUsualUpdate);
+      this.state.Add(State.Result, OnResultEnter, OnResultUpdate);
+      this.state.Add(State.Continue, OnContinueEnter, OnContinueUpdate);
+      this.state.SetState(State.Idle);
     }
 
     //-------------------------------------------------------------------------
@@ -48,20 +77,79 @@ namespace MyGame
     /// </summary>
     public void Setup(GameObject locations)
     {
-      this.locations.Add(Define.App.Player.P1, new Location("P1", locations));
-      this.locations.Add(Define.App.Player.P2, new Location("P2", locations));
+      this.locations.Add(App.Player.P1, new Location("P1", locations));
+      this.locations.Add(App.Player.P2, new Location("P2", locations));
 
-      CreatePlayer(Define.App.Player.P1);
-      CreatePlayer(Define.App.Player.P2);
+      this.p1 = CreatePlayer(App.Player.P1);
+      this.p2 = CreatePlayer(App.Player.P2);
 
-      this.players[Define.App.Player.P1].Setup();
-      this.players[Define.App.Player.P2].Setup();
+      this.state.SetState(State.Ready);
     }
+
+    //-------------------------------------------------------------------------
+    // ステートマシン
+
+    private void OnReadyEnter()
+    {
+      PreparePlayers();
+    }
+
+    private void OnReadyUpdate()
+    {
+      this.state.SetState(State.Go);
+    }
+
+    private void OnGoEnter()
+    {
+      Instance.StartPlayers();
+    }
+
+    private void OnGoUpdate()
+    {
+      this.state.SetState(State.Usual);
+    }
+
+    private void OnUsualEnter()
+    {
+    }
+
+    private void OnUsualUpdate()
+    {
+      UpdatePlayers();
+    }
+
+    private void OnResultEnter()
+    {
+    }
+
+    private void OnResultUpdate()
+    {
+
+    }
+
+    private void OnContinueEnter()
+    {
+
+    }
+
+    private void OnContinueUpdate()
+    {
+
+    }
+
+    public bool Move()
+    {
+      this.state.Update();
+      return true;
+    }
+
+    //-------------------------------------------------------------------------
+    // プレイヤーに関すること
 
     /// <summary>
     /// プレイヤーを生成
     /// </summary>
-    private void CreatePlayer(Define.App.Player type)
+    private Player CreatePlayer(App.Player type)
     {
       Player.Props props = new Player.Props();
       props.Type     = type;
@@ -69,19 +157,31 @@ namespace MyGame
       props.Location = this.locations[type];
       props.Config   = SaveManager.Instance.GetPlayerConfig(type);
 
-      this.players.Add(type, new Player(props).Init());
+      return new Player(props).Init();
     }
 
-    //-------------------------------------------------------------------------
-    // プレイヤー関係
+    /// <summary>
+    /// プレイヤーの準備を整える
+    /// </summary>
+    private void PreparePlayers()
+    {
+      DoPlayers((p) => { p.Setup(); });
+    }
+
+    /// <summary>
+    /// プレイヤーを始動
+    /// </summary>
+    private void StartPlayers()
+    {
+      DoPlayers((p) => { p.Start(); });
+    }
 
     /// <summary>
     /// プレイヤーの更新
     /// </summary>
-    public void UpdatePlayer()
+    private void UpdatePlayers()
     {
-      this.players[Define.App.Player.P1].Update();
-      this.players[Define.App.Player.P2].Update();
+      DoPlayers((p) => { p.Update(); });
     }
 
     /// <summary>
@@ -89,19 +189,32 @@ namespace MyGame
     /// </summary>
     public void AttackPlayer(Player attacker)
     {
-      if (attacker.Type == Define.App.Player.P1) {
-        this.players[Define.App.Player.P2].AcceptAttack(attacker);
-      } else {
-        this.players[Define.App.Player.P1].AcceptAttack(attacker);
-      }
+      GetTargetPlayerBy(attacker).AcceptAttack(attacker);
+    }
+
+    /// <summary>
+    /// 同時にプレイヤー2人のメソッドを実行したい事が多いけど
+    /// わざわざループする量でもないので愚直に呼び出すヘルパー
+    /// </summary>
+    private void DoPlayers(System.Action<Player> func)
+    {
+      func(this.p1);
+      func(this.p2);
+    }
+
+    /// <summary>
+    /// 指定されたプレイヤーの対になる相手を取得する
+    /// </summary>
+    private Player GetTargetPlayerBy(Player player)
+    {
+      return (player.Type == App.Player.P1)? p2 : p1;
     }
 
 #if _DEBUG
     public override void OnDebug()
     {
       using (new GUILayout.HorizontalScope(GUI.skin.box)) {
-        this.players[Define.App.Player.P1].OnDebug();
-        this.players[Define.App.Player.P2].OnDebug();
+        DoPlayers((p) => { p.OnDebug(); });
       }
     }
 #endif
