@@ -75,7 +75,7 @@ namespace MyGame.Unit.Versus
     /// <summary>
     /// 属性
     /// </summary>
-    public Define.App.Attribute Attribute { get; private set; } = default;
+    public App.Attribute Attribute { get; private set; } = default;
 
     /// <summary>
     /// 肉球が選択されているかどうかの状態を表すフラグ
@@ -92,7 +92,7 @@ namespace MyGame.Unit.Versus
     /// <summary>
     /// 消滅可能かどうか、状態によっては消滅状態へ遷移できないなどの判定をここで行う
     /// </summary>
-    public bool canVanish {
+    public bool CanVanish {
       get {
         return !IsEvaluated; // まだ評価されてない
       }
@@ -131,7 +131,7 @@ namespace MyGame.Unit.Versus
     /// <summary>
     /// Spriteリソース
     /// </summary>
-    private static Dictionary<Define.App.Attribute, Sprite> Sprites = new Dictionary<Define.App.Attribute, Sprite>(Define.App.AttributeCount);
+    private static Dictionary<App.Attribute, Sprite> Sprites = new Dictionary<App.Attribute, Sprite>(Define.App.AttributeCount);
 
     public static void Load(System.Action pre, System.Action done)
     {
