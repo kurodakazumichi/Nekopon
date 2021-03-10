@@ -64,9 +64,10 @@ namespace MyGame
     private void CreatePlayer(Define.App.Player type)
     {
       Player.Props props = new Player.Props();
-      props.parent   = CacheTransform;
-      props.location = this.locations[type];
-      props.config   = SaveManager.Instance.GetPlayerConfig(type);
+      props.Type     = type;
+      props.Parent   = CacheTransform;
+      props.Location = this.locations[type];
+      props.Config   = SaveManager.Instance.GetPlayerConfig(type);
 
       this.players.Add(type, new Player(props).Init());
     }
@@ -81,6 +82,18 @@ namespace MyGame
     {
       this.players[Define.App.Player.P1].Update();
       this.players[Define.App.Player.P2].Update();
+    }
+
+    /// <summary>
+    /// プレイヤーに対して攻撃をする
+    /// </summary>
+    public void AttackPlayer(Player attacker)
+    {
+      if (attacker.Type == Define.App.Player.P1) {
+        this.players[Define.App.Player.P2].AcceptAttack(attacker);
+      } else {
+        this.players[Define.App.Player.P1].AcceptAttack(attacker);
+      }
     }
 
 #if _DEBUG

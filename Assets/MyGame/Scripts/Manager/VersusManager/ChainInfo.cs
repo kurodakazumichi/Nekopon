@@ -23,16 +23,6 @@ namespace MyGame.VersusManagement
     private List<int> vanishCounts = new List<int>();
 
     /// <summary>
-    /// 現在消滅している属性
-    /// </summary>
-    public Define.App.Attribute CurrentAttribute { get; private set; } = default;
-
-    /// <summary>
-    /// 現在の消滅数
-    /// </summary>
-    public int CurrentCount { get; private set; } = 0;
-
-    /// <summary>
     /// 消滅した肉球の総数
     /// </summary>
     public int TotalVanishCount {
@@ -63,9 +53,8 @@ namespace MyGame.VersusManagement
     {
       // 連鎖、消失に関する情報をリセット
       ChainCount = 0;
-      CurrentAttribute = default;
-      CurrentCount = 0;
 
+      // 消滅した肉球の数
       MyEnum.ForEach<Define.App.Attribute>((attribute) => {
         this.vanishCounts[(int)attribute] = 0;
       });
@@ -86,10 +75,6 @@ namespace MyGame.VersusManagement
     {
       // 属性ごとに消えた数を保持
       this.vanishCounts[(int)attribute] += count;
-
-      // 現在の消滅に関する情報を記録
-      CurrentAttribute = attribute;
-      CurrentCount     = count;
     }
 
     /// <summary>
@@ -115,7 +100,6 @@ namespace MyGame.VersusManagement
           });
         }
 
-        GUILayout.Label($"現在の消失:{this.CurrentAttribute}/{this.CurrentCount}");
         GUILayout.Label($"総数:{TotalVanishCount}");
       }
     }

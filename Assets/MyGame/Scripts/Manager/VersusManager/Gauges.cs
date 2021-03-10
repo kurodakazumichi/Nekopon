@@ -20,12 +20,12 @@ namespace MyGame.VersusManagement
       /// <summary>
       /// Playerの親に該当するオブジェクト
       /// </summary>
-      public Transform parent;
+      public Transform Parent;
 
       /// <summary>
       /// 各種画面の配置情報
       /// </summary>
-      public Location location;
+      public Location Location;
     }
 
     //-------------------------------------------------------------------------
@@ -116,7 +116,7 @@ namespace MyGame.VersusManagement
     {
       // プレースフォルダーを作成
       this.folder = new GameObject("Gauges").transform;
-      this.folder.parent = this.props.parent;
+      this.folder.parent = this.props.Parent;
 
       // ゲージを生成
       this.hp = Object.Instantiate(GaugePrefab, this.folder).GetComponent<Gauge>();
@@ -124,9 +124,9 @@ namespace MyGame.VersusManagement
       this.ap = Object.Instantiate(GaugePrefab, this.folder).GetComponent<Gauge>();
 
       // 位置設定
-      this.hp.CacheTransform.position = this.props.location.HpGuage;
-      this.dp.CacheTransform.position = this.props.location.HpGuage;
-      this.ap.CacheTransform.position = this.props.location.ApGuage;
+      this.hp.CacheTransform.position = this.props.Location.HpGuage;
+      this.dp.CacheTransform.position = this.props.Location.HpGuage;
+      this.ap.CacheTransform.position = this.props.Location.ApGuage;
 
       // 色設定
       this.hp.ToHpColor();

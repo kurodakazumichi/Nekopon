@@ -74,5 +74,10 @@ namespace MyGame.Define
     /// 最大ダメージ量
     /// </summary>
     public const float MAX_DAMAGE = 9999;
+
+    /// <summary>
+    /// 1秒あたりに受けるダメージ
+    /// </summary>
+    public const float DAMAGE_PER_SEC = 30.0f;
   }
 }

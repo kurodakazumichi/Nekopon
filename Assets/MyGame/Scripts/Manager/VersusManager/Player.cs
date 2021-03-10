@@ -18,23 +18,33 @@ namespace MyGame.VersusManagement
     public class Props
     {
       /// <summary>
+      /// プレイヤータイプ
+      /// </summary>
+      public Define.App.Player Type;
+
+      /// <summary>
       /// Playerの親に該当するオブジェクト
       /// </summary>
-      public Transform parent;
+      public Transform Parent;
 
       /// <summary>
       /// 各種画面の配置情報
       /// </summary>
-      public Location location;
+      public Location Location;
 
       /// <summary>
       /// プレイヤー設定
       /// </summary>
-      public IPlayerConfig config;
+      public IPlayerConfig Config;
     }
 
     //-------------------------------------------------------------------------
     // メンバ変数
+
+    /// <summary>
+    /// プレイヤータイプ
+    /// </summary>
+    public Define.App.Player Type { get; private set; }
 
     /// <summary>
     /// 親オブジェクト
@@ -72,6 +82,14 @@ namespace MyGame.VersusManagement
     private IPlayerConfig config = null;
 
     //-------------------------------------------------------------------------
+    // プロパティ
+
+    /// <summary>
+    /// 公開用Status
+    /// </summary>
+    public IPlayerStatus Status => this.status;
+
+    //-------------------------------------------------------------------------
     // Load, Unload
 
     public static void Load(System.Action pre, System.Action done)
@@ -94,9 +112,10 @@ namespace MyGame.VersusManagement
     /// </summary>
     public Player(Props props)
     {
-      this.parent   = props.parent;
-      this.location = props.location;
-      this.config   = props.config;
+      this.Type     = props.Type;
+      this.parent   = props.Parent;
+      this.location = props.Location;
+      this.config   = props.Config;
       this.status   = new PlayerStatus().Setup(config);
     }
 
@@ -112,20 +131,28 @@ namespace MyGame.VersusManagement
       // パズルを作成
       this.puzzle = new Puzzle(this.folder, this.location.Paw);
       this.puzzle.Init();
-      this.puzzle.OnVanished = (ChainInfo score) => { 
-        Debug.Logger.Log(score.ChainCount);
-        Debug.Logger.Log(score.CurrentAttribute);
-
-
-
-      };
+      this.puzzle.OnVanished = OnVanished;
 
       // ゲージを生成
       var props = new Gauges.Props();
-      props.location = this.location;
-      props.parent   = this.folder;
+      props.Location = this.location;
+      props.Parent   = this.folder;
       this.gauges = new Gauges(props).Init();
       return this;
+    }
+
+    /// <summary>
+    /// 肉球消滅時に呼ばれるコールバック
+    /// </summary>
+    private void OnVanished(ChainInfo score)
+    {
+      // 消えた肉球の数だけMPを回復
+      MyEnum.ForEach<Define.App.Attribute>((attribute) => { 
+        this.status.Mp(attribute).Now += score.GetVanishCount(attribute);
+      });
+
+      // 攻撃力計算：連鎖数 * 合計消滅数 / 2
+      this.status.Attack.Now += (score.ChainCount * score.TotalVanishCount / 2);
     }
 
     /// <summary>
@@ -146,6 +173,10 @@ namespace MyGame.VersusManagement
 
     public void Update()
     {
+      this.status.Update();
+      this.gauges.Hp = this.status.Hp.Rate;
+      this.gauges.Dp = this.status.Dp.Rate;
+
       if (Input.GetKeyDown(KeyCode.Alpha2)) {
         this.puzzle.ShowCursor();
       }
@@ -198,8 +229,21 @@ namespace MyGame.VersusManagement
 
         if (this.puzzle.IsFinishedChain) {
           this.puzzle.EndChain();
+          VersusManager.Instance.AttackPlayer(this);
         }
       }
+    }
+
+    //-------------------------------------------------------------------------
+    // プレイヤー関連
+
+    /// <summary>
+    /// 攻撃を受け入れる
+    /// </summary>
+    public void AcceptAttack(Player attacker)
+    {
+      this.status.Damage.Now += attacker.status.Attack.Now;
+      attacker.status.Attack.BeToEmpty();
     }
 
 #if _DEBUG
