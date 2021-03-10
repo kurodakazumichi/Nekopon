@@ -131,18 +131,19 @@ namespace MyGame.Unit.Versus
     /// <summary>
     /// Spriteリソース
     /// </summary>
-    private static Dictionary<App.Attribute, Sprite> Sprites = new Dictionary<App.Attribute, Sprite>(Define.App.AttributeCount);
+    private static readonly Dictionary<App.Attribute, Sprite> Sprites 
+      = new Dictionary<App.Attribute, Sprite>(App.AttributeCount);
 
     public static void Load(System.Action pre, System.Action done)
     {
       var rm = ResourceManager.Instance;
-      rm.Load<Sprite>("Paw.Fir.sprite", pre, done, (res) => { Sprites[Define.App.Attribute.Fir] = res; });
-      rm.Load<Sprite>("Paw.Wat.sprite", pre, done, (res) => { Sprites[Define.App.Attribute.Wat] = res; });
-      rm.Load<Sprite>("Paw.Thu.sprite", pre, done, (res) => { Sprites[Define.App.Attribute.Thu] = res; });
-      rm.Load<Sprite>("Paw.Ice.sprite", pre, done, (res) => { Sprites[Define.App.Attribute.Ice] = res; });
-      rm.Load<Sprite>("Paw.Tre.sprite", pre, done, (res) => { Sprites[Define.App.Attribute.Tre] = res; });
-      rm.Load<Sprite>("Paw.Hol.sprite", pre, done, (res) => { Sprites[Define.App.Attribute.Hol] = res; });
-      rm.Load<Sprite>("Paw.Dar.sprite", pre, done, (res) => { Sprites[Define.App.Attribute.Dar] = res; });
+      rm.Load<Sprite>("Paw.Fir.sprite", pre, done, (res) => { Sprites[App.Attribute.Fir] = res; });
+      rm.Load<Sprite>("Paw.Wat.sprite", pre, done, (res) => { Sprites[App.Attribute.Wat] = res; });
+      rm.Load<Sprite>("Paw.Thu.sprite", pre, done, (res) => { Sprites[App.Attribute.Thu] = res; });
+      rm.Load<Sprite>("Paw.Ice.sprite", pre, done, (res) => { Sprites[App.Attribute.Ice] = res; });
+      rm.Load<Sprite>("Paw.Tre.sprite", pre, done, (res) => { Sprites[App.Attribute.Tre] = res; });
+      rm.Load<Sprite>("Paw.Hol.sprite", pre, done, (res) => { Sprites[App.Attribute.Hol] = res; });
+      rm.Load<Sprite>("Paw.Dar.sprite", pre, done, (res) => { Sprites[App.Attribute.Dar] = res; });
     }
 
     public static void Unload()
