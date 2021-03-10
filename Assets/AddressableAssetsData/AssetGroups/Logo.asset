@@ -10,14 +10,52 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
-  m_Name: Packed Assets
+  m_Name: Logo
   m_EditorClassIdentifier: 
-  m_GroupName: Packed Assets
+  m_GroupName: Logo
   m_Data:
     m_SerializedData: []
   m_GUID: 297390e394a978a43bc0e75c9980502a
-  m_SerializeEntries: []
+  m_SerializeEntries:
+  - m_GUID: 0abae7414e368d1479e7a0df6a0b134a
+    m_Address: Logo.Go.sprite
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 2800000, guid: 0abae7414e368d1479e7a0df6a0b134a, type: 3}
+    m_TargetAsset: {fileID: 2800000, guid: 0abae7414e368d1479e7a0df6a0b134a, type: 3}
+  - m_GUID: 5fc0a830dea0c0640bff19ea323da445
+    m_Address: Logo.Continue.sprite
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 2800000, guid: 5fc0a830dea0c0640bff19ea323da445, type: 3}
+    m_TargetAsset: {fileID: 2800000, guid: 5fc0a830dea0c0640bff19ea323da445, type: 3}
+  - m_GUID: 60cca823382f70b40805cff657928d73
+    m_Address: Logo.Win.sprite
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 2800000, guid: 60cca823382f70b40805cff657928d73, type: 3}
+    m_TargetAsset: {fileID: 2800000, guid: 60cca823382f70b40805cff657928d73, type: 3}
+  - m_GUID: 71b49f8e9991f064dae0df3e81b42bea
+    m_Address: Logo.GameTitle.sprite
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 2800000, guid: 71b49f8e9991f064dae0df3e81b42bea, type: 3}
+    m_TargetAsset: {fileID: 2800000, guid: 71b49f8e9991f064dae0df3e81b42bea, type: 3}
+  - m_GUID: a046d86b505973e4790db8fd7d3322a4
+    m_Address: Logo.Ready.sprite
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 2800000, guid: a046d86b505973e4790db8fd7d3322a4, type: 3}
+    m_TargetAsset: {fileID: 2800000, guid: a046d86b505973e4790db8fd7d3322a4, type: 3}
+  - m_GUID: f3df90f949de21d4681f1a6aa49e8c19
+    m_Address: Logo.Lose.sprite
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 2800000, guid: f3df90f949de21d4681f1a6aa49e8c19, type: 3}
+    m_TargetAsset: {fileID: 2800000, guid: f3df90f949de21d4681f1a6aa49e8c19, type: 3}
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 8c2478ab617b39d41897f31592ccbc8b, type: 2}
   m_SchemaSet:
-    m_Schemas: []
+    m_Schemas:
+    - {fileID: 11400000, guid: 4bea606c48f03d04ea8073e3b00c90bd, type: 2}
+    - {fileID: 11400000, guid: c0def386867d07d4c921ddf9944c6f1c, type: 2}
