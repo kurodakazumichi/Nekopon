@@ -233,7 +233,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e95a664f79fdd8458fbff0b4371ff5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _FirstTransitionScene: 2
+  _FirstTransitionScene: 1
   _TargetFrameRate: 60
 --- !u!4 &1476317109
 Transform:

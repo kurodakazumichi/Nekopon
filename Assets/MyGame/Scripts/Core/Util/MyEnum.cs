@@ -67,5 +67,13 @@ namespace MyGame
     {
       return (T)Enum.Parse(typeof(T), name);
     }
+
+    /// <summary>
+    /// 文字列からEnumの取得を試みる
+    /// </summary>
+    public static bool TryParse<T>(string name, out T result) where T:struct
+    {
+      return Enum.TryParse(name, out result);
+    }
   }
 }

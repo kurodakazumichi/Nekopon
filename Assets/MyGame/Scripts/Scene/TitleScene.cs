@@ -78,6 +78,7 @@ namespace MyGame.Scene
 
     protected override void OnMyDestory()
     {
+      SoundManager.Instance.StopBGM();
       var rm = ResourceManager.Instance;
       rm.Unload("Title.Logo.prefab");
       rm.Unload("Title.MenuCpu.prefab");

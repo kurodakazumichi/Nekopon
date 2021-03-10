@@ -87,15 +87,17 @@ namespace MyGame.VersusManagement
 
     public static void Load(System.Action pre, System.Action done)
     {
-      ResourceManager.Instance.Load<GameObject>("VS.Gauge.prefab", pre, done, (res) => {
-        GaugePrefab = res;
-      });
+      var rm = ResourceManager.Instance;
+      rm.Load<GameObject>("VS.Gauge.prefab", pre, done, (res) => { GaugePrefab = res; });
       Gauge.Load(pre, done);
     }
 
     public static void Unload()
     {
+      var rm = ResourceManager.Instance;
+      rm.Unload("VS.Gauge.prefab");
       Gauge.Unload();
+      GaugePrefab = null;
     }
 
     //-------------------------------------------------------------------------
