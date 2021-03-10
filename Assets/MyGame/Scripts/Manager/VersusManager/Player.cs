@@ -62,6 +62,11 @@ namespace MyGame.VersusManagement
     private Puzzle puzzle = null;
 
     /// <summary>
+    /// ゲージ
+    /// </summary>
+    private Gauges gauges = null;
+
+    /// <summary>
     /// プレイヤー設定
     /// </summary>
     private IPlayerConfig config = null;
@@ -71,11 +76,13 @@ namespace MyGame.VersusManagement
 
     public static void Load(System.Action pre, System.Action done)
     {
+      Gauges.Load(pre, done);
       Puzzle.Load(pre, done);
     }
 
     public static void Unload()
     {
+      Gauges.Unload();
       Puzzle.Unload();
     }
 
@@ -109,6 +116,12 @@ namespace MyGame.VersusManagement
         Debug.Logger.Log(score.ChainCount);
         Debug.Logger.Log(score.CurrentAttribute);
       };
+
+      // ゲージを生成
+      var props = new Gauges.Props();
+      props.location = this.location;
+      props.parent   = this.folder;
+      this.gauges = new Gauges(props).Init();
       return this;
     }
 

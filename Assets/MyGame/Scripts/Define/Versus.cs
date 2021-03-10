@@ -57,5 +57,17 @@ namespace MyGame.Define
     /// </summary>
     public const float PAW_STAFF_MIN_TIME = 0.3f;
     public const float PAW_STAFF_MAX_TIME = 0.8f;
+
+    /// <summary>
+    /// ゲージの最大幅
+    /// </summary>
+    public const float GAUGE_MAX_WIDTH = 2.77f;
+
+    /// <summary>
+    /// ゲージの色設定
+    /// </summary>
+    public static readonly Color GAUGE_HP_COLOR = new Color(0, 1, 0.9500496f);
+    public static readonly Color GAUGE_DP_COLOR = new Color(1, 0, 0, 0.5f);
+    public static readonly Color GAUGE_AP_COLOR = new Color(1, 1, 1);
   }
 }

@@ -41,9 +41,9 @@ namespace MyGame
 
     protected virtual void OnMyDestory() { }
 
-    public MyMonoBehaviour SetParent(Transform parent)
+    public MyMonoBehaviour SetParent(Transform parent, bool worldPositionStays = true)
     {
-      this.CacheTransform.parent = parent;
+      this.CacheTransform.SetParent(parent, worldPositionStays);
       return this;
     }
 

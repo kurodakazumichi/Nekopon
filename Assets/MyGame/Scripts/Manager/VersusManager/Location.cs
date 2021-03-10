@@ -32,7 +32,7 @@ namespace MyGame.VersusManagement
       Transform locations = go.transform;
       Paw = locations.Find($"{prefix}.Paw").position;
       HpGuage = locations.Find($"{prefix}.Gauge.Hp").position;
-      ApGuage = locations.Find("${prefix}.Gauge.Ap").position;
+      ApGuage = locations.Find($"{prefix}.Gauge.Ap").position;
     }
   }
 }

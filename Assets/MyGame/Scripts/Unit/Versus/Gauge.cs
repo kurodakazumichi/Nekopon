@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace MyGame.Unit.Versus
 {
@@ -18,6 +16,18 @@ namespace MyGame.Unit.Versus
     /// ゲージのスプライトを表示するため
     /// </summary>
     private SpriteRenderer spriteRenderer = null;
+
+    //-------------------------------------------------------------------------
+    // プロパティ
+
+    public float Rate
+    {
+      set {
+        var scale = CacheTransform.localScale;
+        scale.x = Mathf.Lerp(0, Define.Versus.GAUGE_MAX_WIDTH, Mathf.Max(0, Mathf.Min(1, value)));
+        CacheTransform.localScale = scale;
+      }
+    }
 
     //-------------------------------------------------------------------------
     // Load, Unload
@@ -45,9 +55,35 @@ namespace MyGame.Unit.Versus
 
     protected override void MyAwake()
     {
-      this.spriteRenderer = this.gameObject.AddComponent<SpriteRenderer>();
+      this.spriteRenderer = CacheTransform.Find("Sprite").GetComponent<SpriteRenderer>();
       this.spriteRenderer.sprite = GaugeSprite;
     }
 
+    //-------------------------------------------------------------------------
+    // publicメソッド
+
+    /// <summary>
+    /// HPカラーに変更
+    /// </summary>
+    public void ToHpColor()
+    {
+      this.spriteRenderer.color = Define.Versus.GAUGE_HP_COLOR;
+    }
+
+    /// <summary>
+    /// ダメージカラーに変更
+    /// </summary>
+    public void ToDpColor()
+    {
+      this.spriteRenderer.color = Define.Versus.GAUGE_DP_COLOR;
+    }
+
+    /// <summary>
+    /// APカラーに変更
+    /// </summary>
+    public void ToApColor()
+    {
+      this.spriteRenderer.color = Define.Versus.GAUGE_AP_COLOR;
+    }
   }
 }
