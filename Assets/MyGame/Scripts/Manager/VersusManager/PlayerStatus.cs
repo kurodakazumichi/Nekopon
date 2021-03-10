@@ -22,16 +22,18 @@ namespace MyGame.VersusManagement
     /// </summary>
     private Dictionary<App.Attribute, LimitedFloat> mp = new Dictionary<App.Attribute, LimitedFloat>();
 
-    //-------------------------------------------------------------------------
-    // publicメソッド
+    /// <summary>
+    /// AP
+    /// </summary>
+    public LimitedFloat Ap { get; private set; } = new LimitedFloat();
 
     /// <summary>
-    /// MP
+    /// ダメージ
     /// </summary>
-    public LimitedFloat Mp(App.Attribute attribute)
-    {
-      return this.mp[attribute];
-    }
+    public LimitedFloat Dp { get; private set; } = new LimitedFloat();
+
+    //-------------------------------------------------------------------------
+    // publicメソッド
 
     /// <summary>
     /// コンストラクタ
@@ -58,8 +60,23 @@ namespace MyGame.VersusManagement
         Mp(attribute).Setup(max, max);
       });
 
+      // DP
+      this.Dp.Setup(0, config.MaxHp);
+
+      // AP
+      this.Ap.Setup(0, config.MaxAp);
+
       return this;
     }
+
+    /// <summary>
+    /// MP
+    /// </summary>
+    public LimitedFloat Mp(App.Attribute attribute)
+    {
+      return this.mp[attribute];
+    }
+
 
 #if _DEBUG
     //-------------------------------------------------------------------------
@@ -74,6 +91,8 @@ namespace MyGame.VersusManagement
         Util.ForEach(this.mp, (attr, mp) => {
           GUILayout.Label($"MP_{attr}:{mp.Now}");
         });
+
+        GUILayout.Label($"AP:{Ap.Now}");
       }
     }
 #endif

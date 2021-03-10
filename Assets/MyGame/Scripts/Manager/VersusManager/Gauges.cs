@@ -136,5 +136,15 @@ namespace MyGame.VersusManagement
       return this;
     }
 
+    /// <summary>
+    /// セットアップ
+    /// </summary>
+    public void Setup(float hp, float dp, float ap)
+    {
+      Hp = hp;
+      Dp = dp;
+      Ap = ap;
+    }
+
   }
 }

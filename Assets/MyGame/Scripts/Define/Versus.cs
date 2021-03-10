@@ -69,5 +69,10 @@ namespace MyGame.Define
     public static readonly Color GAUGE_HP_COLOR = new Color(0, 1, 0.9500496f);
     public static readonly Color GAUGE_DP_COLOR = new Color(1, 0, 0, 0.5f);
     public static readonly Color GAUGE_AP_COLOR = new Color(1, 1, 1);
+
+    /// <summary>
+    /// 最大ダメージ量
+    /// </summary>
+    public const float MAX_DAMAGE = 9999;
   }
 }

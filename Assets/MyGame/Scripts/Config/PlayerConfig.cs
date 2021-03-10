@@ -17,6 +17,16 @@ namespace MyGame
     int MaxHp { get; }
 
     /// <summary>
+    /// 最大AP
+    /// </summary>
+    int MaxAp { get; }
+
+    /// <summary>
+    /// 使用AP
+    /// </summary>
+    int UseAp { get; }
+
+    /// <summary>
     /// 最大MP
     /// </summary>
     int GetMaxMp(App.Attribute attribute);

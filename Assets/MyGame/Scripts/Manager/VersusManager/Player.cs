@@ -115,6 +115,9 @@ namespace MyGame.VersusManagement
       this.puzzle.OnVanished = (ChainInfo score) => { 
         Debug.Logger.Log(score.ChainCount);
         Debug.Logger.Log(score.CurrentAttribute);
+
+
+
       };
 
       // ゲージを生成
@@ -130,6 +133,14 @@ namespace MyGame.VersusManagement
     /// </summary>
     public void Setup()
     {
+      // ゲージのセットアップ
+      this.gauges.Setup(
+        this.status.Hp.Rate,
+        this.status.Dp.Rate,
+        this.status.Ap.Rate
+      );
+
+      // パズルのセットアップ
       this.puzzle.Setup();
     }
 
