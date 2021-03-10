@@ -53,6 +53,18 @@ namespace MyGame
     [SerializeField]
     private List<int> useMp = new List<int>(App.AttributeCount);
 
+    /// <summary>
+    /// 最大AP
+    /// </summary>
+    [SerializeField]
+    private int maxAp = 0;
+
+    /// <summary>
+    /// 使用AP
+    /// </summary>
+    [SerializeField]
+    private int useAp = 0;
+
     //-------------------------------------------------------------------------
     // ライフサイクル
 
@@ -71,11 +83,27 @@ namespace MyGame
     // アクセッサ
 
     /// <summary>
-    /// アクセッサ
+    /// 最大HP
     /// </summary>
     public int MaxHp {
       get { return this.maxHp; }
       set { this.maxHp = value; }
+    }
+
+    /// <summary>
+    /// 最大AP
+    /// </summary>
+    public int MaxAp {
+      get { return this.maxAp; }
+      set { this.maxAp = value; }
+    }
+
+    /// <summary>
+    /// 使用AP
+    /// </summary>
+    public int UseAp {
+      get { return this.useAp; }
+      set { this.useAp = value; }
     }
 
     /// <summary>
@@ -173,6 +201,10 @@ namespace MyGame
         UseMpField("聖", App.Attribute.Hol);
         UseMpField("闇", App.Attribute.Dar);
       }
+
+      // 最大・使用AP
+      config.MaxAp = EditorGUILayout.IntField("最大AP", config.MaxAp);
+      config.UseAp = EditorGUILayout.IntField("使用AP", config.UseAp);
     }
 
     /// <summary>
