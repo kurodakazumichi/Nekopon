@@ -15,7 +15,11 @@ namespace MyGame.Scene
     {
       Idle,
       Setup,
-      Main,
+      Ready,
+      Go,
+      Usual,
+      Result,
+      Continue,
     }
 
     //-------------------------------------------------------------------------
@@ -29,34 +33,41 @@ namespace MyGame.Scene
 
     protected override void MyAwake()
     {
-      Debug.Logger.Log("VersusScene.MyAwake");
       // VersusScene用のManagerを入れるオブジェクト
       var system = new GameObject("system");
       system.transform.parent = CacheTransform;
 
       // 必要なシングルトンがあればココで定義
       SingletonManager.Instance.Setup<VersusManager>(system);
+
+      // 状態のセットアップ
+      this.state.Add(State.Idle);
+      this.state.Add(State.Setup, OnSetupEnter);
+      this.state.Add(State.Usual, null, OnUsualUpdate);
+      this.state.SetState(State.Idle);
     }
 
     protected override void MyStart()
     {
-      this.state.Add(State.Idle);
-      this.state.Add(State.Setup, OnSetupEnter);
-      this.state.Add(State.Main, null, OnMainUpdate);
+
     }
 
     protected override IEnumerator Load()
     {
+      // ロード待機用
       var waitForCount = new WaitForCount();
       System.Action pre  = waitForCount.inc;
       System.Action done = waitForCount.dec;
 
+      // ロード
       var rm = ResourceManager.Instance;
       rm.Load<GameObject>("VS.BackGround.prefab", pre, done, (res) => { this.backGroundPrefab = res; });
       VersusManager.Load(pre, done);
 
+      // ロード待機
       yield return waitForCount;
 
+      // ロード完了
       this.isLoaded = true;
       this.state.SetState(State.Setup);
     }
@@ -79,10 +90,10 @@ namespace MyGame.Scene
       var vs = VersusManager.Instance;
       vs.Setup(backGround);
 
-      this.state.SetState(State.Main);
+      this.state.SetState(State.Usual);
     }
 
-    private void OnMainUpdate()
+    private void OnUsualUpdate()
     {
       VersusManager.Instance.UpdatePlayer();
     }

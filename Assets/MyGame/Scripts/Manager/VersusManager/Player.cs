@@ -137,22 +137,10 @@ namespace MyGame.VersusManagement
       var props = new Gauges.Props();
       props.Location = this.location;
       props.Parent   = this.folder;
+
       this.gauges = new Gauges(props).Init();
+
       return this;
-    }
-
-    /// <summary>
-    /// 肉球消滅時に呼ばれるコールバック
-    /// </summary>
-    private void OnVanished(ChainInfo score)
-    {
-      // 消えた肉球の数だけMPを回復
-      MyEnum.ForEach<Define.App.Attribute>((attribute) => { 
-        this.status.Mp(attribute).Now += score.GetVanishCount(attribute);
-      });
-
-      // 攻撃力計算：連鎖数 * 合計消滅数 / 2
-      this.status.Attack.Now += (score.ChainCount * score.TotalVanishCount / 2);
     }
 
     /// <summary>
@@ -235,6 +223,23 @@ namespace MyGame.VersusManagement
     }
 
     //-------------------------------------------------------------------------
+    // パズル系
+
+    /// <summary>
+    /// 肉球消滅時に呼ばれるコールバック
+    /// </summary>
+    private void OnVanished(ChainInfo score)
+    {
+      // 消えた肉球の数だけMPを回復
+      MyEnum.ForEach<Define.App.Attribute>((attribute) => {
+        this.status.Mp(attribute).Now += score.GetVanishCount(attribute);
+      });
+
+      // 攻撃力計算：連鎖数 * 合計消滅数 / 2
+      this.status.Attack.Now += (score.ChainCount * score.TotalVanishCount / 2);
+    }
+
+    //-------------------------------------------------------------------------
     // プレイヤー関連
 
     /// <summary>
@@ -247,6 +252,9 @@ namespace MyGame.VersusManagement
     }
 
 #if _DEBUG
+    //-------------------------------------------------------------------------
+    // デバッグ
+
     public void OnDebug()
     {
       using (new GUILayout.VerticalScope()) {
