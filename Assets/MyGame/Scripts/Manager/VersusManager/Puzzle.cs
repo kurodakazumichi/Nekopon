@@ -176,14 +176,14 @@ namespace MyGame.VersusManagement
       this.folder.parent = this.parent;
 
       // カーソル、肉球を用意
-      PrepareCursor();
-      PreparePaws();
+      InitCursor();
+      InitPaws();
     }
 
     /// <summary>
     /// カーソルの用意
     /// </summary>
-    private void PrepareCursor()
+    private void InitCursor()
     {
       this.cursor = new GameObject("curosr").AddComponent<Unit.Versus.Cursor>();
       this.cursor.SetParent(this.folder).SetActive(false);
@@ -193,16 +193,33 @@ namespace MyGame.VersusManagement
     /// <summary>
     /// 肉球のセットアップ
     /// </summary>
-    private void PreparePaws()
+    private void InitPaws()
     {
       // 肉球を生成
       for (int i = 0; i < Define.Versus.PAW_TOTAL; ++i) 
       {
         var paw = Object.Instantiate(PawPrefab).GetComponent<Paw>();
-        paw.RandomAttribute();
         paw.SetParent(this.folder).SetActive(false);
         this.paws[i] = paw;
       }
+    }
+
+    /// <summary>
+    /// 初期配置
+    /// </summary>
+    public void Setup()
+    {
+      // 肉球を準備する
+      Util.ForEach(this.paws, (paw, index) => 
+      {
+        Vector3 pos = PositionBy(index);
+        float time  = Random.Range(Define.Versus.PAW_SETUP_MIN_TIME, Define.Versus.PAW_SETUP_MAX_TIME);
+
+        paw.SetActive(true);
+        paw.RandomAttribute();
+        paw.CacheTransform.position = new Vector3(pos.x, 1f, 0);
+        paw.ToMove(pos, time, Tween.Type.EaseOutBounce);
+      });
     }
 
     //-------------------------------------------------------------------------
@@ -324,22 +341,6 @@ namespace MyGame.VersusManagement
 
     //-------------------------------------------------------------------------
     // 肉球関連
-
-    /// <summary>
-    /// 初期配置
-    /// </summary>
-    public void Setup()
-    {
-      Util.ForEach(this.paws, (paw, index) => 
-      {
-        Vector3 pos = PositionBy(index);
-        float time  = Random.Range(Define.Versus.PAW_SETUP_MIN_TIME, Define.Versus.PAW_SETUP_MAX_TIME);
-
-        paw.SetActive(true);
-        paw.CacheTransform.position = new Vector3(pos.x, 1f, 0);
-        paw.ToMove(pos, time, Tween.Type.EaseOutBounce);
-      });
-    }
 
     /// <summary>
     /// 肉球を選択する
