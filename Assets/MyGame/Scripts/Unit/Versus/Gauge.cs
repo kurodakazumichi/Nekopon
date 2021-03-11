@@ -56,11 +56,19 @@ namespace MyGame.Unit.Versus
     protected override void MyAwake()
     {
       this.spriteRenderer = CacheTransform.Find("Sprite").GetComponent<SpriteRenderer>();
-      this.spriteRenderer.sprite = GaugeSprite;
     }
 
     //-------------------------------------------------------------------------
     // publicメソッド
+
+    /// <summary>
+    /// セットアップ
+    /// </summary>
+    public Gauge Setup()
+    {
+      this.spriteRenderer.sprite = GaugeSprite;
+      return this;
+    }
 
     /// <summary>
     /// HPカラーに変更

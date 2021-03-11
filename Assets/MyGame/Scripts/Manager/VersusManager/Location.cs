@@ -25,14 +25,26 @@ namespace MyGame.VersusManagement
     public Vector3 Paw { get; private set; } = Vector3.zero;
 
     /// <summary>
+    /// 自分のパズルの中心あたり
+    /// </summary>
+    public Vector3 MyCenter { get; private set; } = Vector3.zero;
+
+    /// <summary>
+    /// 相手のパズルの中心あたり
+    /// </summary>
+    public Vector3 TargetCenter { get; private set; } = Vector3.zero;
+
+    /// <summary>
     /// コンストラクタ
     /// </summary>
-    public Location(string prefix, GameObject go)
+    public Location(string myPrefix, string targetPrefix, GameObject go)
     {
       Transform locations = go.transform;
-      Paw = locations.Find($"{prefix}.Paw").position;
-      HpGuage = locations.Find($"{prefix}.Gauge.Hp").position;
-      ApGuage = locations.Find($"{prefix}.Gauge.Ap").position;
+      Paw          = locations.Find($"{myPrefix}.Paw").position;
+      HpGuage      = locations.Find($"{myPrefix}.Gauge.Hp").position;
+      ApGuage      = locations.Find($"{myPrefix}.Gauge.Ap").position;
+      MyCenter     = locations.Find($"{myPrefix}.Center").position;
+      TargetCenter = locations.Find($"{targetPrefix}.Center").position;
     }
   }
 }

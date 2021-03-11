@@ -7,6 +7,9 @@ namespace MyGame
 {
   public class VersusManager : SingletonMonoBehaviour<VersusManager>
   {
+    /// <summary>
+    /// 状態
+    /// </summary>
     private enum State
     {
       Idle,
@@ -37,6 +40,11 @@ namespace MyGame
     /// </summary>
     private Player p2 = null;
 
+    /// <summary>
+    /// ガイドユニット
+    /// </summary>
+    private Unit.Versus.Guide guide = null;
+
     //-------------------------------------------------------------------------
     // Load, Unload
 
@@ -44,12 +52,14 @@ namespace MyGame
     {
       Player.Load(pre, done);
       Puzzle.Load(pre, done);
+      Unit.Versus.Guide.Load(pre, done);
     }
 
     public static void Unload()
     {
       Player.Unload();
       Puzzle.Unload();
+      Unit.Versus.Guide.Unload();
     }
 
     //-------------------------------------------------------------------------
@@ -69,6 +79,11 @@ namespace MyGame
       this.state.SetState(State.Idle);
     }
 
+    protected override void OnMyDestory()
+    {
+      Debug.Manager.Instance.Discard(this);
+    }
+
     //-------------------------------------------------------------------------
     // 生成・準備に関するモノ
 
@@ -77,11 +92,22 @@ namespace MyGame
     /// </summary>
     public void Setup(GameObject locations)
     {
-      this.locations.Add(App.Player.P1, new Location("P1", locations));
-      this.locations.Add(App.Player.P2, new Location("P2", locations));
+      // ロケーション生成
+      this.locations.Add(App.Player.P1, new Location("P1", "P2", locations));
+      this.locations.Add(App.Player.P2, new Location("P2", "P1", locations));
 
+      // プレイヤー生成
       this.p1 = CreatePlayer(App.Player.P1);
       this.p2 = CreatePlayer(App.Player.P2);
+
+      // ガイド生成
+      this.guide = new GameObject("Guide").AddComponent<Unit.Versus.Guide>();
+      this.guide.SetParent(CacheTransform);
+      this.guide.Init(
+        this.locations[App.Player.P1].MyCenter,
+        this.locations[App.Player.P2].MyCenter
+      );
+      this.guide.Setup();
 
       this.state.SetState(State.Ready);
     }
@@ -91,21 +117,38 @@ namespace MyGame
 
     private void OnReadyEnter()
     {
+      // プレイヤーの準備(肉球がぱらぱらふってくる)
       PreparePlayers();
+
+      // Ready!を表示
+      this.guide.ToReady();
     }
 
     private void OnReadyUpdate()
     {
+      // Ready表示が終わるのを待機
+      if (!this.guide.IsFinished) return;
+
+      // GO!のステートへ
       this.state.SetState(State.Go);
     }
 
     private void OnGoEnter()
     {
-      Instance.StartPlayers();
+      // Go!を表示
+      this.guide.ToGo();
     }
 
     private void OnGoUpdate()
     {
+      // Go!の表示が終わるのを待つ
+      if (!this.guide.IsFinished) return;
+
+      // ガイドをアイドル状態にし、プレイヤーを始動
+      this.guide.ToIdle();
+      Instance.StartPlayers();
+
+      // 通常(対戦状態)へ
       this.state.SetState(State.Usual);
     }
 
@@ -116,6 +159,17 @@ namespace MyGame
     private void OnUsualUpdate()
     {
       UpdatePlayers();
+
+      // Debug
+      if (Input.GetKeyDown(KeyCode.A)) {
+        this.guide.ToResult(App.Player.P1);
+      }
+      if (Input.GetKeyDown(KeyCode.S)) {
+        this.guide.ToResult(App.Player.P2);
+      }
+      if (Input.GetKeyDown(KeyCode.D)) {
+        this.guide.ToRetry();
+      }
     }
 
     private void OnResultEnter()

@@ -130,11 +130,6 @@ namespace MyGame.VersusManagement
       this.dp.CacheTransform.position = this.props.Location.HpGuage;
       this.ap.CacheTransform.position = this.props.Location.ApGuage;
 
-      // 色設定
-      this.hp.ToHpColor();
-      this.dp.ToDpColor();
-      this.ap.ToApColor();
-
       return this;
     }
 
@@ -143,6 +138,11 @@ namespace MyGame.VersusManagement
     /// </summary>
     public void Setup(float hp, float dp, float ap)
     {
+      // 色設定
+      this.hp.Setup().ToHpColor();
+      this.dp.Setup().ToDpColor();
+      this.ap.Setup().ToApColor();
+
       Hp = hp;
       Dp = dp;
       Ap = ap;
