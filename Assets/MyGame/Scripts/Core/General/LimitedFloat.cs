@@ -81,7 +81,7 @@ namespace MyGame
     /// <summary>
     /// セットアップ
     /// </summary>
-    public void Setup(float now, float max)
+    public void Init(float now, float max)
     {
       Max = max;
       Now = now;

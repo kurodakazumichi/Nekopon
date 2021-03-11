@@ -43,7 +43,7 @@ namespace MyGame.InputManagement
     //-------------------------------------------------------------------------
     // コントローラーの設定に関する部分
 
-    public void Setup(JoyConfig config, int padNo)
+    public void Init(JoyConfig config, int padNo)
     {
       // 接続されているパッドがあるかどうかのフラグ
       IsConnectedPad = padNo <= (Input.GetJoystickNames().Length - 1);
@@ -54,37 +54,37 @@ namespace MyGame.InputManagement
 
       // 軸の設定を作成
       config.GetAxes((type, no, invert) => { 
-        if (0 <= no) SetupAxis(padNo, type, no, invert);
+        if (0 <= no) InitAxis(padNo, type, no, invert);
       });
 
       // ボタンの設定を作成
       config.GetButtons((type, no) => { 
-        if (0 <= no) SetupButton(padNo, type, no);
+        if (0 <= no) InitButton(padNo, type, no);
       });
     }
 
     /// <summary>
     /// セットアップ(KeyConfigを元に設定をする
     /// </summary>
-    public void Setup(KeyConfig config)
+    public void Init(KeyConfig config)
     {
       if (!config) return;
 
       // キーボード入力の設定
       config.Gets((type, code) => { 
-        if (code != KeyCode.None) SetupKey(type, code);
+        if (code != KeyCode.None) InitKey(type, code);
       });
     }
 
     /// <summary>
     /// 軸インスタンスを生成し、軸の設定をする。
     /// </summary>
-    private GamePad SetupAxis(int padNo, AxisType type, int no, bool invert)
+    private GamePad InitAxis(int padNo, AxisType type, int no, bool invert)
     {
       var name = $"Joy{padNo + 1}_Axis{no}";
 
       if (this.axes.TryGetValue(type, out Axis axis)) {
-        axis.Setup(type, name, invert);
+        axis.Init(type, name, invert);
       } else {
         this.axes[type] = new Axis(type, name, invert);
       }
@@ -95,12 +95,12 @@ namespace MyGame.InputManagement
     /// <summary>
     /// ボタンインスタンスを生成し、ボタンの設定をする。
     /// </summary>
-    private GamePad SetupButton(int padNo, ButtonType type, int no)
+    private GamePad InitButton(int padNo, ButtonType type, int no)
     {
       var name = $"Joy{padNo + 1}_Button{no}";
 
       if (this.buttons.TryGetValue(type, out Button button)) {
-        button.Setup(type, name);
+        button.Init(type, name);
       } else {
         this.buttons[type] = new Button(type, name);
       }
@@ -111,10 +111,10 @@ namespace MyGame.InputManagement
     /// <summary>
     /// キーボードのキーインスタンスを生成し、ボタンの設定をする。
     /// </summary>
-    private GamePad SetupKey(KeyType type, KeyCode code)
+    private GamePad InitKey(KeyType type, KeyCode code)
     {
       if (this.keys.TryGetValue(type, out Key key)) {
-        key.Setup(type, code);
+        key.Init(type, code);
       } else {
         this.keys[type] = new Key(type, code);
       }

@@ -56,13 +56,13 @@ namespace MyGame.InputManagement
     /// </summary>
     public Axis(AxisType type, string name, bool invert)
     {
-      Setup(type, name, invert);
+      Init(type, name, invert);
     }
 
     /// <summary>
     /// 軸の設定を行う、この設定によりどの軸からの入力を受け取るか決まる。
     /// </summary>
-    public void Setup(AxisType type, string name, bool invert)
+    public void Init(AxisType type, string name, bool invert)
     {
       this.type = type;
       this.name = name;

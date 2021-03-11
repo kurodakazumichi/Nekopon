@@ -9,7 +9,7 @@ namespace MyGame
   /// </summary>
   public class SingletonManager : SingletonMonoBehaviour<SingletonManager>
   {
-    public SingletonManager Setup<T> (GameObject parent) where T : SingletonMonoBehaviour<T>
+    public SingletonManager Regist<T> (GameObject parent) where T : SingletonMonoBehaviour<T>
     {
       var type = typeof(T);
       var go = new GameObject(type.Name);

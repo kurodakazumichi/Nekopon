@@ -46,13 +46,13 @@ namespace MyGame.InputManagement
     /// </summary>
     public Button(ButtonType type, string name)
     {
-      Setup(type, name);
+      Init(type, name);
     }
 
     /// <summary>
     /// ボタンの設定を行う、この設定によりどの軸からの入力を受け取るか決まる。
     /// </summary>
-    public void Setup(ButtonType type, string name)
+    public void Init(ButtonType type, string name)
     {
       this.type = type;
       this.name = name;

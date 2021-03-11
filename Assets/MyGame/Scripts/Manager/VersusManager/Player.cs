@@ -116,7 +116,7 @@ namespace MyGame.VersusManagement
       this.parent   = props.Parent;
       this.location = props.Location;
       this.config   = props.Config;
-      this.status   = new PlayerStatus().Setup(config);
+      this.status   = new PlayerStatus().Init(config);
     }
 
     /// <summary>

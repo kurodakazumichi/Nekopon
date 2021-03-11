@@ -73,26 +73,26 @@ namespace MyGame.VersusManagement
     /// <summary>
     /// 設定を元にStatusを構築
     /// </summary>
-    public PlayerStatus Setup(IPlayerConfig config)
+    public PlayerStatus Init(IPlayerConfig config)
     {
       // HP
-      this.Hp.Setup(config.MaxHp, config.MaxHp);
+      this.Hp.Init(config.MaxHp, config.MaxHp);
 
       // MP
       MyEnum.ForEach<App.Attribute>((attribute) => 
       {
-        Mp(attribute).Setup(0, config.GetMaxMp(attribute));
+        Mp(attribute).Init(0, config.GetMaxMp(attribute));
       });
 
       // DP
-      this.Dp.Setup(0, config.MaxHp);
+      this.Dp.Init(0, config.MaxHp);
 
       // AP
-      this.Ap.Setup(0, config.MaxAp);
+      this.Ap.Init(0, config.MaxAp);
 
       // 攻撃とダメージ
-      this.Attack.Setup(0, Versus.MAX_DAMAGE);
-      this.Damage.Setup(0, Versus.MAX_DAMAGE);
+      this.Attack.Init(0, Versus.MAX_DAMAGE);
+      this.Damage.Init(0, Versus.MAX_DAMAGE);
 
       return this;
     }

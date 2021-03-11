@@ -46,13 +46,13 @@ namespace MyGame.Scene
 
       // 常駐させたいシステムがあればここで生成
       SingletonManager.Instance
-        .Setup<Debug.Manager>(system)
-        .Setup<SaveManager>(system)
-        .Setup<TimeManager>(system)
-        .Setup<SceneManager>(system)
-        .Setup<ResourceManager>(system)
-        .Setup<SoundManager>(system)
-        .Setup<InputManager>(system);
+        .Regist<Debug.Manager>(system)
+        .Regist<SaveManager>(system)
+        .Regist<TimeManager>(system)
+        .Regist<SceneManager>(system)
+        .Regist<ResourceManager>(system)
+        .Regist<SoundManager>(system)
+        .Regist<InputManager>(system);
     }
 
     protected override IEnumerator Load()
@@ -79,7 +79,7 @@ namespace MyGame.Scene
 
     private void OnUsualEnter()
     {
-      SaveManager.Instance.Init();
+      SaveManager.Instance.Setup();
 
       SetupGamePad();
 
@@ -106,12 +106,12 @@ namespace MyGame.Scene
       
       // 1P GamePadの設定
       pad = im.GetPad(0);
-      pad.Setup(sm.GetJoyConfig(im.GetJoyType(0)), 0);
-      pad.Setup(sm.GetKeyConfig(Define.App.OperationMethod.Standard));
+      pad.Init(sm.GetJoyConfig(im.GetJoyType(0)), 0);
+      pad.Init(sm.GetKeyConfig(Define.App.OperationMethod.Standard));
 
       // 2P GamePadの設定
       pad = im.GetPad(1);
-      pad.Setup(sm.GetJoyConfig(im.GetJoyType(1)), 1);
+      pad.Init(sm.GetJoyConfig(im.GetJoyType(1)), 1);
     }
   }
 }

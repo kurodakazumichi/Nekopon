@@ -55,13 +55,13 @@ namespace MyGame.InputManagement
     /// </summary>
     public Key(KeyType type, KeyCode code)
     {
-      Setup(type, code);
+      Init(type, code);
     }
 
     /// <summary>
     /// 軸の設定を行う、この設定によりどの軸からの入力を受け取るか決まる。
     /// </summary>
-    public void Setup(KeyType type, KeyCode code)
+    public void Init(KeyType type, KeyCode code)
     {
       this.type = type;
       this.code = code;

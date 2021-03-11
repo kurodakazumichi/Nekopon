@@ -93,7 +93,7 @@ namespace MyGame
     /// <summary>
     /// 初期化
     /// </summary>
-    public void Init()
+    public void Setup()
     {
       if (!this.defaultPlayerConfig) return;
       this.players.Add(App.Player.P1, Instantiate(this.defaultPlayerConfig));
