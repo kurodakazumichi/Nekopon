@@ -255,7 +255,8 @@ namespace MyGame.Unit.Versus
     private void OnReadyEnter()
     {
       this.Ready.SetActive(true);
-      this.time = 0.7f;
+      this.timer = 0;
+      this.time  = 0.7f;
     }
 
     private void OnReadyUpdate()
