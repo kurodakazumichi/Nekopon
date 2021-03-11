@@ -10,14 +10,136 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
-  m_Name: Packed Assets
+  m_Name: Cat
   m_EditorClassIdentifier: 
-  m_GroupName: Packed Assets
+  m_GroupName: Cat
   m_Data:
     m_SerializedData: []
   m_GUID: b7a7d3a3a44d2864faa16be4af326c19
-  m_SerializeEntries: []
+  m_SerializeEntries:
+  - m_GUID: 02c599b6ec235be4eaa04a64fdd249b6
+    m_Address: Cat.Minchi.Damage01
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 2800000, guid: 02c599b6ec235be4eaa04a64fdd249b6, type: 3}
+    m_TargetAsset: {fileID: 2800000, guid: 02c599b6ec235be4eaa04a64fdd249b6, type: 3}
+  - m_GUID: 116130761398d9548861b55fb68e1a1a
+    m_Address: Cat.Tii.Attack01.sprite
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 2800000, guid: 116130761398d9548861b55fb68e1a1a, type: 3}
+    m_TargetAsset: {fileID: 2800000, guid: 116130761398d9548861b55fb68e1a1a, type: 3}
+  - m_GUID: 141008d0c0818914cb95e01050169fe0
+    m_Address: Cat.Shiro.Damage02.sprite
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 2800000, guid: 141008d0c0818914cb95e01050169fe0, type: 3}
+    m_TargetAsset: {fileID: 2800000, guid: 141008d0c0818914cb95e01050169fe0, type: 3}
+  - m_GUID: 1948082da1dc1de44a238d4b681b2e81
+    m_Address: Cat.Shiro.Usual01.sprite
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 2800000, guid: 1948082da1dc1de44a238d4b681b2e81, type: 3}
+    m_TargetAsset: {fileID: 2800000, guid: 1948082da1dc1de44a238d4b681b2e81, type: 3}
+  - m_GUID: 2f9140addb2bbcd4b98a250b0c4f65a9
+    m_Address: Cat.Shiro.Attack01.sprite
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 2800000, guid: 2f9140addb2bbcd4b98a250b0c4f65a9, type: 3}
+    m_TargetAsset: {fileID: 2800000, guid: 2f9140addb2bbcd4b98a250b0c4f65a9, type: 3}
+  - m_GUID: 41aef4953149d6b4995543acee3b02d2
+    m_Address: Cat.Tii.Usual02.sprite
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 2800000, guid: 41aef4953149d6b4995543acee3b02d2, type: 3}
+    m_TargetAsset: {fileID: 2800000, guid: 41aef4953149d6b4995543acee3b02d2, type: 3}
+  - m_GUID: 483cc44f0a7df41478a2e7b369092474
+    m_Address: Cat.Minchi.Attack01
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 2800000, guid: 483cc44f0a7df41478a2e7b369092474, type: 3}
+    m_TargetAsset: {fileID: 2800000, guid: 483cc44f0a7df41478a2e7b369092474, type: 3}
+  - m_GUID: 4e65cc3f3a56b0b4a9820cc86c64be7e
+    m_Address: Cat.Nick.Usual01.sprite
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 2800000, guid: 4e65cc3f3a56b0b4a9820cc86c64be7e, type: 3}
+    m_TargetAsset: {fileID: 2800000, guid: 4e65cc3f3a56b0b4a9820cc86c64be7e, type: 3}
+  - m_GUID: 505ef98ea6d71934caf62047a10aac80
+    m_Address: Cat.Nick.Attack01.sprite
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 2800000, guid: 505ef98ea6d71934caf62047a10aac80, type: 3}
+    m_TargetAsset: {fileID: 2800000, guid: 505ef98ea6d71934caf62047a10aac80, type: 3}
+  - m_GUID: 64a5d3fe6ec40994a8723cba56134a0a
+    m_Address: Cat.Minchi.Usual02
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 2800000, guid: 64a5d3fe6ec40994a8723cba56134a0a, type: 3}
+    m_TargetAsset: {fileID: 2800000, guid: 64a5d3fe6ec40994a8723cba56134a0a, type: 3}
+  - m_GUID: 7ce8275d3bc69204496c91b2140b1f73
+    m_Address: Cat.Nick.Attack02.sprite
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 2800000, guid: 7ce8275d3bc69204496c91b2140b1f73, type: 3}
+    m_TargetAsset: {fileID: 2800000, guid: 7ce8275d3bc69204496c91b2140b1f73, type: 3}
+  - m_GUID: 81f8964340563444c99f52a52d865a0a
+    m_Address: Cat.Minchi.Usual01
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 2800000, guid: 81f8964340563444c99f52a52d865a0a, type: 3}
+    m_TargetAsset: {fileID: 2800000, guid: 81f8964340563444c99f52a52d865a0a, type: 3}
+  - m_GUID: 88929698da8c701419e3f4baff4a1723
+    m_Address: Cat.Nick.Damage02.sprite
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 2800000, guid: 88929698da8c701419e3f4baff4a1723, type: 3}
+    m_TargetAsset: {fileID: 2800000, guid: 88929698da8c701419e3f4baff4a1723, type: 3}
+  - m_GUID: a633ef9bb43143242bf5cda8dc5012b6
+    m_Address: Cat.Tii.Usual01.sprite
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 2800000, guid: a633ef9bb43143242bf5cda8dc5012b6, type: 3}
+    m_TargetAsset: {fileID: 2800000, guid: a633ef9bb43143242bf5cda8dc5012b6, type: 3}
+  - m_GUID: b6c838f512f6d9e48800146bbcec86f3
+    m_Address: Cat.Tii.Damage01.sprite
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 2800000, guid: b6c838f512f6d9e48800146bbcec86f3, type: 3}
+    m_TargetAsset: {fileID: 2800000, guid: b6c838f512f6d9e48800146bbcec86f3, type: 3}
+  - m_GUID: b836773fc1bf9584694b2e15436f65c5
+    m_Address: Cat.Shiro.Usual02.sprite
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 2800000, guid: b836773fc1bf9584694b2e15436f65c5, type: 3}
+    m_TargetAsset: {fileID: 2800000, guid: b836773fc1bf9584694b2e15436f65c5, type: 3}
+  - m_GUID: c76b51af464562c4686439ae5fd1b507
+    m_Address: Cat.Tii.Damage02.sprite
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 2800000, guid: c76b51af464562c4686439ae5fd1b507, type: 3}
+    m_TargetAsset: {fileID: 2800000, guid: c76b51af464562c4686439ae5fd1b507, type: 3}
+  - m_GUID: d014e9e7bc9df9c46b05a41a2fe92c57
+    m_Address: Cat.Nick.Damage01.sprite
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 2800000, guid: d014e9e7bc9df9c46b05a41a2fe92c57, type: 3}
+    m_TargetAsset: {fileID: 2800000, guid: d014e9e7bc9df9c46b05a41a2fe92c57, type: 3}
+  - m_GUID: d60bddb6bd7d66d43be1256207b381e9
+    m_Address: Cat.Shiro.Damage01.sprite
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 2800000, guid: d60bddb6bd7d66d43be1256207b381e9, type: 3}
+    m_TargetAsset: {fileID: 2800000, guid: d60bddb6bd7d66d43be1256207b381e9, type: 3}
+  - m_GUID: f0e870e19162b1846bfcc6427d74fc95
+    m_Address: Cat.Nick.Usual02.sprite
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 2800000, guid: f0e870e19162b1846bfcc6427d74fc95, type: 3}
+    m_TargetAsset: {fileID: 2800000, guid: f0e870e19162b1846bfcc6427d74fc95, type: 3}
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 8c2478ab617b39d41897f31592ccbc8b, type: 2}
   m_SchemaSet:
-    m_Schemas: []
+    m_Schemas:
+    - {fileID: 11400000, guid: 5e1df51f12e53c744adbebe8a674e354, type: 2}
+    - {fileID: 11400000, guid: a082670a3c599a0439359ac48dfd798d, type: 2}
