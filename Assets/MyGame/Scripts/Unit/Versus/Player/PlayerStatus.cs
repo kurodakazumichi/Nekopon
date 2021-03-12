@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using MyGame.Define;
 
-namespace MyGame.VersusManagement
+namespace MyGame.Unit.Versus
 {
   /// <summary>
   /// PlayerStatusインターフェース
@@ -10,7 +9,7 @@ namespace MyGame.VersusManagement
   public interface IPlayerStatus
   {
     ILimitedFloat HP { get; }
-    ILimitedFloat MP(App.Attribute attribute);
+    ILimitedFloat MP(Define.App.Attribute attribute);
     ILimitedFloat AP { get; }
     LimitedFloat Attack { get; }
     LimitedFloat Damage { get; }
@@ -33,8 +32,8 @@ namespace MyGame.VersusManagement
     /// <summary>
     /// MP
     /// </summary>
-    private Dictionary<App.Attribute, LimitedFloat> mp = new Dictionary<App.Attribute, LimitedFloat>();
-    public ILimitedFloat MP(App.Attribute attribute) { return this.mp[attribute]; }
+    private Dictionary<Define.App.Attribute, LimitedFloat> mp = new Dictionary<Define.App.Attribute, LimitedFloat>();
+    public ILimitedFloat MP(Define.App.Attribute attribute) { return this.mp[attribute]; }
 
     /// <summary>
     /// AP
@@ -65,7 +64,7 @@ namespace MyGame.VersusManagement
     /// </summary>
     public PlayerStatus()
     {
-      MyEnum.ForEach<App.Attribute>((attribute) => {
+      MyEnum.ForEach<Define.App.Attribute>((attribute) => {
         this.mp.Add(attribute, new LimitedFloat());
       });
     }
@@ -79,7 +78,7 @@ namespace MyGame.VersusManagement
       this.Hp.Init(config.MaxHp, config.MaxHp);
 
       // MP
-      MyEnum.ForEach<App.Attribute>((attribute) => 
+      MyEnum.ForEach<Define.App.Attribute>((attribute) => 
       {
         Mp(attribute).Init(0, config.GetMaxMp(attribute));
       });
@@ -91,8 +90,8 @@ namespace MyGame.VersusManagement
       this.Ap.Init(0, config.MaxAp);
 
       // 攻撃とダメージ
-      this.Attack.Init(0, Versus.MAX_DAMAGE);
-      this.Damage.Init(0, Versus.MAX_DAMAGE);
+      this.Attack.Init(0, Define.Versus.MAX_DAMAGE);
+      this.Damage.Init(0, Define.Versus.MAX_DAMAGE);
 
       return this;
     }
@@ -100,7 +99,7 @@ namespace MyGame.VersusManagement
     /// <summary>
     /// MP
     /// </summary>
-    public LimitedFloat Mp(App.Attribute attribute)
+    public LimitedFloat Mp(Define.App.Attribute attribute)
     {
       return this.mp[attribute];
     }
@@ -113,7 +112,7 @@ namespace MyGame.VersusManagement
       // ダメージがあるならHPを減らし続ける
       if (Damage.IsEmpty) return;
 
-      float damage = Versus.DAMAGE_PER_SEC * TimeSystem.Instance.DeltaTime;
+      float damage = Define.Versus.DAMAGE_PER_SEC * TimeSystem.Instance.DeltaTime;
 
       Dp.Now = Damage.Now;
       Hp.Now     -= damage;

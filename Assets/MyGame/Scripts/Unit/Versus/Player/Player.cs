@@ -1,9 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using MyGame.Unit.Versus;
+﻿using UnityEngine;
+using MyGame.VersusManagement;
 
-namespace MyGame.VersusManagement
+namespace MyGame.Unit.Versus
 {
   /// <summary>
   /// 対戦プレイヤーに該当するクラス
