@@ -132,7 +132,7 @@ namespace MyGame.Unit.Title
 
       if (CacheTransform.position.y < _EndY) 
       {
-        SoundManager.Instance.PlaySE("SE.Bound001");
+        SoundSystem.Instance.PlaySE("SE.Bound001");
         CacheTransform.position = new Vector3(0, _EndY, 0);
         this.velocity.y *= -0.9f;
         this.boundCount++;

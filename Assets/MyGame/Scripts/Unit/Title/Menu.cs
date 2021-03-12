@@ -75,7 +75,7 @@ namespace MyGame.Unit.Title
     {
       GetComponent<SpriteRenderer>().material.color = SelectedColor;
       SceneManager.Instance.ReservedScene = SceneType;
-      SoundManager.Instance.PlaySE("SE.Over01");
+      SoundSystem.Instance.PlaySE("SE.Over01");
     }
 
     private void OnTriggerExit2D(Collider2D collision)

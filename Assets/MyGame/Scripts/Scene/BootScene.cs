@@ -51,7 +51,7 @@ namespace MyGame.Scene
         .Regist<TimeSystem>(system)
         .Regist<SceneManager>(system)
         .Regist<ResourceManager>(system)
-        .Regist<SoundManager>(system)
+        .Regist<SoundSystem>(system)
         .Regist<InputManager>(system);
     }
 

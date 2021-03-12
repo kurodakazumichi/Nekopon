@@ -78,7 +78,7 @@ namespace MyGame.Scene
 
     protected override void OnMyDestory()
     {
-      SoundManager.Instance.StopBGM();
+      SoundSystem.Instance.StopBGM();
       var rm = ResourceManager.Instance;
       rm.Unload("Title.Logo.prefab");
       rm.Unload("Title.MenuCpu.prefab");
@@ -135,7 +135,7 @@ namespace MyGame.Scene
     private void OnIntroEnter()
     {
       // BGM再生
-      SoundManager.Instance.PlayBGM("BGM.001");
+      SoundSystem.Instance.PlayBGM("BGM.001");
 
       // タイトルロゴをバウンド状態へ、バウンド完了時に入力待ちになるようにコールバックを設定
       this.logo.SetActive(true);
@@ -192,7 +192,7 @@ namespace MyGame.Scene
       // シーン予約がなければシーン遷移しない
       if (!SceneManager.Instance.HasReservedScene) return;
 
-      SoundManager.Instance.PlaySE("SE.Select01");
+      SoundSystem.Instance.PlaySE("SE.Select01");
 
       // タイトルシーンを破棄して予約シーンへ遷移
       SceneManager.Instance.UnloadSceneAsync(SceneManager.SceneType.Title, () => { 

@@ -5,7 +5,7 @@ using System;
 
 namespace MyGame
 {
-  public class SoundManager : SingletonMonoBehaviour<SoundManager>
+  public class SoundSystem : SingletonMonoBehaviour<SoundSystem>
   {
     private AudioSource bgmSource = null;
     private AudioSource seSource = null;
