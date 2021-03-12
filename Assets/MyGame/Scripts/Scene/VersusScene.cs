@@ -46,7 +46,7 @@ namespace MyGame.Scene
       system.transform.parent = CacheTransform;
 
       // 必要なシングルトンがあればココで定義
-      SingletonManager.Instance.Regist<VersusManager>(system);
+      SingletonSystem.Instance.Regist<VersusManager>(system);
 
       // 状態のセットアップ
       this.state.Add(State.Idle);

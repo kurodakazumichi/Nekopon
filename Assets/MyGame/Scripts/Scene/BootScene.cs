@@ -41,11 +41,11 @@ namespace MyGame.Scene
       DontDestroyOnLoad(system);
 
       // シングルトンを管理するシングルトン
-      var singleton = new GameObject("SingletonManager", typeof(SingletonManager));
+      var singleton = new GameObject("SingletonManager", typeof(SingletonSystem));
       singleton.transform.parent = system.transform;
 
       // 常駐させたいシステムがあればここで生成
-      SingletonManager.Instance
+      SingletonSystem.Instance
         .Regist<Debug.Manager>(system)
         .Regist<SaveManager>(system)
         .Regist<TimeSystem>(system)
