@@ -53,6 +53,11 @@ namespace MyGame
       return this;
     }
 
+    public T AddComponent<T>() where T : Component
+    {
+      return this.gameObject.AddComponent<T>();
+    }
+
 #if _DEBUG
     public virtual void OnDebug()
     {
