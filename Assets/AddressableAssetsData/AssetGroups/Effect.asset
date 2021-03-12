@@ -17,30 +17,72 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: 08f20e950133ec7408260d142d572ff6
   m_SerializeEntries:
+  - m_GUID: 3791c56068c07d54391d88a8a2552049
+    m_Address: Effect.Paw.Freeze.01.sprite
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 2800000, guid: 3791c56068c07d54391d88a8a2552049, type: 3}
+    m_TargetAsset: {fileID: 2800000, guid: 3791c56068c07d54391d88a8a2552049, type: 3}
+  - m_GUID: 6202516b40b2253499384ec3342e3717
+    m_Address: Effect.Paw.Numb.03.sprite
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 2800000, guid: 6202516b40b2253499384ec3342e3717, type: 3}
+    m_TargetAsset: {fileID: 2800000, guid: 6202516b40b2253499384ec3342e3717, type: 3}
   - m_GUID: 92f1369b446ccef41bca897d83a3eea2
     m_Address: Effect.Bubble03.sprite
     m_ReadOnly: 0
     m_SerializedLabels: []
-    m_MainAsset: {fileID: 2800000, guid: 92f1369b446ccef41bca897d83a3eea2, type: 3}
-    m_TargetAsset: {fileID: 2800000, guid: 92f1369b446ccef41bca897d83a3eea2, type: 3}
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 94d4d2c5db98b1a4bb756c4c98a13f9a
+    m_Address: Effect.Paw.Numb.04.sprite
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 2800000, guid: 94d4d2c5db98b1a4bb756c4c98a13f9a, type: 3}
+    m_TargetAsset: {fileID: 2800000, guid: 94d4d2c5db98b1a4bb756c4c98a13f9a, type: 3}
   - m_GUID: 9c4eba3360668d14d87c5e3ffdc17bf5
     m_Address: Effect.Bubble04.sprite
     m_ReadOnly: 0
     m_SerializedLabels: []
-    m_MainAsset: {fileID: 2800000, guid: 9c4eba3360668d14d87c5e3ffdc17bf5, type: 3}
-    m_TargetAsset: {fileID: 2800000, guid: 9c4eba3360668d14d87c5e3ffdc17bf5, type: 3}
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: a4be540c63b80ca4da153c8cc3bd855b
+    m_Address: Effect.Paw.Numb.01.sprite
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 2800000, guid: a4be540c63b80ca4da153c8cc3bd855b, type: 3}
+    m_TargetAsset: {fileID: 2800000, guid: a4be540c63b80ca4da153c8cc3bd855b, type: 3}
   - m_GUID: c151e42e8c77a364da3c2bb6bf694cbc
     m_Address: Effect.Bubble02.sprite
     m_ReadOnly: 0
     m_SerializedLabels: []
-    m_MainAsset: {fileID: 2800000, guid: c151e42e8c77a364da3c2bb6bf694cbc, type: 3}
-    m_TargetAsset: {fileID: 2800000, guid: c151e42e8c77a364da3c2bb6bf694cbc, type: 3}
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
   - m_GUID: c3fd208497f98ca4aa223a6fe7d86821
     m_Address: Effect.Bubble01.sprite
     m_ReadOnly: 0
     m_SerializedLabels: []
-    m_MainAsset: {fileID: 2800000, guid: c3fd208497f98ca4aa223a6fe7d86821, type: 3}
-    m_TargetAsset: {fileID: 2800000, guid: c3fd208497f98ca4aa223a6fe7d86821, type: 3}
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: c6ac23c176753eb458b6927fa7f3b5f6
+    m_Address: Effect.Paw.Freeze.03.sprite
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 2800000, guid: c6ac23c176753eb458b6927fa7f3b5f6, type: 3}
+    m_TargetAsset: {fileID: 2800000, guid: c6ac23c176753eb458b6927fa7f3b5f6, type: 3}
+  - m_GUID: c7729905ff7b4c4418880ad9fd27d1e0
+    m_Address: Effect.Paw.Numb.02.sprite
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 2800000, guid: c7729905ff7b4c4418880ad9fd27d1e0, type: 3}
+    m_TargetAsset: {fileID: 2800000, guid: c7729905ff7b4c4418880ad9fd27d1e0, type: 3}
+  - m_GUID: cdefeca0d3f8f04498cae3dd9f074375
+    m_Address: Effect.Paw.Freeze.02.sprite
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 2800000, guid: cdefeca0d3f8f04498cae3dd9f074375, type: 3}
+    m_TargetAsset: {fileID: 2800000, guid: cdefeca0d3f8f04498cae3dd9f074375, type: 3}
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 8c2478ab617b39d41897f31592ccbc8b, type: 2}
   m_SchemaSet:
