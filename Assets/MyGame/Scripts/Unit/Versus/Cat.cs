@@ -27,6 +27,17 @@ namespace MyGame.Unit.Versus
     /// </summary>
     private const float INTERVAL = 0.5f;
 
+    /// <summary>
+    /// Sprite名の定義(定数扱い)
+    /// </summary>
+    private static readonly Dictionary<App.Cat, string[]> SPRITE_NAMES = new Dictionary<App.Cat, string[]>(){
+      { App.Cat.Minchi, new string[] { "Usual01", "Usual02", "Damage01", "Attack01" }},
+      { App.Cat.Nick  , new string[] { "Usual01", "Usual02", "Damage01", "Damage02", "Attack01", "Attack02" }},
+      { App.Cat.Shiro , new string[] { "Usual01", "Usual02", "Damage01", "Damage02", "Attack01" }},
+      { App.Cat.Tii   , new string[] { "Usual01", "Usual02", "Damage01", "Damage02", "Attack01" }},
+    };
+
+
     //-------------------------------------------------------------------------
     // メンバ変数
 
@@ -47,13 +58,6 @@ namespace MyGame.Unit.Versus
     private List<Sprite> usualSprites = new List<Sprite>();
     private List<Sprite> damageSprites = new List<Sprite>();
     private List<Sprite> attackSprites = new List<Sprite>();
-
-    private static Dictionary<App.Cat, string[]> SPRITE_NAMES = new Dictionary<App.Cat, string[]>(){
-      { App.Cat.Minchi, new string[] { "Usual01", "Usual02", "Damage01", "Attack01" }},
-      { App.Cat.Nick  , new string[] { "Usual01", "Usual02", "Damage01", "Damage02", "Attack01", "Attack02" }},
-      { App.Cat.Shiro , new string[] { "Usual01", "Usual02", "Damage01", "Damage02", "Attack01" }},
-      { App.Cat.Tii   , new string[] { "Usual01", "Usual02", "Damage01", "Damage02", "Attack01" }},
-    };
 
     /// <summary>
     /// 汎用タイマー
@@ -79,6 +83,7 @@ namespace MyGame.Unit.Versus
     {
       this.type = type;
 
+      // 反転するならスケールのXを-1にする
       CacheTransform.localScale = (flip)
         ? new Vector3(-1, 1, 1)
         : Vector3.one;
