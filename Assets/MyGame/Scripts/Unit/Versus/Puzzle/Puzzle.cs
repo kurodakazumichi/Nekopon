@@ -1,9 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using MyGame.Unit.Versus;
 
-namespace MyGame.VersusManagement
+
+namespace MyGame.Unit.Versus
 {
   public class Puzzle
   {

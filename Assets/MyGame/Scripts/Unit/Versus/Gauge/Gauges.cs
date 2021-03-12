@@ -1,8 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using MyGame.Unit.Versus;
-namespace MyGame.VersusManagement
+﻿using UnityEngine;
+using MyGame.VersusManagement;
+
+namespace MyGame.Unit.Versus
 {
   /// <summary>
   /// ゲージ取りまとめようクラス

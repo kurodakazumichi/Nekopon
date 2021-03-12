@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace MyGame.VersusManagement
+namespace MyGame.Unit.Versus
 {
   /// <summary>
   /// 消滅情報
