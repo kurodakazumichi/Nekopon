@@ -52,7 +52,7 @@ namespace MyGame.Scene
         .Regist<SceneSystem>(system)
         .Regist<ResourceSystem>(system)
         .Regist<SoundSystem>(system)
-        .Regist<InputManager>(system);
+        .Regist<InputSystem>(system);
     }
 
     protected override IEnumerator Load()
@@ -99,7 +99,7 @@ namespace MyGame.Scene
     {
       // Singleton取得
       var sm = SaveSystem.Instance;
-      var im = InputManager.Instance;
+      var im = InputSystem.Instance;
 
       // GamePadの設定
       InputManagement.GamePad pad;

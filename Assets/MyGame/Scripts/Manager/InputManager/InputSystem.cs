@@ -9,7 +9,7 @@ namespace MyGame
   /// <summary>
   /// 入力管理
   /// </summary>
-  public class InputManager : SingletonMonoBehaviour<InputManager>
+  public class InputSystem : SingletonMonoBehaviour<InputSystem>
   {
     //-------------------------------------------------------------------------
     // メンバ変数

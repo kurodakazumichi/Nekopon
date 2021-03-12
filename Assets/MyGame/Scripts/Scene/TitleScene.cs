@@ -155,7 +155,7 @@ namespace MyGame.Scene
     /// </summary>
     private void OnIntroUpdate()
     {
-      if (InputManager.Instance.GetCommand(Command.PressAnyButton, 0).IsFixed) {
+      if (InputSystem.Instance.GetCommand(Command.PressAnyButton, 0).IsFixed) {
         this.logo.CompletedBound = null;
         this.logo.ToUsual();
         this.state.SetState(State.MenuSelection);
@@ -187,7 +187,7 @@ namespace MyGame.Scene
     private void TryChangeReservedScene()
     {
       // 決定ボタンがおされていなければシーン変更しない
-      if (!InputManager.Instance.GetCommand(Command.Decide, 0).IsFixed) return;
+      if (!InputSystem.Instance.GetCommand(Command.Decide, 0).IsFixed) return;
 
       // シーン予約がなければシーン遷移しない
       if (!SceneSystem.Instance.HasReservedScene) return;
