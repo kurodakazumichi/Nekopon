@@ -24,12 +24,12 @@ namespace MyGame
     //-------------------------------------------------------------------------
     // メンバ変数
 
-    private StateMachine<State> state = new StateMachine<State>();
+    private readonly StateMachine<State> state = new StateMachine<State>();
 
     /// <summary>
     /// 対戦画面の各種ロケーション
     /// </summary>
-    private Dictionary<App.Player, Location> locations = new Dictionary<App.Player, Location>();
+    private readonly Dictionary<App.Player, Location> locations = new Dictionary<App.Player, Location>();
 
     /// <summary>
     /// プレイヤー１
@@ -44,7 +44,7 @@ namespace MyGame
     /// <summary>
     /// ガイドユニット
     /// </summary>
-    private Unit.Versus.Guide guide = null;
+    private Guide guide = null;
 
     //-------------------------------------------------------------------------
     // Load, Unload
@@ -53,14 +53,14 @@ namespace MyGame
     {
       Player.Load(pre, done);
       Puzzle.Load(pre, done);
-      Unit.Versus.Guide.Load(pre, done);
+      Guide.Load(pre, done);
     }
 
     public static void Unload()
     {
       Player.Unload();
       Puzzle.Unload();
-      Unit.Versus.Guide.Unload();
+      Guide.Unload();
     }
 
     //-------------------------------------------------------------------------
@@ -206,12 +206,13 @@ namespace MyGame
     /// </summary>
     private Player CreatePlayer(App.Player type)
     {
-      Player.Props props = new Player.Props();
-      props.Type     = type;
-      props.Parent   = CacheTransform;
-      props.Location = this.locations[type];
-      props.Config   = SaveSystem.Instance.GetPlayerConfig(type);
-      props.CatType  = MyEnum.Random<App.Cat>();
+      Player.Props props = new Player.Props {
+        Type     = type,
+        Parent   = CacheTransform,
+        Location = this.locations[type],
+        Config   = SaveSystem.Instance.GetPlayerConfig(type),
+        CatType  = MyEnum.Random<App.Cat>()
+      };
       return new Player(props).Init();
     }
 
