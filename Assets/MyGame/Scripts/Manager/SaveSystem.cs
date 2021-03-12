@@ -6,9 +6,9 @@ using MyGame.Define;
 namespace MyGame
 {
   /// <summary>
-  /// セーブデータ管理
+  /// セーブデータシステム
   /// </summary>
-  public class SaveManager : SingletonMonoBehaviour<SaveManager>
+  public class SaveSystem : SingletonMonoBehaviour<SaveSystem>
   {
     //-------------------------------------------------------------------------
     // メンバ変数

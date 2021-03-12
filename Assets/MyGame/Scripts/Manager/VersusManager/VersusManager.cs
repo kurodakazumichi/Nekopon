@@ -209,7 +209,7 @@ namespace MyGame
       props.Type     = type;
       props.Parent   = CacheTransform;
       props.Location = this.locations[type];
-      props.Config   = SaveManager.Instance.GetPlayerConfig(type);
+      props.Config   = SaveSystem.Instance.GetPlayerConfig(type);
       props.CatType  = MyEnum.Random<App.Cat>();
       return new Player(props).Init();
     }

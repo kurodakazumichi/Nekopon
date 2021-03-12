@@ -47,7 +47,7 @@ namespace MyGame.Scene
       // 常駐させたいシステムがあればここで生成
       SingletonSystem.Instance
         .Regist<Debug.Manager>(system)
-        .Regist<SaveManager>(system)
+        .Regist<SaveSystem>(system)
         .Regist<TimeSystem>(system)
         .Regist<SceneSystem>(system)
         .Regist<ResourceManager>(system)
@@ -61,7 +61,7 @@ namespace MyGame.Scene
       System.Action pre  = waitForCount.inc;
       System.Action done = waitForCount.dec;
 
-      SaveManager.Instance.Load(pre, done);
+      SaveSystem.Instance.Load(pre, done);
 
       yield return waitForCount;
 
@@ -79,7 +79,7 @@ namespace MyGame.Scene
 
     private void OnUsualEnter()
     {
-      SaveManager.Instance.Setup();
+      SaveSystem.Instance.Setup();
 
       SetupGamePad();
 
@@ -98,7 +98,7 @@ namespace MyGame.Scene
     private void SetupGamePad()
     {
       // Singleton取得
-      var sm = SaveManager.Instance;
+      var sm = SaveSystem.Instance;
       var im = InputManager.Instance;
 
       // GamePadの設定
