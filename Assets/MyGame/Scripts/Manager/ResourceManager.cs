@@ -118,12 +118,24 @@ namespace MyGame
     }
 
 #if _DEBUG
+    //-------------------------------------------------------------------------
+    // デバッグ
+    private string __InputText = "";
+
     public override void OnDebug()
     {
-      using (new GUILayout.VerticalScope(GUI.skin.box)) {
-        Util.ForEach(this.cache, (key, value) => {
-          GUILayout.Label($"{key}:{value.Count}");
-        });
+      using (new GUILayout.VerticalScope(GUI.skin.box)) 
+      {
+        __InputText = GUILayout.TextField(__InputText);
+
+        using(new GUILayout.VerticalScope(GUI.skin.box)) 
+        {
+          Util.ForEach(this.cache, (key, value) => 
+          {
+            if (__InputText != "" && !key.Contains(__InputText)) return;
+            GUILayout.Label($"{key}:{value.Count}");
+          });
+        }
       }
     }
 #endif
