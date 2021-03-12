@@ -41,12 +41,12 @@ namespace MyGame
 
     protected override void MyStart()
     {
-      Debug.Manager.Instance.Regist(this);
+      DebugSystem.Instance.Regist(this);
     }
 
     protected override void OnMyDestory()
     {
-      Debug.Manager.Instance.Discard(this);
+      DebugSystem.Instance.Discard(this);
     }
 
     /// <summary>

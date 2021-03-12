@@ -4,9 +4,9 @@ using UnityEngine;
 using System.Diagnostics;
 using MyGame.Define;
 
-namespace MyGame.Debug
+namespace MyGame
 {
-  public class Manager : SingletonMonoBehaviour<Manager>
+  public class DebugSystem : SingletonMonoBehaviour<DebugSystem>
   {
     /// <summary>
     /// デバッグマネージャーに対称を登録

@@ -39,7 +39,7 @@ namespace MyGame
 
     protected override void MyStart()
     {
-      Debug.Manager.Instance.Regist(this);
+      DebugSystem.Instance.Regist(this);
       this.ConnectedPadCount = Input.GetJoystickNames().Length;
 
       this.pads.Add(new GamePad());
@@ -56,7 +56,7 @@ namespace MyGame
 
     protected override void OnMyDestory()
     {
-      Debug.Manager.Instance.Discard(this);
+      DebugSystem.Instance.Discard(this);
     }
 
     //-------------------------------------------------------------------------

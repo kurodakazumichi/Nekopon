@@ -46,7 +46,9 @@ namespace MyGame.Scene
 
       // 常駐させたいシステムがあればここで生成
       SingletonSystem.Instance
-        .Regist<Debug.Manager>(system)
+#if _DEBUG
+        .Regist<DebugSystem>(system)
+#endif
         .Regist<SaveSystem>(system)
         .Regist<TimeSystem>(system)
         .Regist<SceneSystem>(system)
