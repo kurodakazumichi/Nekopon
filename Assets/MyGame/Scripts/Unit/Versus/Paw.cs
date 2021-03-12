@@ -236,7 +236,7 @@ namespace MyGame.Unit.Versus
 
     private void OnVanishUpdate()
     {
-      float deltaTime = TimeManager.Instance.DeltaTime;
+      float deltaTime = TimeSystem.Instance.DeltaTime;
       
       this.CacheTransform.Rotate(0, 0, _VanishingAngularSpeed * deltaTime);
       this.CacheTransform.localScale = Vector3.Lerp(Vector3.one, Vector3.zero, this.timer/_VanishingTime);
@@ -272,7 +272,7 @@ namespace MyGame.Unit.Versus
 
       // 時間経過していたら移動完了フェーズへ
       if (movingTime <= this.timer) { this.state.SetState(State.Usual); }
-      this.timer += TimeManager.Instance.DeltaTime;
+      this.timer += TimeSystem.Instance.DeltaTime;
     }
 
     private void OnMoveExit()
@@ -306,7 +306,7 @@ namespace MyGame.Unit.Versus
         Tween.EaseInSine(Mathf.Abs(Mathf.Sin(this.timer * Mathf.PI)))
       );
 
-      this.timer += TimeManager.Instance.DeltaTime;
+      this.timer += TimeSystem.Instance.DeltaTime;
     }
 
     //-------------------------------------------------------------------------

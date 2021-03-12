@@ -48,7 +48,7 @@ namespace MyGame.Scene
       SingletonManager.Instance
         .Regist<Debug.Manager>(system)
         .Regist<SaveManager>(system)
-        .Regist<TimeManager>(system)
+        .Regist<TimeSystem>(system)
         .Regist<SceneManager>(system)
         .Regist<ResourceManager>(system)
         .Regist<SoundManager>(system)

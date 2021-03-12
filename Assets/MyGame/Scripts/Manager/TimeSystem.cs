@@ -7,7 +7,7 @@ namespace MyGame
   /// <summary>
   /// ゲーム内時間を管理するクラス
   /// </summary>
-  public class TimeManager : SingletonMonoBehaviour<TimeManager>
+  public class TimeSystem : SingletonMonoBehaviour<TimeSystem>
   {
     [SerializeField]
     private float timeScale = 1f;

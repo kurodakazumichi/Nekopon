@@ -127,8 +127,8 @@ namespace MyGame.Unit.Title
 
     private void OnBoundUpdate()
     {
-      this.velocity.y -= _Speed * TimeManager.Instance.DeltaTime;
-      CacheTransform.position += this.velocity * TimeManager.Instance.DeltaTime;
+      this.velocity.y -= _Speed * TimeSystem.Instance.DeltaTime;
+      CacheTransform.position += this.velocity * TimeSystem.Instance.DeltaTime;
 
       if (CacheTransform.position.y < _EndY) 
       {

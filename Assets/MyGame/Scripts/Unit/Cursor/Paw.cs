@@ -142,7 +142,7 @@ namespace MyGame.Unit.Cursor
     /// </summary>
     private void OnOperableUpdate()
     {
-      var deltaTime = TimeManager.Instance.DeltaTime;
+      var deltaTime = TimeSystem.Instance.DeltaTime;
       var cmdMove   = InputManager.Instance.GetCommand(Command.Move, this.PadNo);
 
       // Moveコマンド中はカーソルを加速

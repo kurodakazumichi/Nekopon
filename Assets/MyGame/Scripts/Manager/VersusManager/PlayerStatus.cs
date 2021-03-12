@@ -113,7 +113,7 @@ namespace MyGame.VersusManagement
       // ダメージがあるならHPを減らし続ける
       if (Damage.IsEmpty) return;
 
-      float damage = Versus.DAMAGE_PER_SEC * TimeManager.Instance.DeltaTime;
+      float damage = Versus.DAMAGE_PER_SEC * TimeSystem.Instance.DeltaTime;
 
       Dp.Now = Damage.Now;
       Hp.Now     -= damage;

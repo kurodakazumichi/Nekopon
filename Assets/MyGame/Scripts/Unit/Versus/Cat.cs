@@ -198,7 +198,7 @@ namespace MyGame.Unit.Versus
       int index = (int)(this.timer / INTERVAL) % this.sprites.Count;
       this.spriteRenderer.sprite = this.sprites[index];
 
-      this.timer += TimeManager.Instance.DeltaTime;
+      this.timer += TimeSystem.Instance.DeltaTime;
     }
 
     //-------------------------------------------------------------------------

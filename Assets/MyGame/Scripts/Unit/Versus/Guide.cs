@@ -264,7 +264,7 @@ namespace MyGame.Unit.Versus
       this.Ready.CacheTransform.position 
         = MyVector3.Lerp(Vector3.left, Vector3.zero, Tween.EaseOutBack(this.timer/this.time));
 
-      this.timer += TimeManager.Instance.DeltaTime;
+      this.timer += TimeSystem.Instance.DeltaTime;
 
       if (this.timer < this.time) return;
       this.state.SetState(State.ReadyWait);
@@ -279,7 +279,7 @@ namespace MyGame.Unit.Versus
 
     private void OnReadyWaitUpdate()
     {
-      this.timer += TimeManager.Instance.DeltaTime;
+      this.timer += TimeSystem.Instance.DeltaTime;
 
       if (this.timer < this.time) return;
       this.state.SetState(State.Finished);
@@ -300,7 +300,7 @@ namespace MyGame.Unit.Versus
       this.Go.CacheTransform.position
         = Vector3.Lerp(Vector3.up, Vector3.zero, Tween.EaseOutBounce(this.timer/this.time));
 
-      this.timer += TimeManager.Instance.DeltaTime;
+      this.timer += TimeSystem.Instance.DeltaTime;
 
       if (this.timer < this.time) return;
       this.state.SetState(State.GoWait);
@@ -315,7 +315,7 @@ namespace MyGame.Unit.Versus
 
     private void OnGoWaitUpdate()
     {
-      this.timer += TimeManager.Instance.DeltaTime;
+      this.timer += TimeSystem.Instance.DeltaTime;
 
       if (this.timer < this.time) return;
       this.state.SetState(State.GoBack);
@@ -333,7 +333,7 @@ namespace MyGame.Unit.Versus
       this.Go.CacheTransform.position
         = MyVector3.Lerp(Vector3.zero, Vector3.up * 2, Tween.EaseInOutBack(this.timer / this.time));
 
-      this.timer += TimeManager.Instance.DeltaTime;
+      this.timer += TimeSystem.Instance.DeltaTime;
 
       if (this.timer < this.time) return;
       this.state.SetState(State.Finished);
@@ -361,7 +361,7 @@ namespace MyGame.Unit.Versus
       this.Lose.CacheTransform.position
         = MyVector3.Lerp(Vector3.up, LoserPos, Tween.EaseOutElastic(rate));
 
-      this.timer += TimeManager.Instance.DeltaTime;
+      this.timer += TimeSystem.Instance.DeltaTime;
 
       if (this.timer < this.time) return;
       this.state.SetState(State.ResultWait);
@@ -389,7 +389,7 @@ namespace MyGame.Unit.Versus
       this.Retry.CacheTransform.localScale
         = MyVector3.Lerp(Vector3.zero, Vector3.one, Tween.EaseOutBack(this.timer / this.time));
 
-      this.timer += TimeManager.Instance.DeltaTime;
+      this.timer += TimeSystem.Instance.DeltaTime;
 
       if (this.timer < this.time) return;
       this.state.SetState(State.RetryWait);
