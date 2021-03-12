@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using MyGame.Unit.Versus;
 
 namespace MyGame.VersusManagement
 {
@@ -21,6 +22,11 @@ namespace MyGame.VersusManagement
       /// プレイヤータイプ
       /// </summary>
       public Define.App.Player Type;
+
+      /// <summary>
+      /// 猫のタイプ
+      /// </summary>
+      public Define.App.Cat CatType;
 
       /// <summary>
       /// Playerの親に該当するオブジェクト
@@ -81,6 +87,16 @@ namespace MyGame.VersusManagement
     /// </summary>
     private IPlayerConfig config = null;
 
+    /// <summary>
+    /// 猫
+    /// </summary>
+    private Cat cat = null;
+
+    /// <summary>
+    /// 猫の種類
+    /// </summary>
+    private Define.App.Cat catType = default;
+
     //-------------------------------------------------------------------------
     // プロパティ
 
@@ -116,6 +132,7 @@ namespace MyGame.VersusManagement
       this.parent   = props.Parent;
       this.location = props.Location;
       this.config   = props.Config;
+      this.catType  = props.CatType;
       this.status   = new PlayerStatus().Init(config);
     }
 
@@ -139,6 +156,12 @@ namespace MyGame.VersusManagement
       props.Parent   = this.folder;
 
       this.gauges = new Gauges(props).Init();
+
+      // 猫を生成
+      this.cat = new GameObject("Cat").AddComponent<Cat>();
+      this.cat.SetParent(this.folder);
+      this.cat.CacheTransform.position = this.location.Cat;
+      this.cat.Init(this.catType, this.Type == Define.App.Player.P2);
 
       return this;
     }
@@ -172,6 +195,17 @@ namespace MyGame.VersusManagement
       this.status.Update();
       this.gauges.Hp = this.status.Hp.Rate;
       this.gauges.Dp = this.status.Dp.Rate;
+
+
+      if (Input.GetKeyDown(KeyCode.Alpha1)) {
+        this.cat.ToUsual();
+      }
+      if (Input.GetKeyDown(KeyCode.Alpha2)) {
+        this.cat.ToDamage();
+      }
+      if (Input.GetKeyDown(KeyCode.Alpha3)) {
+        this.cat.ToAttack();
+      }
 
       if (Input.GetKeyDown(KeyCode.Alpha2)) {
         this.puzzle.ShowCursor();

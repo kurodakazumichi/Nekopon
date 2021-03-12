@@ -66,6 +66,11 @@ namespace MyGame
         post?.Invoke(op.Result);
         done();
 
+        if (op.Result == null) {
+          Debug.Logger.Error($"ResourceManager.Load:{address}がロードできませんでした。");
+          return;
+        }
+
         // 未キャッシュであればキャッシュ、キャッシュ済であれば参照カウンタを更新
         if (!this.cache.ContainsKey(address)) {
           this.cache[address] = new CachedResource(op.Result);

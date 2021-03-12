@@ -35,6 +35,11 @@ namespace MyGame.VersusManagement
     public Vector3 TargetCenter { get; private set; } = Vector3.zero;
 
     /// <summary>
+    /// 猫の位置
+    /// </summary>
+    public Vector3 Cat { get; private set; } = Vector3.zero;
+
+    /// <summary>
     /// コンストラクタ
     /// </summary>
     public Location(string myPrefix, string targetPrefix, GameObject go)
@@ -45,6 +50,7 @@ namespace MyGame.VersusManagement
       ApGuage      = locations.Find($"{myPrefix}.Gauge.Ap").position;
       MyCenter     = locations.Find($"{myPrefix}.Center").position;
       TargetCenter = locations.Find($"{targetPrefix}.Center").position;
+      Cat          = locations.Find($"{myPrefix}.Cat").position;
     }
   }
 }

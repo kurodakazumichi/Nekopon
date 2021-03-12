@@ -18,7 +18,7 @@ MonoBehaviour:
   m_GUID: b7a7d3a3a44d2864faa16be4af326c19
   m_SerializeEntries:
   - m_GUID: 02c599b6ec235be4eaa04a64fdd249b6
-    m_Address: Cat.Minchi.Damage01
+    m_Address: Cat.Minchi.Damage01.sprite
     m_ReadOnly: 0
     m_SerializedLabels: []
     m_MainAsset: {fileID: 2800000, guid: 02c599b6ec235be4eaa04a64fdd249b6, type: 3}
@@ -54,7 +54,7 @@ MonoBehaviour:
     m_MainAsset: {fileID: 2800000, guid: 41aef4953149d6b4995543acee3b02d2, type: 3}
     m_TargetAsset: {fileID: 2800000, guid: 41aef4953149d6b4995543acee3b02d2, type: 3}
   - m_GUID: 483cc44f0a7df41478a2e7b369092474
-    m_Address: Cat.Minchi.Attack01
+    m_Address: Cat.Minchi.Attack01.sprite
     m_ReadOnly: 0
     m_SerializedLabels: []
     m_MainAsset: {fileID: 2800000, guid: 483cc44f0a7df41478a2e7b369092474, type: 3}
@@ -72,7 +72,7 @@ MonoBehaviour:
     m_MainAsset: {fileID: 2800000, guid: 505ef98ea6d71934caf62047a10aac80, type: 3}
     m_TargetAsset: {fileID: 2800000, guid: 505ef98ea6d71934caf62047a10aac80, type: 3}
   - m_GUID: 64a5d3fe6ec40994a8723cba56134a0a
-    m_Address: Cat.Minchi.Usual02
+    m_Address: Cat.Minchi.Usual02.sprite
     m_ReadOnly: 0
     m_SerializedLabels: []
     m_MainAsset: {fileID: 2800000, guid: 64a5d3fe6ec40994a8723cba56134a0a, type: 3}
@@ -84,7 +84,7 @@ MonoBehaviour:
     m_MainAsset: {fileID: 2800000, guid: 7ce8275d3bc69204496c91b2140b1f73, type: 3}
     m_TargetAsset: {fileID: 2800000, guid: 7ce8275d3bc69204496c91b2140b1f73, type: 3}
   - m_GUID: 81f8964340563444c99f52a52d865a0a
-    m_Address: Cat.Minchi.Usual01
+    m_Address: Cat.Minchi.Usual01.sprite
     m_ReadOnly: 0
     m_SerializedLabels: []
     m_MainAsset: {fileID: 2800000, guid: 81f8964340563444c99f52a52d865a0a, type: 3}

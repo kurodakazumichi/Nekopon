@@ -53,5 +53,16 @@ namespace MyGame.Define
       X360,
       PS4,
     }
+
+    /// <summary>
+    /// 猫
+    /// </summary>
+    public enum Cat
+    {
+      Minchi,
+      Nick,
+      Shiro,
+      Tii,
+    }
   }
 }
