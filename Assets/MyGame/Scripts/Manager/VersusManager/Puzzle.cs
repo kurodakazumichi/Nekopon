@@ -132,7 +132,7 @@ namespace MyGame.VersusManagement
 
     public static void Load(System.Action pre, System.Action done)
     {
-      var rm = ResourceManager.Instance;
+      var rm = ResourceSystem.Instance;
       rm.Load<GameObject>("VS.Paw.prefab", pre, done, (res) => { PawPrefab = res; });
       Paw.Load(pre, done);
       Unit.Versus.Cursor.Load(pre, done);
@@ -140,7 +140,7 @@ namespace MyGame.VersusManagement
 
     public static void Unload()
     {
-      var rm = ResourceManager.Instance;
+      var rm = ResourceSystem.Instance;
       rm.Unload("VS.Paw.prefab");
       Paw.Unload();
       Unit.Versus.Cursor.Unload();

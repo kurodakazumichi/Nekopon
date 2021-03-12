@@ -84,14 +84,14 @@ namespace MyGame.Unit.Cursor
 
     public static void Load(Action pre, Action done)
     {
-      var rm = ResourceManager.Instance;
+      var rm = ResourceSystem.Instance;
       rm.Load<Sprite>("Cursor.Cat01.sprite", pre, done);
       rm.Load<Sprite>("Cursor.Cat02.sprite", pre, done);
     }
 
     public static void Unload()
     {
-      var rm = ResourceManager.Instance;
+      var rm = ResourceSystem.Instance;
       rm.Unload("Cursor.Cat01.sprite");
       rm.Unload("Cursor.Cat02.sprite");
     }
@@ -106,8 +106,8 @@ namespace MyGame.Unit.Cursor
       this.state.Add(State.Operable, null, OnOperableUpdate);
       this.state.SetState(State.Idle);
 
-      this.sprites[Type.White] = ResourceManager.Instance.GetCache<Sprite>("Cursor.Cat01.sprite");
-      this.sprites[Type.Black] = ResourceManager.Instance.GetCache<Sprite>("Cursor.Cat02.sprite");
+      this.sprites[Type.White] = ResourceSystem.Instance.GetCache<Sprite>("Cursor.Cat01.sprite");
+      this.sprites[Type.Black] = ResourceSystem.Instance.GetCache<Sprite>("Cursor.Cat02.sprite");
     }
 
     protected override void OnMyDestory()

@@ -128,7 +128,7 @@ namespace MyGame.Unit.Versus
 
     public static void Load(System.Action pre, System.Action done)
     {
-      var rm = ResourceManager.Instance;
+      var rm = ResourceSystem.Instance;
       MyEnum.ForEach<Type>((type) => { 
         rm.Load<Sprite>($"Logo.{type}.sprite", pre, done, (res) => { Sprites[type] = res; });
       });
@@ -136,7 +136,7 @@ namespace MyGame.Unit.Versus
 
     public static void Unload()
     {
-      var rm = ResourceManager.Instance;
+      var rm = ResourceSystem.Instance;
       MyEnum.ForEach<Type>((type) => { rm.Unload($"Logo.{type}.sprite"); });
       Sprites.Clear();
     }

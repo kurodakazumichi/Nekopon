@@ -69,7 +69,7 @@ namespace MyGame.Scene
       System.Action done = waitForCount.dec;
 
       // ロード
-      var rm = ResourceManager.Instance;
+      var rm = ResourceSystem.Instance;
       rm.Load<GameObject>("VS.BackGround.prefab", pre, done, (res) => { this.backGroundPrefab = res; });
       VersusManager.Load(pre, done);
 
@@ -83,7 +83,7 @@ namespace MyGame.Scene
 
     protected override void OnMyDestory()
     {
-      var rm = ResourceManager.Instance;
+      var rm = ResourceSystem.Instance;
       rm.Unload("VS.BackGround.prefab");
       VersusManager.Unload();
     }

@@ -136,7 +136,7 @@ namespace MyGame.Unit.Versus
 
     public static void Load(System.Action pre, System.Action done)
     {
-      var rm = ResourceManager.Instance;
+      var rm = ResourceSystem.Instance;
       rm.Load<Sprite>("Paw.Fir.sprite", pre, done, (res) => { Sprites[App.Attribute.Fir] = res; });
       rm.Load<Sprite>("Paw.Wat.sprite", pre, done, (res) => { Sprites[App.Attribute.Wat] = res; });
       rm.Load<Sprite>("Paw.Thu.sprite", pre, done, (res) => { Sprites[App.Attribute.Thu] = res; });
@@ -148,7 +148,7 @@ namespace MyGame.Unit.Versus
 
     public static void Unload()
     {
-      var rm = ResourceManager.Instance;
+      var rm = ResourceSystem.Instance;
       rm.Unload("Paw.Fir.sprite");
       rm.Unload("Paw.Wat.sprite");
       rm.Unload("Paw.Thu.sprite");

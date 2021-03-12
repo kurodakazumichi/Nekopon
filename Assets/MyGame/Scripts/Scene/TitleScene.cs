@@ -55,7 +55,7 @@ namespace MyGame.Scene
       System.Action pre  = waitForCount.inc;
       System.Action done = waitForCount.dec;
 
-      var rm = ResourceManager.Instance;
+      var rm = ResourceSystem.Instance;
       rm.Load<GameObject>("Title.Logo.prefab", pre, done, (res) => { this.logoPrefab = res; });
       rm.Load<GameObject>("Title.MenuCpu.prefab", pre, done, (res) => { this.menuPrefabs.Add(res);  });
       rm.Load<GameObject>("Title.MenuVs.prefab", pre, done, (res) => { this.menuPrefabs.Add(res);  });
@@ -79,7 +79,7 @@ namespace MyGame.Scene
     protected override void OnMyDestory()
     {
       SoundSystem.Instance.StopBGM();
-      var rm = ResourceManager.Instance;
+      var rm = ResourceSystem.Instance;
       rm.Unload("Title.Logo.prefab");
       rm.Unload("Title.MenuCpu.prefab");
       rm.Unload("Title.MenuVs.prefab");

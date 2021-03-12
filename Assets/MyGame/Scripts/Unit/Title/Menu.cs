@@ -34,12 +34,12 @@ namespace MyGame.Unit.Title
 
     public static void Load(Action pre, Action done)
     {
-      ResourceManager.Instance.Load<AudioClip>("SE.Over01", pre, done);
+      ResourceSystem.Instance.Load<AudioClip>("SE.Over01", pre, done);
     }
 
     public static void Unload()
     {
-      ResourceManager.Instance.Unload("SE.Over01");
+      ResourceSystem.Instance.Unload("SE.Over01");
     }
 
     //-------------------------------------------------------------------------

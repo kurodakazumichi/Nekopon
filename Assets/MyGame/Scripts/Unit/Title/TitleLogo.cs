@@ -71,12 +71,12 @@ namespace MyGame.Unit.Title
 
     public static void Load(Action pre, Action done)
     {
-      ResourceManager.Instance.Load<AudioClip>("SE.Bound001", pre, done);
+      ResourceSystem.Instance.Load<AudioClip>("SE.Bound001", pre, done);
     }
 
     public static void Unload()
     {
-      ResourceManager.Instance.Unload("SE.Bound001");
+      ResourceSystem.Instance.Unload("SE.Bound001");
     }
 
     //-------------------------------------------------------------------------

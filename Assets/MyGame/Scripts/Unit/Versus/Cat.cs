@@ -119,7 +119,7 @@ namespace MyGame.Unit.Versus
     /// </summary>
     private void LoadCatSprites(System.Action pre, System.Action done, App.Cat type, string[] names)
     {
-      var rm = ResourceManager.Instance;
+      var rm = ResourceSystem.Instance;
 
       Util.ForEach(names, (name, _) => {
         rm.Load<Sprite>($"Cat.{type}.{name}.sprite", pre, done);
@@ -131,7 +131,7 @@ namespace MyGame.Unit.Versus
     /// </summary>
     private void UnloadCatSprites(App.Cat type, string[] names)
     {
-      var rm = ResourceManager.Instance;
+      var rm = ResourceSystem.Instance;
 
       Util.ForEach(names, (name, _) => {
         rm.Unload($"Cat.{type}.{name}.sprite");
@@ -224,7 +224,7 @@ namespace MyGame.Unit.Versus
 
     private Sprite GetSpriteBy(string name)
     {
-      var rm = ResourceManager.Instance;
+      var rm = ResourceSystem.Instance;
       return rm.GetCache<Sprite>($"Cat.{this.type}.{name}.sprite");
     }
 

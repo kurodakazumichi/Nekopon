@@ -41,7 +41,7 @@ namespace MyGame
 
     public void Load(System.Action pre, System.Action done)
     {
-      var rm = ResourceManager.Instance;
+      var rm = ResourceSystem.Instance;
 
       // プレイヤー設定(HP,MPなど)
       rm.Load<PlayerConfig>("Config.Player.asset", pre, done, (res) => { 
@@ -70,7 +70,7 @@ namespace MyGame
 
     public void Unload()
     {
-      var rm = ResourceManager.Instance;
+      var rm = ResourceSystem.Instance;
       rm.Unload("Config.Player.asset");
     }
 

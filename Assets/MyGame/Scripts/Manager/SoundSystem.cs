@@ -52,7 +52,7 @@ namespace MyGame
 
     private AudioClip GetAudio(string address)
     {
-      return ResourceManager.Instance.GetCache<AudioClip>(address);
+      return ResourceSystem.Instance.GetCache<AudioClip>(address);
     }
 
     protected override void MyStart()

@@ -39,13 +39,13 @@ namespace MyGame.Unit.Versus
 
     public static void Load(System.Action pre, System.Action done)
     {
-      var rm = ResourceManager.Instance;
+      var rm = ResourceSystem.Instance;
       rm.Load<Sprite>("Common.White.sprite", pre, done, (res) => { GaugeSprite = res; });
     }
 
     public static void Unload()
     {
-      var rm = ResourceManager.Instance;
+      var rm = ResourceSystem.Instance;
       rm.Unload("Common.White.sprite");
       GaugeSprite = null;
     }

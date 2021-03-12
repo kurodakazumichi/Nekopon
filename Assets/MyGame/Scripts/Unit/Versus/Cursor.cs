@@ -33,13 +33,13 @@ namespace MyGame.Unit.Versus
 
     public static void Load(System.Action pre, System.Action done)
     {
-      var rm = ResourceManager.Instance;
+      var rm = ResourceSystem.Instance;
       rm.Load<Sprite>("Cursor.Puzzle.sprite", pre, done, (res) => { CursorSprite = res; });
     }
 
     public static void Unload()
     {
-      var rm = ResourceManager.Instance;
+      var rm = ResourceSystem.Instance;
       rm.Unload("Cursor.Puzzle.sprite");
       CursorSprite = null;
     }
