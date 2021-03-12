@@ -46,7 +46,10 @@ namespace MyGame.Scene
       system.transform.parent = CacheTransform;
 
       // 必要なシングルトンがあればココで定義
-      SingletonSystem.Instance.Regist<VersusManager>(system);
+      SingletonSystem.Instance
+        .Regist<PawEffectManager>(system)
+        .Regist<VersusManager>(system);
+      
 
       // 状態のセットアップ
       this.state.Add(State.Idle);
@@ -71,6 +74,7 @@ namespace MyGame.Scene
       // ロード
       var rm = ResourceSystem.Instance;
       rm.Load<GameObject>("VS.BackGround.prefab", pre, done, (res) => { this.backGroundPrefab = res; });
+      PawEffectManager.Load(pre, done);
       VersusManager.Load(pre, done);
 
       // ロード待機
@@ -85,7 +89,9 @@ namespace MyGame.Scene
     {
       var rm = ResourceSystem.Instance;
       rm.Unload("VS.BackGround.prefab");
+      PawEffectManager.Unload();
       VersusManager.Unload();
+
     }
 
     //-------------------------------------------------------------------------
