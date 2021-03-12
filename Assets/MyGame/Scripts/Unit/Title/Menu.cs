@@ -27,7 +27,7 @@ namespace MyGame.Unit.Title
     /// <summary>
     /// メニューボタンが押された時に遷移する先のシーンタイプ
     /// </summary>
-    public SceneManager.SceneType SceneType { private get; set; } = SceneManager.SceneType.None;
+    public SceneSystem.SceneType SceneType { private get; set; } = SceneSystem.SceneType.None;
 
     //-------------------------------------------------------------------------
     // Load, Unload
@@ -74,14 +74,14 @@ namespace MyGame.Unit.Title
     private void OnTriggerEnter2D(Collider2D collision)
     {
       GetComponent<SpriteRenderer>().material.color = SelectedColor;
-      SceneManager.Instance.ReservedScene = SceneType;
+      SceneSystem.Instance.ReservedScene = SceneType;
       SoundSystem.Instance.PlaySE("SE.Over01");
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
       GetComponent<SpriteRenderer>().material.color = Color.white;
-      SceneManager.Instance.ReservedScene = SceneManager.SceneType.None;
+      SceneSystem.Instance.ReservedScene = SceneSystem.SceneType.None;
     }
   }
 }

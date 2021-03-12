@@ -117,7 +117,7 @@ namespace MyGame.Scene
       this.menuPrefabs.ForEach((prefab) => {
         var menu = Instantiate(prefab).GetComponent<Menu>();
         menu.SetParent(this.CacheTransform).SetActive(false);
-        menu.SceneType = SceneManager.SceneType.Title;
+        menu.SceneType = SceneSystem.SceneType.Title;
         this.menus.Add(menu);
       });
 
@@ -190,13 +190,13 @@ namespace MyGame.Scene
       if (!InputManager.Instance.GetCommand(Command.Decide, 0).IsFixed) return;
 
       // シーン予約がなければシーン遷移しない
-      if (!SceneManager.Instance.HasReservedScene) return;
+      if (!SceneSystem.Instance.HasReservedScene) return;
 
       SoundSystem.Instance.PlaySE("SE.Select01");
 
       // タイトルシーンを破棄して予約シーンへ遷移
-      SceneManager.Instance.UnloadSceneAsync(SceneManager.SceneType.Title, () => { 
-        SceneManager.Instance.LoadReservedSceneAdditive();
+      SceneSystem.Instance.UnloadSceneAsync(SceneSystem.SceneType.Title, () => { 
+        SceneSystem.Instance.LoadReservedSceneAdditive();
       });
 
       this.state.SetState(State.Idle);

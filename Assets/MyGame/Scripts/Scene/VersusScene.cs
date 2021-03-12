@@ -29,7 +29,7 @@ namespace MyGame.Scene
     /// <summary>
     /// SceneManager
     /// </summary>
-    private SceneManager scene = null;
+    private SceneSystem scene = null;
 
     /// <summary>
     /// VersusManager
@@ -57,7 +57,7 @@ namespace MyGame.Scene
 
     protected override void MyStart()
     {
-      this.scene = SceneManager.Instance;
+      this.scene = SceneSystem.Instance;
       this.vs    = VersusManager.Instance;
     }
 
@@ -106,8 +106,8 @@ namespace MyGame.Scene
     {
       // 対戦が終わるまでループ
       if (!this.vs.Move()) {
-        this.scene.UnloadSceneAsync(SceneManager.SceneType.Versus, () => {
-          this.scene.LoadSceneAdditive(SceneManager.SceneType.Title);
+        this.scene.UnloadSceneAsync(SceneSystem.SceneType.Versus, () => {
+          this.scene.LoadSceneAdditive(SceneSystem.SceneType.Title);
         });
       }
     }

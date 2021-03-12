@@ -19,7 +19,7 @@ namespace MyGame.Scene
 
 #if _DEBUG
     // シーン遷移しないフラグ(デバッグ用)
-    public SceneManager.SceneType _FirstTransitionScene = SceneManager.SceneType.None;
+    public SceneSystem.SceneType _FirstTransitionScene = SceneSystem.SceneType.None;
     public int _TargetFrameRate = 60;
 #endif
 
@@ -49,7 +49,7 @@ namespace MyGame.Scene
         .Regist<Debug.Manager>(system)
         .Regist<SaveManager>(system)
         .Regist<TimeSystem>(system)
-        .Regist<SceneManager>(system)
+        .Regist<SceneSystem>(system)
         .Regist<ResourceManager>(system)
         .Regist<SoundSystem>(system)
         .Regist<InputManager>(system);
@@ -84,12 +84,12 @@ namespace MyGame.Scene
       SetupGamePad();
 
 #if _DEBUG
-      if (_FirstTransitionScene != SceneManager.SceneType.None) {
-        SceneManager.Instance.LoadSceneAdditive(_FirstTransitionScene);
+      if (_FirstTransitionScene != SceneSystem.SceneType.None) {
+        SceneSystem.Instance.LoadSceneAdditive(_FirstTransitionScene);
         return;
       }
 #endif
-      SceneManager.Instance.LoadSceneAdditive(SceneManager.SceneType.Title);
+      SceneSystem.Instance.LoadSceneAdditive(SceneSystem.SceneType.Title);
     }
 
     /// <summary>

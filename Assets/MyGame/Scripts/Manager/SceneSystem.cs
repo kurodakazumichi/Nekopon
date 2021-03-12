@@ -10,7 +10,7 @@ namespace MyGame
   /// シーン遷移や合成を司るクラス
   /// このゲームではBootシーンから始まり、原則として他のシーンは加算合成を前提とする。
   /// </summary>
-  public class SceneManager : SingletonMonoBehaviour<SceneManager>
+  public class SceneSystem : SingletonMonoBehaviour<SceneSystem>
   {
     /// <summary>
     /// シーンの種類
