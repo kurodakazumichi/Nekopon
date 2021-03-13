@@ -260,6 +260,19 @@ namespace MyGame.Unit.Versus
           VersusManager.Instance.AttackPlayer(this);
         }
       }
+
+      // 凍結
+      if (Input.GetKeyDown(KeyCode.F)) {
+        this.puzzle.Freeze();
+      }
+      // 麻痺
+      if (Input.GetKeyDown(KeyCode.P)) {
+        this.puzzle.Paralyze();
+      }
+      // 回復
+      if (Input.GetKeyDown(KeyCode.O)) {
+        this.puzzle.Cure();
+      }
     }
 
     //-------------------------------------------------------------------------

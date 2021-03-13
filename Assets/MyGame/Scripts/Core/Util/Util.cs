@@ -61,5 +61,10 @@ namespace MyGame
 
       return null;
     }
+
+    public static bool HasLuck(float rate)
+    {
+      return (UnityEngine.Random.Range(0, 1f) <= rate);
+    }
   }
 }

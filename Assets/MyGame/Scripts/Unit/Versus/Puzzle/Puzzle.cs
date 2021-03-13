@@ -390,6 +390,36 @@ namespace MyGame.Unit.Versus
       this.paws[dstIndex] = src;
     }
 
+    /// <summary>
+    /// 肉球をランダムに凍結させる
+    /// </summary>
+    public void Freeze()
+    {
+      Util.ForEach(this.paws, (paw, index) => { 
+        if (Util.HasLuck(0.5f)) paw.Freeze();
+      });
+    }
+
+    /// <summary>
+    /// 肉球をランダムに麻痺させる
+    /// </summary>
+    public void Paralyze()
+    {
+      Util.ForEach(this.paws, (paw, index) => { 
+        if (Util.HasLuck(0.5f)) paw.Paralyze();
+      });
+    }
+
+    /// <summary>
+    /// 肉球を回復させる
+    /// </summary>
+    public void Cure()
+    {
+      Util.ForEach(this.paws, (paw, index) => {
+        paw.Cure();
+      });
+    }
+
     //-------------------------------------------------------------------------
     // 連鎖関連
 
