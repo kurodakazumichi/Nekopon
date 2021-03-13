@@ -79,5 +79,8 @@ namespace MyGame.Define
     /// 1秒あたりに受けるダメージ
     /// </summary>
     public const float DAMAGE_PER_SEC = 30.0f;
+
+    public const float PAW_FREEZE_TIME = 5f;
+    public const float PAW_PARALYSIS_TIME = 5f;
   }
 }
