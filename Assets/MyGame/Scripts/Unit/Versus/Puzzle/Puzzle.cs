@@ -24,7 +24,7 @@ namespace MyGame.Unit.Versus
     /// <summary>
     /// 親オブジェクト
     /// </summary>
-    private Transform parent = null;
+    private readonly Transform parent = null;
 
     /// <summary>
     /// Puzzle内のゲームオブジェクトを格納しておくゲームオブジェクト
@@ -44,12 +44,12 @@ namespace MyGame.Unit.Versus
     /// <summary>
     /// 肉球リスト
     /// </summary>
-    private Paw[] paws = new Paw[Define.Versus.PAW_TOTAL];
+    private readonly Paw[] paws = new Paw[Define.Versus.PAW_TOTAL];
 
     /// <summary>
     /// カーソル
     /// </summary>
-    private Unit.Versus.Cursor cursor = null;
+    private Cursor cursor = null;
 
     /// <summary>
     /// 選択中の肉球を指すIndex、未選択時は -1
@@ -59,7 +59,7 @@ namespace MyGame.Unit.Versus
     /// <summary>
     /// ステートマシン
     /// </summary>
-    private StateMachine<State> state = new StateMachine<State>();
+    private readonly StateMachine<State> state = new StateMachine<State>();
 
     /// <summary>
     /// 連鎖の記録
@@ -135,7 +135,7 @@ namespace MyGame.Unit.Versus
       var rm = ResourceSystem.Instance;
       rm.Load<GameObject>("VS.Paw.prefab", pre, done, (res) => { PawPrefab = res; });
       Paw.Load(pre, done);
-      Unit.Versus.Cursor.Load(pre, done);
+      Cursor.Load(pre, done);
     }
 
     public static void Unload()
@@ -143,7 +143,7 @@ namespace MyGame.Unit.Versus
       var rm = ResourceSystem.Instance;
       rm.Unload("VS.Paw.prefab");
       Paw.Unload();
-      Unit.Versus.Cursor.Unload();
+      Cursor.Unload();
       PawPrefab = null;
     }
 
@@ -396,7 +396,7 @@ namespace MyGame.Unit.Versus
     public void Freeze()
     {
       Util.ForEach(this.paws, (paw, index) => { 
-        if (Util.HasLuck(0.5f)) paw.Freeze();
+        if (Util.HasLuck(Define.Versus.PAW_FREEZE_RATE)) paw.Freeze();
       });
     }
 
@@ -406,7 +406,7 @@ namespace MyGame.Unit.Versus
     public void Paralyze()
     {
       Util.ForEach(this.paws, (paw, index) => { 
-        if (Util.HasLuck(0.5f)) paw.Paralyze();
+        if (Util.HasLuck(Define.Versus.PAW_PARALYSIS_RATE)) paw.Paralyze();
       });
     }
 
