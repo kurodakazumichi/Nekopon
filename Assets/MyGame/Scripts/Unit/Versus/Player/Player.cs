@@ -273,6 +273,10 @@ namespace MyGame.Unit.Versus
       if (Input.GetKeyDown(KeyCode.O)) {
         this.puzzle.Cure();
       }
+
+      if (Input.GetKeyDown(KeyCode.Alpha1)) {
+        AcceptDamage(1000);
+      }
     }
 
     //-------------------------------------------------------------------------
@@ -302,6 +306,14 @@ namespace MyGame.Unit.Versus
     {
       this.status.Damage.Now += attacker.status.Attack.Now;
       attacker.status.Attack.BeToEmpty();
+    }
+
+    /// <summary>
+    /// ダメージを受ける
+    /// </summary>
+    public void AcceptDamage(float points)
+    {
+      this.status.Damage.Now += points;
     }
 
 #if _DEBUG
