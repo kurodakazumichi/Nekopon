@@ -14,18 +14,18 @@ namespace MyGame.Define
       public const string UI = "UI";
     }
 
-    public enum Order
+    public static class Order
     {
-      Layer00 = 0,
-      Layer10 = 10,
-      Layer20 = 20,
-      Layer30 = 30,
-      Layer40 = 40,
-      Layer50 = 50,
-      Layer60 = 60,
-      Layer70 = 70,
-      Layer80 = 80,
-      Layer90 = 90,
+      public const int Layer00 = 0;
+      public const int Layer10 = 10;
+      public const int Layer20 = 20;
+      public const int Layer30 = 30;
+      public const int Layer40 = 40;
+      public const int Layer50 = 50;
+      public const int Layer60 = 60;
+      public const int Layer70 = 70;
+      public const int Layer80 = 80;
+      public const int Layer90 = 90;
     }
   }
 }

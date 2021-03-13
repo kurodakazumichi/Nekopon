@@ -16,7 +16,7 @@ namespace MyGame
     public enum Type
     {
       Freeze,
-      Numb,
+      Paralysis,
     }
 
     //-------------------------------------------------------------------------
@@ -104,7 +104,7 @@ namespace MyGame
 
       switch (type) {
         case Type.Freeze: SetupFreeze(e); break;
-        case Type.Numb  : SetupNumb(e); break;
+        case Type.Paralysis  : SetupNumb(e); break;
       }
 
       e.ToUsual();
@@ -117,6 +117,8 @@ namespace MyGame
     /// </summary>
     public void Release(PawEffect e)
     {
+      if (e == null) return;
+
       e.SetParent(CacheTransform);
       this.pool.Release(e);
     }
@@ -128,6 +130,7 @@ namespace MyGame
     {
       e.Reset();
       e.Interval = 0.2f;
+      e.SortingOrder = Define.Layer.Order.Layer00;
       FREEZE_SPRITES.ForEach((sprite) => { e.AddSprite(sprite); });
     }
 
@@ -137,6 +140,8 @@ namespace MyGame
     private void SetupNumb(PawEffect e)
     {
       e.Reset();
+      e.Interval = 0.01f;
+      e.SortingOrder = Define.Layer.Order.Layer10;
       NUMB_SPRITES.ForEach((sprite) => { e.AddSprite(sprite); });
     }
 
@@ -165,7 +170,7 @@ namespace MyGame
         }
 
         if (GUILayout.Button("Numb")) {
-          Create(Type.Numb);
+          Create(Type.Paralysis);
         }
       }
     }

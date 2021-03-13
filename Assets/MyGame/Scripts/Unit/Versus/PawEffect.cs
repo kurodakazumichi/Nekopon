@@ -48,6 +48,18 @@ namespace MyGame.Unit.Versus
     public float Interval { private get; set; }
 
     //-------------------------------------------------------------------------
+    // プロパティ
+
+    /// <summary>
+    /// ソート順
+    /// </summary>
+    public int SortingOrder {
+      set {
+        this.spriteRenderer.sortingOrder = value;
+      }
+    }
+
+    //-------------------------------------------------------------------------
     // ライフサイクル
 
     protected override void MyAwake()

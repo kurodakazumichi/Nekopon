@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 using MyGame.Define;
+using System;
 
 namespace MyGame.Unit.Versus
 {
   /// <summary>
   /// パズル内の肉球
   /// </summary>
-  public class Paw : Unit<Paw.State>
+  public partial class Paw : Unit<Paw.State>
   {
     /// <summary>
     /// 状態
@@ -19,6 +20,15 @@ namespace MyGame.Unit.Versus
       Move,     // 移動
       Usual,    // 通常
       Selected, // 選択されている
+    }
+
+    /// <summary>
+    /// 状態異常などのサブステート(配列の添え字に使う)
+    /// </summary>
+    public enum SubState
+    {
+      Freeze    = 0, // 凍結
+      Paralysis = 1,   // 麻痺
     }
 
     //-------------------------------------------------------------------------
@@ -68,6 +78,11 @@ namespace MyGame.Unit.Versus
     /// 汎用タイマー
     /// </summary>
     private float timer = 0;
+
+    /// <summary>
+    /// ステータス(凍結、麻痺)
+    /// </summary>
+    private List<Status> status = new List<Status>();
 
     //-------------------------------------------------------------------------
     // プロパティ
@@ -125,6 +140,16 @@ namespace MyGame.Unit.Versus
       }
     }
 
+    /// <summary>
+    /// 凍結しているか？
+    /// </summary>
+    public bool IsFreeze => this.status[(int)SubState.Freeze].IsActive;
+
+    /// <summary>
+    /// 麻痺しているか？
+    /// </summary>
+    public bool IsParalyzed => this.status[(int)SubState.Paralysis].IsActive;
+
     //-------------------------------------------------------------------------
     // Load, Unload
 
@@ -172,12 +197,24 @@ namespace MyGame.Unit.Versus
       this.state.Add(State.Usual, OnUsualEnter);
       this.state.Add(State.Selected, OnSelectedEnter, OnSelectedUpdate);
       this.state.SetState(State.Idle);
+
+      // Freeze→Paralysisの順で登録する
+      this.status.Add(new Status(PawEffectManager.Type.Freeze   , Define.Versus.PAW_FREEZE_TIME, CacheTransform));
+      this.status.Add(new Status(PawEffectManager.Type.Paralysis, Define.Versus.PAW_PARALYSIS_TIME, CacheTransform));
+    }
+
+    protected override void MyUpdate()
+    {
+      base.MyUpdate();
+      this.status.ForEach((status) => { status.Update(); });
     }
 
     //-------------------------------------------------------------------------
     // Publicメソッド
 
-
+    /// <summary>
+    /// 消滅状態へ
+    /// </summary>
     public void ToVanish()
     {
       if (!CanToVanish) return;
@@ -192,16 +229,25 @@ namespace MyGame.Unit.Versus
       this.state.SetState(State.Move);
     }
 
+    /// <summary>
+    /// 通常状態へ
+    /// </summary>
     public void ToUsual()
     {
       this.state.SetState(State.Usual);
     }
 
+    /// <summary>
+    /// 選択状態へ
+    /// </summary>
     public void ToSelected()
     {
       this.state.SetState(State.Selected);
     }
 
+    /// <summary>
+    /// 属性をランダムに変更
+    /// </summary>
     public void RandomAttribute()
     {
       this.Attribute = MyEnum.Random<Define.App.Attribute>();
@@ -220,6 +266,30 @@ namespace MyGame.Unit.Versus
       if (this.state.StateKey == State.Idle) return false;
 
       return true;
+    }
+
+    /// <summary>
+    /// 肉球を凍結させる
+    /// </summary>
+    public void Freeze()
+    {
+      this.status[(int)SubState.Freeze].Start();
+    }
+
+    /// <summary>
+    /// 肉球を麻痺らせる
+    /// </summary>
+    public void Paralyze()
+    {
+      this.status[(int)SubState.Paralysis].Start();
+    }
+
+    /// <summary>
+    /// 肉球を治療する
+    /// </summary>
+    public void Cure()
+    {
+      this.status.ForEach((status) => { status.Finish(); });
     }
 
     //-------------------------------------------------------------------------
