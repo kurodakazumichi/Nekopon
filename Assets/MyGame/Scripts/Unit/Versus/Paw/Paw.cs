@@ -93,13 +93,6 @@ namespace MyGame.Unit.Versus
     public App.Attribute Attribute { get; private set; } = default;
 
     /// <summary>
-    /// 肉球が選択されているかどうかの状態を表すフラグ
-    /// </summary>
-    public bool IsSelected {
-      get { return this.state.StateKey == State.Selected; }
-    }
-
-    /// <summary>
     /// 連鎖時に使用する、評価済フラグ
     /// </summary>
     public bool IsEvaluated { get; set; } = false;
@@ -114,6 +107,42 @@ namespace MyGame.Unit.Versus
     }
 
     /// <summary>
+    /// 選択可能かどうか
+    /// まず麻痺っていたら選択不可で、すでに選択中とか消えてる最中とかも
+    /// 選択できるとまずいので、通常状態の時だけ選択可能ということにする
+    /// </summary>
+    public bool CanSelect
+    {
+      get {
+        if (this.IsParalyzed) return false;
+        if (this.state.StateKey != State.Usual) return false;
+        return true;
+      }
+    }
+
+    /// <summary>
+    /// 入れ替え可能かどうか
+    /// 麻痺している肉球は動かせないので入れ替えも不可
+    /// </summary>
+    public bool CanSwap {
+      get {
+        if (this.IsParalyzed) return false;
+        return true;
+      }
+    }
+
+    /// <summary>
+    /// 消滅状態へ移行可能かどうか
+    /// </summary>
+    private bool CanToVanish {
+      get {
+        if (this.state.StateKey == State.Usual) return true;
+        if (this.state.StateKey == State.Selected) return true;
+        return false;
+      }
+    }
+
+    /// <summary>
     /// アイドルです
     /// </summary>
     public bool IsIdle => (this.state.StateKey == State.Idle);
@@ -124,22 +153,17 @@ namespace MyGame.Unit.Versus
     public bool IsMoving => (this.state.StateKey == State.Move);
 
     /// <summary>
+    /// 肉球が選択されているかどうかの状態を表すフラグ
+    /// </summary>
+    public bool IsSelected {
+      get { return this.state.StateKey == State.Selected; }
+    }
+
+    /// <summary>
     /// 消失中です
     /// </summary>
     public bool IsVanishing => (this.state.StateKey == State.Vanish);
     
-    /// <summary>
-    /// 消滅状態へ移行可能かどうか
-    /// </summary>
-    private bool CanToVanish
-    {
-      get {
-        if (this.state.StateKey == State.Usual) return true;
-        if (this.state.StateKey == State.Selected) return true;
-        return false;
-      }
-    }
-
     /// <summary>
     /// 凍結しているか？
     /// </summary>
@@ -259,6 +283,9 @@ namespace MyGame.Unit.Versus
     /// </summary>
     public bool CanConnect(Paw paw)
     {
+      // 凍結していたら繋がれない
+      if (this.IsFreeze) return false;
+
       // 属性が異なるなら繋がれない
       if (this.Attribute != paw.Attribute) return false;
 
@@ -318,6 +345,7 @@ namespace MyGame.Unit.Versus
 
     private void OnVanishExit()
     {
+      Cure();
       CacheTransform.localScale = Vector3.zero;
     }
 

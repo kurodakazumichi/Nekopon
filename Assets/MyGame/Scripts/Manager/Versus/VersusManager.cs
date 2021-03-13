@@ -162,15 +162,15 @@ namespace MyGame
       UpdatePlayers();
 
       // Debug
-      if (Input.GetKeyDown(KeyCode.A)) {
-        this.guide.ToResult(App.Player.P1);
-      }
-      if (Input.GetKeyDown(KeyCode.S)) {
-        this.guide.ToResult(App.Player.P2);
-      }
-      if (Input.GetKeyDown(KeyCode.D)) {
-        this.guide.ToRetry();
-      }
+      //if (Input.GetKeyDown(KeyCode.A)) {
+      //  this.guide.ToResult(App.Player.P1);
+      //}
+      //if (Input.GetKeyDown(KeyCode.S)) {
+      //  this.guide.ToResult(App.Player.P2);
+      //}
+      //if (Input.GetKeyDown(KeyCode.D)) {
+      //  this.guide.ToRetry();
+      //}
     }
 
     private void OnResultEnter()

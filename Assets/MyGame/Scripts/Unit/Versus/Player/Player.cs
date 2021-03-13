@@ -281,7 +281,7 @@ namespace MyGame.Unit.Versus
     /// <summary>
     /// 肉球消滅時に呼ばれるコールバック
     /// </summary>
-    private void OnVanished(ChainInfo score)
+    private void OnVanished(Puzzle.ChainInfo score)
     {
       // 消えた肉球の数だけMPを回復
       MyEnum.ForEach<Define.App.Attribute>((attribute) => {

@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace MyGame.Unit.Versus
 {
-  public class Puzzle
+  public partial class Puzzle
   {
     /// <summary>
     /// 状態
@@ -347,8 +347,18 @@ namespace MyGame.Unit.Versus
     /// </summary>
     public void SelectPaw()
     {
-      this.selectedIndex = IndexBy(this.cursorCoord);
-      this.paws[this.selectedIndex].ToSelected();
+      // 既に選択中なら何もしない
+      if (HasSelectedPaw) return;
+
+      // カーソル位置にある肉球を取得
+      var currentIndex = IndexBy(this.cursorCoord);
+      var paw = this.paws[currentIndex];
+
+      // 選択可能なら選択
+      if (paw.CanSelect) {
+        paw.ToSelected();
+        this.selectedIndex = currentIndex;
+      }
     }
 
     /// <summary>
@@ -376,12 +386,15 @@ namespace MyGame.Unit.Versus
       // 入れ替え元と先が同じであれば何もしない
       if (srcIndex == dstIndex) return;
 
-      // 入れ替える前に選択状態を解除
-      ReleasePaw();
-
-      // 入れ替える肉球を取得
+      // 入れ替える予定の肉球を取得
       var src = this.paws[srcIndex];
       var dst = this.paws[dstIndex];
+
+      // 片方でも入れ替え不可の肉球があれば入れ替えない
+      if (!src.CanSwap || !dst.CanSwap) return;
+
+      // 入れ替える前に選択状態を解除
+      ReleasePaw();
 
       // 入れ替え作業
       src.CacheTransform.position = PositionBy(dstIndex);
@@ -405,8 +418,18 @@ namespace MyGame.Unit.Versus
     /// </summary>
     public void Paralyze()
     {
-      Util.ForEach(this.paws, (paw, index) => { 
-        if (Util.HasLuck(Define.Versus.PAW_PARALYSIS_RATE)) paw.Paralyze();
+      Util.ForEach(this.paws, (paw, index) => 
+      {
+        if (Util.HasLuck(Define.Versus.PAW_PARALYSIS_RATE)) 
+        {
+          // 肉球を麻痺らせる
+          paw.Paralyze();
+
+          // 選択中の肉球だったら選択解除
+          if (selectedIndex == index) {
+            ReleasePaw();
+          }
+        }
       });
     }
 
