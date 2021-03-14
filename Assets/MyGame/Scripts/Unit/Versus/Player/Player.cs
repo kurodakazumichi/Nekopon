@@ -265,6 +265,10 @@ namespace MyGame.Unit.Versus
       if (Input.GetKeyDown(KeyCode.O)) {
         this.puzzle.Cure();
       }
+      // ランダム化
+      if (Input.GetKeyDown(KeyCode.R)) {
+        this.puzzle.Randomize();
+      }
 
       if (Input.GetKeyDown(KeyCode.Alpha1)) {
         TakeDamage(1000);

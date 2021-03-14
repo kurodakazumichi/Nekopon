@@ -82,7 +82,7 @@ namespace MyGame.Unit.Versus
     /// <summary>
     /// ステータス(凍結、麻痺)
     /// </summary>
-    private List<Status> status = new List<Status>();
+    private readonly List<Status> status = new List<Status>();
 
     //-------------------------------------------------------------------------
     // プロパティ
@@ -127,6 +127,18 @@ namespace MyGame.Unit.Versus
     public bool CanSwap {
       get {
         if (this.IsParalyzed) return false;
+        return true;
+      }
+    }
+
+    /// <summary>
+    /// 属性を変える事ができる
+    /// Idleと消滅中以外は変えてもいいかもしれないのでそれでいこう
+    /// </summary>
+    public bool CanChangeAttribute {
+      get {
+        if (this.state.StateKey == State.Idle) return false;
+        if (this.state.StateKey == State.Vanish) return false;
         return true;
       }
     }
@@ -274,7 +286,7 @@ namespace MyGame.Unit.Versus
     /// </summary>
     public void RandomAttribute()
     {
-      this.Attribute = MyEnum.Random<Define.App.Attribute>();
+      this.Attribute = MyEnum.Random<App.Attribute>();
       this.spriteRenderer.sprite = Sprites[this.Attribute];
     }
 

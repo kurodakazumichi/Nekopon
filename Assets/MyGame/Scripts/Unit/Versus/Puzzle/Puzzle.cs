@@ -443,6 +443,18 @@ namespace MyGame.Unit.Versus
       });
     }
 
+    /// <summary>
+    /// 肉球の色をランダムに変化
+    /// </summary>
+    public void Randomize()
+    {
+      Util.ForEach(this.paws, (paw, index) => { 
+        if (paw.CanChangeAttribute) {
+          paw.RandomAttribute();
+        }
+      });
+    }
+
     //-------------------------------------------------------------------------
     // 連鎖関連
 
