@@ -245,7 +245,7 @@ namespace MyGame
     /// </summary>
     public void AttackPlayer(Player attacker)
     {
-      GetTargetPlayerBy(attacker).AcceptAttack(attacker);
+      GetTargetPlayerBy(attacker).TakeAttack(attacker);
     }
 
     /// <summary>

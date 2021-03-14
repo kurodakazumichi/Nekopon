@@ -6,7 +6,7 @@ namespace MyGame.Unit.Versus
   /// <summary>
   /// 対戦プレイヤーに該当するクラス
   /// </summary>
-  public class Player
+  public partial class Player
   {
     //-------------------------------------------------------------------------
     // クラス
@@ -68,7 +68,7 @@ namespace MyGame.Unit.Versus
     /// <summary>
     /// ステータス
     /// </summary>
-    private PlayerStatus status = null;
+    private Status status = null;
 
     /// <summary>
     /// パズル
@@ -94,14 +94,6 @@ namespace MyGame.Unit.Versus
     /// 猫の種類
     /// </summary>
     private Define.App.Cat catType = default;
-
-    //-------------------------------------------------------------------------
-    // プロパティ
-
-    /// <summary>
-    /// 公開用Status
-    /// </summary>
-    public IPlayerStatus Status => this.status;
 
     //-------------------------------------------------------------------------
     // Load, Unload
@@ -131,7 +123,7 @@ namespace MyGame.Unit.Versus
       this.location = props.Location;
       this.config   = props.Config;
       this.catType  = props.CatType;
-      this.status   = new PlayerStatus().Init(config);
+      this.status   = new Status().Init(config);
     }
 
     /// <summary>
@@ -171,9 +163,9 @@ namespace MyGame.Unit.Versus
     {
       // ゲージのセットアップ
       this.gauges.Setup(
-        this.status.Hp.Rate,
-        this.status.Dp.Rate,
-        this.status.Ap.Rate
+        this.status.HpRate,
+        this.status.DpRate,
+        this.status.ApRate
       );
 
       // パズルのセットアップ
@@ -191,8 +183,8 @@ namespace MyGame.Unit.Versus
     public void Update()
     {
       this.status.Update();
-      this.gauges.Hp = this.status.Hp.Rate;
-      this.gauges.Dp = this.status.Dp.Rate;
+      this.gauges.Hp = this.status.HpRate;
+      this.gauges.Dp = this.status.DpRate;
 
 
       if (Input.GetKeyDown(KeyCode.Alpha1)) {
@@ -275,7 +267,11 @@ namespace MyGame.Unit.Versus
       }
 
       if (Input.GetKeyDown(KeyCode.Alpha1)) {
-        AcceptDamage(1000);
+        TakeDamage(1000);
+      }
+
+      if (Input.GetKeyDown(KeyCode.Alpha2)) {
+        Recover(Random.Range(300, 600));
       }
     }
 
@@ -289,31 +285,38 @@ namespace MyGame.Unit.Versus
     {
       // 消えた肉球の数だけMPを回復
       MyEnum.ForEach<Define.App.Attribute>((attribute) => {
-        this.status.Mp(attribute).Now += score.GetVanishCount(attribute);
+        this.status.AddMp(attribute, score.GetVanishCount(attribute));
       });
 
       // 攻撃力計算：連鎖数 * 合計消滅数 / 2
-      this.status.Attack.Now += (score.ChainCount * score.TotalVanishCount / 2);
+      this.status.AddPower(score.ChainCount * score.TotalVanishCount / 2);
     }
 
     //-------------------------------------------------------------------------
     // プレイヤー関連
 
     /// <summary>
-    /// 攻撃を受け入れる
+    /// プレイヤーが攻撃を受ける
     /// </summary>
-    public void AcceptAttack(Player attacker)
+    public void TakeAttack(Player attacker)
     {
-      this.status.Damage.Now += attacker.status.Attack.Now;
-      attacker.status.Attack.BeToEmpty();
+      this.status.TakeAttack(attacker.status);
     }
 
     /// <summary>
-    /// ダメージを受ける
+    /// プレイヤーがダメージを受ける
     /// </summary>
-    public void AcceptDamage(float points)
+    public void TakeDamage(float points)
     {
-      this.status.Damage.Now += points;
+      this.status.TakeDamage(points);
+    }
+
+    /// <summary>
+    /// 回復する
+    /// </summary>
+    public void Recover(float points)
+    {
+      this.status.Recover(points);
     }
 
 #if _DEBUG

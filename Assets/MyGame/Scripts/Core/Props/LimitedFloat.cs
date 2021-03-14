@@ -61,6 +61,11 @@ namespace MyGame
     }
 
     /// <summary>
+    /// 差分
+    /// </summary>
+    public float Diff => Max - Now;
+
+    /// <summary>
     /// 割合
     /// </summary>
     public float Rate => (this.now / this.max);
@@ -88,17 +93,9 @@ namespace MyGame
     }
 
     /// <summary>
-    /// 1になる
-    /// </summary>
-    public void BeToOne()
-    {
-      Now = 1;
-    }
-
-    /// <summary>
     /// いっぱいになる
     /// </summary>
-    public void BeToFull()
+    public void Full()
     {
       Now = Max;
     }
@@ -106,7 +103,7 @@ namespace MyGame
     /// <summary>
     /// 空になる
     /// </summary>
-    public void BeToEmpty()
+    public void Empty()
     {
       Now = 0;
     }
