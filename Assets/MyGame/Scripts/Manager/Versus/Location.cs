@@ -40,6 +40,16 @@ namespace MyGame.VersusManagement
     public Vector3 Cat { get; private set; } = Vector3.zero;
 
     /// <summary>
+    /// 攻撃ユニットの基底位置
+    /// </summary>
+    public Vector3 AttackBase { get; private set; } = Vector3.zero;
+
+    /// <summary>
+    /// 攻撃対象の位置
+    /// </summary>
+    public Vector3 TargetBase { get; private set; } = Vector3.zero;
+
+    /// <summary>
     /// コンストラクタ
     /// </summary>
     public Location(string myPrefix, string targetPrefix, GameObject go)
@@ -51,6 +61,8 @@ namespace MyGame.VersusManagement
       MyCenter     = locations.Find($"{myPrefix}.Center").position;
       TargetCenter = locations.Find($"{targetPrefix}.Center").position;
       Cat          = locations.Find($"{myPrefix}.Cat").position;
+      AttackBase   = locations.Find($"{myPrefix}.AttackBase").position;
+      TargetBase   = locations.Find($"{targetPrefix}.Gauge.Hp").position;
     }
   }
 }

@@ -62,6 +62,14 @@ namespace MyGame.Unit.Versus
       public float DpRate => dp.Rate;
 
       /// <summary>
+      /// 攻撃の強さを表す比率：パワー / 最大ダメージ(1は超えない)
+      /// </summary>
+      public float PowerRate => Mathf.Min(1f, this.power.Now / dp.Max);
+
+      //-------------------------------------------------------------------------
+      // メソッド
+
+      /// <summary>
       /// コンストラクタ
       /// </summary>
       public Status()

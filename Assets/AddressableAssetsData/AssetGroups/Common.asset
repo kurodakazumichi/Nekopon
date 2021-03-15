@@ -17,12 +17,18 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: 46ef395976857f64bb4e0ae65e76c836
   m_SerializeEntries:
+  - m_GUID: a6692e04a89118c40a78350f27cbba89
+    m_Address: Common.Additive.material
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 2100000, guid: a6692e04a89118c40a78350f27cbba89, type: 2}
+    m_TargetAsset: {fileID: 2100000, guid: a6692e04a89118c40a78350f27cbba89, type: 2}
   - m_GUID: d6069269ff01fdd478c620346530289a
     m_Address: Common.White.sprite
     m_ReadOnly: 0
     m_SerializedLabels: []
-    m_MainAsset: {fileID: 2800000, guid: d6069269ff01fdd478c620346530289a, type: 3}
-    m_TargetAsset: {fileID: 2800000, guid: d6069269ff01fdd478c620346530289a, type: 3}
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 8c2478ab617b39d41897f31592ccbc8b, type: 2}
   m_SchemaSet:

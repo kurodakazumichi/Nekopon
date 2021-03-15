@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Attack
+  m_EditorClassIdentifier: 
+  m_GroupName: Attack
+  m_Data:
+    m_SerializedData: []
+  m_GUID: 5eab3c1f219b3e24d93d633d318d88e7
+  m_SerializeEntries:
+  - m_GUID: 9092f6ba01ac6744b9937afc188baf83
+    m_Address: Attack.01.sprite
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 2800000, guid: 9092f6ba01ac6744b9937afc188baf83, type: 3}
+    m_TargetAsset: {fileID: 2800000, guid: 9092f6ba01ac6744b9937afc188baf83, type: 3}
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 8c2478ab617b39d41897f31592ccbc8b, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 716386e3742edd1408be851e8605f268, type: 2}
+    - {fileID: 11400000, guid: 3ccb3316c723efb44bea621759c88b2d, type: 2}

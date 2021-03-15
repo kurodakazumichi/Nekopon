@@ -51,6 +51,11 @@ namespace MyGame.Unit.Versus
     public Define.App.Player Type { get; private set; }
 
     /// <summary>
+    /// ロケーション情報
+    /// </summary>
+    public Location Location { get; private set; } = null;
+
+    /// <summary>
     /// 親オブジェクト
     /// </summary>
     private Transform parent = null;
@@ -59,11 +64,6 @@ namespace MyGame.Unit.Versus
     /// Playerに関するゲームオブジェクトを格納しておくゲームオブジェクト
     /// </summary>
     private Transform folder = null;
-
-    /// <summary>
-    /// ロケーション情報
-    /// </summary>
-    private Location location;
 
     /// <summary>
     /// ステータス
@@ -95,6 +95,19 @@ namespace MyGame.Unit.Versus
     /// </summary>
     private Define.App.Cat catType = default;
 
+    /// <summary>
+    /// 攻撃ユニット
+    /// </summary>
+    private Attack attack = null;
+
+    //-------------------------------------------------------------------------
+    // プロパティ
+
+    /// <summary>
+    /// 攻撃を反射可能
+    /// </summary>
+    public bool CanReflect = false;
+
     //-------------------------------------------------------------------------
     // Load, Unload
 
@@ -102,12 +115,14 @@ namespace MyGame.Unit.Versus
     {
       Gauges.Load(pre, done);
       Puzzle.Load(pre, done);
+      Versus.Attack.Load(pre, done);
     }
 
     public static void Unload()
     {
       Gauges.Unload();
       Puzzle.Unload();
+      Versus.Attack.Unload();
     }
 
     //-------------------------------------------------------------------------
@@ -120,7 +135,7 @@ namespace MyGame.Unit.Versus
     {
       this.Type     = props.Type;
       this.parent   = props.Parent;
-      this.location = props.Location;
+      this.Location = props.Location;
       this.config   = props.Config;
       this.catType  = props.CatType;
       this.status   = new Status().Init(config);
@@ -136,13 +151,13 @@ namespace MyGame.Unit.Versus
       this.folder.parent = this.parent;
 
       // パズルを作成
-      this.puzzle = new Puzzle(this.folder, this.location.Paw);
+      this.puzzle = new Puzzle(this.folder, this.Location.Paw);
       this.puzzle.Init();
       this.puzzle.OnVanished = OnVanished;
 
       // ゲージを生成
       var props = new Gauges.Props();
-      props.Location = this.location;
+      props.Location = this.Location;
       props.Parent   = this.folder;
 
       this.gauges = new Gauges(props).Init();
@@ -150,8 +165,12 @@ namespace MyGame.Unit.Versus
       // 猫を生成
       this.cat = new GameObject("Cat").AddComponent<Cat>();
       this.cat.SetParent(this.folder);
-      this.cat.CacheTransform.position = this.location.Cat;
+      this.cat.CacheTransform.position = this.Location.Cat;
       this.cat.Init(this.catType, this.Type == Define.App.Player.P2);
+
+      // 攻撃を生成
+      this.attack = new GameObject("Attack").AddComponent<Attack>();
+      this.attack.SetParent(this.folder);
 
       return this;
     }
@@ -170,6 +189,9 @@ namespace MyGame.Unit.Versus
 
       // パズルのセットアップ
       this.puzzle.Setup();
+
+      // 攻撃のセットアップ
+      this.attack.Setup();
     }
 
     /// <summary>
@@ -249,7 +271,7 @@ namespace MyGame.Unit.Versus
 
         if (this.puzzle.IsFinishedChain) {
           this.puzzle.EndChain();
-          VersusManager.Instance.AttackPlayer(this);
+          Attack();
         }
       }
 
@@ -287,6 +309,11 @@ namespace MyGame.Unit.Versus
     /// </summary>
     private void OnVanished(Puzzle.ChainInfo score)
     {
+      // 最初の連鎖時に攻撃オブジェクトを有効化
+      if (score.ChainCount == 1) {
+        this.attack.ToUsual(this.Location.AttackBase);
+      }
+
       // 消えた肉球の数だけMPを回復
       MyEnum.ForEach<Define.App.Attribute>((attribute) => {
         this.status.AddMp(attribute, score.GetVanishCount(attribute));
@@ -294,10 +321,25 @@ namespace MyGame.Unit.Versus
 
       // 攻撃力計算：連鎖数 * 合計消滅数 / 2
       this.status.AddPower(score.ChainCount * score.TotalVanishCount / 2);
+
+      // 攻撃の大きさを設定する
+      this.attack.SetRate(this.status.PowerRate);
     }
 
     //-------------------------------------------------------------------------
     // プレイヤー関連
+
+    /// <summary>
+    /// プレイヤーの通常攻撃
+    /// </summary>
+    private void Attack()
+    {
+      if (this.attack == null) return;
+
+      var target = VersusManager.Instance.GetTargetPlayerBy(Type);
+      IAction action = new Attack.Action(this.attack, this, target);
+      this.attack.ToAttack(this.Location.TargetBase, action);
+    }
 
     /// <summary>
     /// プレイヤーが攻撃を受ける

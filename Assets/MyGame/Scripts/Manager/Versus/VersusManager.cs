@@ -241,14 +241,6 @@ namespace MyGame
     }
 
     /// <summary>
-    /// プレイヤーに対して攻撃をする
-    /// </summary>
-    public void AttackPlayer(Player attacker)
-    {
-      GetTargetPlayerBy(attacker).TakeAttack(attacker);
-    }
-
-    /// <summary>
     /// 同時にプレイヤー2人のメソッドを実行したい事が多いけど
     /// わざわざループする量でもないので愚直に呼び出すヘルパー
     /// </summary>
@@ -261,9 +253,9 @@ namespace MyGame
     /// <summary>
     /// 指定されたプレイヤーの対になる相手を取得する
     /// </summary>
-    private Player GetTargetPlayerBy(Player player)
+    public Player GetTargetPlayerBy(App.Player type)
     {
-      return (player.Type == App.Player.P1)? p2 : p1;
+      return (type == App.Player.P1)? this.p2 : this.p1;
     }
 
 #if _DEBUG

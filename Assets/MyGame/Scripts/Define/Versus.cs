@@ -84,5 +84,7 @@ namespace MyGame.Define
     public const float PAW_FREEZE_RATE = 0.5f;
     public const float PAW_PARALYSIS_TIME = 5f;
     public const float PAW_PARALYSIS_RATE = 0.5f;
+
+    public const float ATTACK_BRIGHTNESS_INTERVAL = 0.5f;
   }
 }
