@@ -323,7 +323,7 @@ namespace MyGame.Unit.Versus
       this.status.AddPower(score.ChainCount * score.TotalVanishCount / 2);
 
       // 攻撃の大きさを設定する
-      this.attack.SetRate(this.status.PowerRate);
+      this.attack.SetIntensity(this.status.PowerRate);
     }
 
     //-------------------------------------------------------------------------

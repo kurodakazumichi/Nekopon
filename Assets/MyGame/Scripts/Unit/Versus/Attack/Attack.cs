@@ -4,13 +4,20 @@ using UnityEngine;
 
 namespace MyGame.Unit.Versus
 {
+  /// <summary>
+  /// 通常攻撃ユニット
+  /// </summary>
   public partial class Attack:Unit<Attack.State>
   {
+    /// <summary>
+    /// 状態
+    /// </summary>
     public enum State
     {
       Idle,
       Usual,
       Attack,
+      AttackEnd,
     }
 
     //-------------------------------------------------------------------------
@@ -20,6 +27,36 @@ namespace MyGame.Unit.Versus
     /// InnerAttackの個数
     /// </summary>
     private const int INNER_COUNT = 10;
+
+    /// <summary>
+    /// 最小のスケール値
+    /// </summary>
+    private const float MIN_SCALE = 0.3f;
+
+    /// <summary>
+    /// 攻撃ユニットの最初の色
+    /// </summary>
+    private static readonly Color START_COLOR = new Color(0.9529412f, 0.2117647f, 0.5019608f, 0.5f);
+
+    /// <summary>
+    /// 攻撃ユニットの最終的な色
+    /// </summary>
+    private static readonly Color END_COLOR = new Color(0.2117647f, 0.9529412f, 0.89285f, 0.5f);
+
+    /// <summary>
+    /// 攻撃に要する時間
+    /// </summary>
+    private const float ATTACK_TIME = 0.5f;
+
+    /// <summary>
+    /// 振れ幅
+    /// </summary>
+    private static readonly Vector2 AMPLITUDE = new Vector2(0.05f, 0.02f);
+
+    /// <summary>
+    /// 周期
+    /// </summary>
+    private static readonly Vector2 CYCLES = new Vector2(2f, 5f);
 
     //-------------------------------------------------------------------------
     // メンバ変数
@@ -53,11 +90,6 @@ namespace MyGame.Unit.Versus
     /// 汎用タイマー
     /// </summary>
     private float timer = 0;
-
-    /// <summary>
-    /// カラー
-    /// </summary>
-    private Color color = new Color(1, 1, 1, 0.5f);
 
     /// <summary>
     /// 攻撃ヒット時のアクション
@@ -102,6 +134,7 @@ namespace MyGame.Unit.Versus
       this.state.Add(State.Idle, OnIdleEnter);
       this.state.Add(State.Usual, OnUsualEnter, OnUsualUpdate);
       this.state.Add(State.Attack, OnAttackEnter, OnAttackUpdate);
+      this.state.Add(State.AttackEnd, OnAttackEndEnter);
       this.state.SetState(State.Idle);
     }
 
@@ -109,7 +142,7 @@ namespace MyGame.Unit.Versus
     {
       // Mainのセットアップ
       this.spriteRenderer.sprite = Sprite;
-      this.spriteRenderer.color = this.color;
+      SetIntensity(0);
 
       // Innerのセットアップ
       this.children.ForEach((child) => {
@@ -150,19 +183,26 @@ namespace MyGame.Unit.Versus
     //-------------------------------------------------------------------------
     // ステートマシン
 
+    /// <summary>
+    /// Idle状態へ
+    /// </summary>
     public void ToIdle()
     {
-      this.action = null;
       this.state.SetState(State.Idle);
     }
 
+    /// <summary>
+    /// 通常状態へ
+    /// </summary>
     public void ToUsual(Vector3 basePosition)
     {
-      SetActive(true);
       this.basePosition = basePosition;
       this.state.SetState(State.Usual);
     }
 
+    /// <summary>
+    /// 攻撃状態へ
+    /// </summary>
     public void ToAttack(Vector3 targetPosition, IAction action)
     {
       this.action = action;
@@ -170,22 +210,16 @@ namespace MyGame.Unit.Versus
       this.state.SetState(State.Attack);
     }
 
-    public void SetRate(float rate)
-    {
-      Debug.Logger.Log(rate);
-      const float SCALE_BIAS = 0.3f;
-      rate = Mathf.Min(1f, rate);
-      
-      CacheTransform.localScale = Vector3.one * Mathf.Min(1f, rate + SCALE_BIAS);
-      this.color = Color.Lerp(Color.red, Color.blue, rate);
-      this.color.a = 0.5f;
-      this.spriteRenderer.color = this.color;
-    }
+    //-------------------------------------------------------------------------
+    // Idle
 
     private void OnIdleEnter()
     {
-      SetActive(false);
+      this.action = null;
     }
+
+    //-------------------------------------------------------------------------
+    // Usual
 
     private void OnUsualEnter()
     {
@@ -195,13 +229,17 @@ namespace MyGame.Unit.Versus
 
     private void OnUsualUpdate()
     {
-      this.velocity.x = Mathf.Cos(this.timer * 2f) * 0.05f;
-      this.velocity.y = Mathf.Sin(this.timer * 5f) * 0.02f;
-
+      // 座標計算
+      this.velocity.x = Mathf.Cos(this.timer * CYCLES.x) * AMPLITUDE.x;
+      this.velocity.y = Mathf.Sin(this.timer * CYCLES.y) * AMPLITUDE.y;
       CacheTransform.position = basePosition + this.velocity;
 
+      // タイマーを更新
       this.timer += TimeSystem.Instance.DeltaTime;
     }
+
+    //-------------------------------------------------------------------------
+    // Attack
 
     private void OnAttackEnter()
     {
@@ -211,20 +249,44 @@ namespace MyGame.Unit.Versus
 
     private void OnAttackUpdate()
     {
-      
+      // 座標更新
+      var rate = Tween.EaseInOutSine(this.timer / ATTACK_TIME);
       CacheTransform.position
-        = MyVector3.Lerp(basePosition, targetPosition, Tween.EaseInOutSine(this.timer / 1f));
+        = MyVector3.Lerp(basePosition, targetPosition, rate);
 
+      // 時間経過
       this.timer += TimeSystem.Instance.DeltaTime;
 
-      if (this.timer < 1f) return;
-
-      // actionがある場合はactionにゆだねる
-      if (action != null) {
-        this.action.Execute();
-      } else {
-        this.state.SetState(State.Idle);
+      // 攻撃時間超えたらAttackEndへ
+      if (ATTACK_TIME < this.timer) {
+        this.state.SetState(State.AttackEnd);
       }
+    }
+
+    //-------------------------------------------------------------------------
+    // AttackEnd
+
+    private void OnAttackEndEnter()
+    {
+      this.action.Execute();
+    }
+
+    //-------------------------------------------------------------------------
+    // その他
+
+    /// <summary>
+    /// 攻撃ユニットの強さを0~1で指定する、大きさと色が変化する
+    /// </summary>
+    public void SetIntensity(float rate)
+    {
+      // 最大は1f
+      rate = Mathf.Min(1f, rate);
+
+      // スケール調整
+      CacheTransform.localScale = Vector3.one * Mathf.Min(1f, rate + MIN_SCALE);
+
+      // 色調整
+      this.spriteRenderer.color = Color.Lerp(START_COLOR, END_COLOR, rate);
     }
   }
 }
