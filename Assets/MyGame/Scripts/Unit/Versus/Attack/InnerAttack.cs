@@ -12,10 +12,15 @@ namespace MyGame.Unit.Versus
     /// <summary>
     /// 状態
     /// </summary>
-    public enum State
-    {
-      Idle,
-    }
+    public enum State {}
+
+    //-------------------------------------------------------------------------
+    // 定数
+
+    /// <summary>
+    /// 最大のアルファ値
+    /// </summary>
+    private const float MAX_ALPHA = 0.1f;
 
     //-------------------------------------------------------------------------
     // メンバ変数
@@ -42,16 +47,22 @@ namespace MyGame.Unit.Versus
     {
       this.spriteRenderer = AddComponent<SpriteRenderer>();
       this.spriteRenderer.sortingLayerName = Define.Layer.Sorting.Effect;
-      this.spriteRenderer.sortingOrder = Define.Layer.Order.Layer10;
-      this.spriteRenderer.color = new Color(1, 1, 1, 0.05f);
+      this.spriteRenderer.sortingOrder     = Define.Layer.Order.Layer10;
     }
 
     protected override void MyUpdate()
     {
+      // 輝き変化の間隔
       const float TIME = Define.Versus.ATTACK_BRIGHTNESS_INTERVAL;
-      float alpha = 0.1f * Mathf.Abs(Mathf.Sin(this.timer / TIME));
+
+      // 経過時間よりアルファ値を決定
+      float alpha = MAX_ALPHA * Mathf.Abs(Mathf.Sin(this.timer / TIME));
+
+      // アルファを設定
       this.color.a = alpha;
       this.spriteRenderer.color = color;
+
+      // 時間を加算
       this.timer += TimeSystem.Instance.DeltaTime;
     }
 
