@@ -62,7 +62,7 @@ namespace MyGame.VersusManagement
       TargetCenter = locations.Find($"{targetPrefix}.Center").position;
       Cat          = locations.Find($"{myPrefix}.Cat").position;
       AttackBase   = locations.Find($"{myPrefix}.AttackBase").position;
-      TargetBase   = locations.Find($"{targetPrefix}.Gauge.Hp").position;
+      TargetBase   = locations.Find($"{myPrefix}.TargetBase").position;
     }
   }
 }
