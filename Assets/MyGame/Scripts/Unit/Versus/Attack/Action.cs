@@ -12,31 +12,56 @@ namespace MyGame.Unit.Versus
     /// </summary>
     public class Action : IAction
     {
+      /// <summary>
+      /// 攻撃ユニット
+      /// </summary>
       private Attack attack;
-      private Player self;
+
+      /// <summary>
+      /// 攻撃する側(オーナー)
+      /// </summary>
+      private Player owner;
+
+      /// <summary>
+      /// 攻撃対象
+      /// </summary>
       private Player target;
 
-      public Action(Attack attack, Player self, Player target)
+      /// <summary>
+      /// コンストラクタ
+      /// </summary>
+      public Action(Attack attack, Player owner, Player target)
       {
         this.attack = attack;
-        this.self   = self;
+        this.owner  = owner;
         this.target = target;
       }
 
+      /// <summary>
+      /// オーナーとターゲットを入れ替え
+      /// </summary>
       private void Swap()
       {
-        var self    = this.self;
-        this.self   = this.target;
+        var self    = this.owner;
+        this.owner  = this.target;
         this.target = self;
       }
 
+      /// <summary>
+      /// 攻撃を実行
+      /// </summary>
       public void Execute()
       {
+        // 相手が反射可能であれば、攻撃対象を入れ替え再攻撃
         if (target.CanReflect) {
           Swap();
-          attack.ToAttack(this.self.Location.TargetBase, this);
-        } else {
-          target.TakeAttack(self);
+          attack.ToAttack(this.owner.Location.TargetBase, this);
+        } 
+        
+        // 相手が反射不可であれば、そのまま相手に攻撃を与える
+        else {
+          target.TakeAttack(owner);
+          // TODO SkillManagerに返却する作りにしよう
           attack.ToIdle();
         }
       }
