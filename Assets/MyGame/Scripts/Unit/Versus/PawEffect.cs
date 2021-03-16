@@ -8,7 +8,7 @@ namespace MyGame.Unit.Versus
   /// <summary>
   /// 肉球エフェクト
   /// </summary>
-  public class PawEffect : Unit<PawEffect.State>, IPoolable
+  public class PawEffect : Unit<PawEffect.State>, PawEffectManager.IPawEffect
   {
     /// <summary>
     /// 状態
@@ -45,19 +45,7 @@ namespace MyGame.Unit.Versus
     /// <summary>
     /// アニメーション間隔
     /// </summary>
-    public float Interval { private get; set; }
-
-    //-------------------------------------------------------------------------
-    // プロパティ
-
-    /// <summary>
-    /// ソート順
-    /// </summary>
-    public int SortingOrder {
-      set {
-        this.spriteRenderer.sortingOrder = value;
-      }
-    }
+    private float interval = 0;
 
     //-------------------------------------------------------------------------
     // ライフサイクル
@@ -76,18 +64,29 @@ namespace MyGame.Unit.Versus
     //-------------------------------------------------------------------------
     // 設定
 
-    public void Reset()
+    /// <summary>
+    /// リセット
+    /// </summary>
+    private void Reset()
     {
-      this.sprites.Clear();    
-      this.timer    = 0;
-      this.Interval = 0;
+      this.sprites.Clear();
+      this.timer = 0;
+      this.interval = 0;
       this.spriteRenderer.sprite = null;
     }
 
-    public PawEffect AddSprite(Sprite sprite)
+    /// <summary>
+    /// セットアップ
+    /// </summary
+    void PawEffectManager.IPawEffect.Setup(List<Sprite> sprites, float interval, int sortingOrder)
     {
-      this.sprites.Add(sprite);
-      return this;
+      // 前の設定が残ってるかもなのでとりまリセット
+      Reset();
+
+      // Sprite、アニメーション間隔、ソート順を指定
+      sprites.ForEach((sprite) => { this.sprites.Add(sprite); });
+      this.interval = interval;
+      this.spriteRenderer.sortingOrder = sortingOrder;
     }
 
     //-------------------------------------------------------------------------
@@ -118,13 +117,13 @@ namespace MyGame.Unit.Versus
 
       this.spriteCount = this.sprites.Count;
       this.timer = 0;
-      this.Interval = Mathf.Max(0.01f, Interval);
+      this.interval = Mathf.Max(0.01f, interval);
       this.SetActive(true);
     }
 
     private void OnUsualUpdate()
     {
-      int index = (int)(this.timer/this.Interval) % this.spriteCount;
+      int index = (int)(this.timer/this.interval) % this.spriteCount;
       this.spriteRenderer.sprite = this.sprites[index];
       this.timer += TimeSystem.Instance.DeltaTime;
     }

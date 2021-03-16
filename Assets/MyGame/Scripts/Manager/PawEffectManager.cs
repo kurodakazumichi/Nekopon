@@ -11,6 +11,22 @@ namespace MyGame
   public class PawEffectManager : SingletonMonoBehaviour<PawEffectManager>
   {
     /// <summary>
+    /// Managerが想定する肉球エフェクトのインターフェース
+    /// </summary>
+    public interface IPawEffect : IPoolable
+    {
+      /// <summary>
+      /// セットアップ可能
+      /// </summary>
+      void Setup(List<Sprite> sprites, float interval, int sortingOrder);
+
+      /// <summary>
+      /// 通常状態になれる
+      /// </summary>
+      void ToUsual();
+    }
+
+    /// <summary>
     /// エフェクトの種類
     /// </summary>
     public enum Type
@@ -25,7 +41,7 @@ namespace MyGame
     /// <summary>
     /// オブジェクトプール
     /// </summary>
-    private ObjectPool<PawEffect> pool = new ObjectPool<PawEffect>();
+    private ObjectPool<IPawEffect> pool = new ObjectPool<IPawEffect>();
 
     //-------------------------------------------------------------------------
     // Load, Unload
@@ -38,7 +54,7 @@ namespace MyGame
     /// <summary>
     /// 麻痺用Spriteリソース
     /// </summary>
-    private static readonly List<Sprite> NUMB_SPRITES = new List<Sprite>();
+    private static readonly List<Sprite> PARALYSIS_SPRITES = new List<Sprite>();
 
     public static void Load(System.Action pre, System.Action done)
     {
@@ -51,7 +67,7 @@ namespace MyGame
 
       // 麻痺エフェクトのスプライトは4枚
       for(int i = 1; i <= 4; ++i) {
-        rs.Load<Sprite>($"Effect.Paw.Numb.0{i}.sprite", pre, done, (res) => { NUMB_SPRITES.Add(res); });
+        rs.Load<Sprite>($"Effect.Paw.Numb.0{i}.sprite", pre, done, (res) => { PARALYSIS_SPRITES.Add(res); });
       }
     }
 
@@ -110,13 +126,13 @@ namespace MyGame
 
       e.ToUsual();
 
-      return e;
+      return e as PawEffect;
     }
 
     /// <summary>
     /// エフェクト解除
     /// </summary>
-    public void Release(PawEffect e)
+    public void Release(IPawEffect e)
     {
       if (e == null) return;
       this.pool.Release(e, CacheTransform);
@@ -125,23 +141,25 @@ namespace MyGame
     /// <summary>
     /// 凍結エフェクトの設定をする
     /// </summary>
-    private void SetupFreeze(PawEffect e)
+    private void SetupFreeze(IPawEffect e)
     {
-      e.Reset();
-      e.Interval = 0.2f;
-      e.SortingOrder = Define.Layer.Order.Layer00;
-      FREEZE_SPRITES.ForEach((sprite) => { e.AddSprite(sprite); });
+      e.Setup(
+        FREEZE_SPRITES,
+        0.2f,
+        Define.Layer.Order.Layer00
+      );
     }
 
     /// <summary>
     /// 麻痺エフェクトの設定をする
     /// </summary>
-    private void SetupNumb(PawEffect e)
+    private void SetupNumb(IPawEffect e)
     {
-      e.Reset();
-      e.Interval = 0.01f;
-      e.SortingOrder = Define.Layer.Order.Layer10;
-      NUMB_SPRITES.ForEach((sprite) => { e.AddSprite(sprite); });
+      e.Setup(
+        PARALYSIS_SPRITES,
+        0.01f,
+        Define.Layer.Order.Layer10
+      );
     }
 
 #if _DEBUG
@@ -160,6 +178,9 @@ namespace MyGame
       }
     }
 
+    /// <summary>
+    /// 肉球エフェクトを生成するデバッグメニュー
+    /// </summary>
     private void OnDebugCreateButtons()
     {
       using (new GUILayout.HorizontalScope()) 
@@ -174,6 +195,9 @@ namespace MyGame
       }
     }
 
+    /// <summary>
+    /// 肉球エフェクトをリリースするデバッグメニュー
+    /// </summary>
     private void OnDebugReleaseButton()
     {
       if (GUILayout.Button("Release")) 
