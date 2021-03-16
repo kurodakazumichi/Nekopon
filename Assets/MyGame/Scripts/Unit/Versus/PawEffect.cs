@@ -8,7 +8,7 @@ namespace MyGame.Unit.Versus
   /// <summary>
   /// 肉球エフェクト
   /// </summary>
-  public class PawEffect : Unit<PawEffect.State>
+  public class PawEffect : Unit<PawEffect.State>, IPoolable
   {
     /// <summary>
     /// 状態

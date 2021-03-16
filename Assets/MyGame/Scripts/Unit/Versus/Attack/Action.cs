@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace MyGame.Unit.Versus
 {
-  public partial class Attack : Unit<Attack.State>
+  public partial class Attack : Unit<Attack.State>, IPoolable
   {
     /// <summary>
     /// 攻撃アクション、攻撃が当たった瞬間にExecuteが呼ばれる

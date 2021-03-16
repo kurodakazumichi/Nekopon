@@ -169,10 +169,15 @@ namespace MyGame.Unit.Versus
     /// </summary>
     private MyMonoBehaviour CreateGameObject(Type type)
     {
-      var go = new GameObject($"{type}");
-      go.AddComponent<SpriteRenderer>().sortingLayerName = Define.Layer.Sorting.UI;
+      var mono = new GameObject($"{type}")
+        .AddComponent<MyMonoBehaviour>();
+      
+      mono.AddComponent<SpriteRenderer>()
+        .sortingLayerName = Define.Layer.Sorting.UI;
 
-      return go.AddComponent<MyMonoBehaviour>().SetParent(CacheTransform);
+      mono.SetParent(CacheTransform);
+
+      return mono;
     }
 
     //-------------------------------------------------------------------------

@@ -1,14 +1,32 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Diagnostics;
 
 namespace MyGame
 {
   /// <summary>
-  /// Object Pool
-  /// あまりパフォーマンスを考えてないので後々改良する想定
+  /// プール可能なインターフェース
   /// </summary>
-  public class ObjectPool<T> where T : MonoBehaviour
+  public interface IPoolable
+  {
+    /// <summary>
+    /// アクティブを設定可能
+    /// </summary>
+    void SetActive(bool isActive);
+
+    /// <summary>
+    /// アクティブ状態を取得可能
+    /// </summary>
+    bool IsActiveSelf { get; }
+  }
+
+  /// <summary>
+  /// Object Pool
+  /// ObjectPoolはオブジェクトを生成するためのGenerator関数(System.Func)を必ず設定すること
+  /// あまりパフォーマンスを考えてないので後々改良したい
+  /// </summary>
+  public class ObjectPool<T> where T : class, IPoolable
   {
     //-------------------------------------------------------------------------
     // メンバ変数
@@ -19,7 +37,7 @@ namespace MyGame
     private List<T> pool = new List<T>();
 
     /// <summary>
-    /// オブジェクト生成用メソッド
+    /// オブジェクト生成用メソッド(外部からかならず設定すること)
     /// </summary>
     private System.Func<T> Generator = null;
 
@@ -31,8 +49,6 @@ namespace MyGame
     /// </summary>
     public ObjectPool()
     {
-      // nullを指定するとデフォルトのジェネレーターが設定される
-      SetGenerator(null);
     }
 
     /// <summary>
@@ -40,7 +56,7 @@ namespace MyGame
     /// </summary>
     public void SetGenerator(System.Func<T> func)
     {
-      this.Generator = func?? DefaultGenerator;
+      this.Generator = func;
     }
 
     /// <summary>
@@ -48,9 +64,12 @@ namespace MyGame
     /// </summary>
     public void Reserve(int count)
     {
-      for(int i = 0; i < count; ++i) {
+      // 警告ログ
+      WarnGeneratorLog();
+
+      for (int i = 0; i < count; ++i) {
         var obj = Generator();
-        obj.gameObject.SetActive(false);
+        obj.SetActive(false);
         this.pool.Add(obj);
       }
     }
@@ -60,6 +79,9 @@ namespace MyGame
     /// </summary>
     public T Create()
     {
+      // 警告ログ
+      WarnGeneratorLog();
+
       var obj = GetEnactive();
 
       if (obj == null) 
@@ -68,7 +90,7 @@ namespace MyGame
         this.pool.Add(obj);
       }
 
-      obj.gameObject.SetActive(true);
+      obj.SetActive(true);
       return obj;
     }
 
@@ -77,7 +99,7 @@ namespace MyGame
     /// </summary>
     public void Release(T obj)
     {
-      obj.gameObject.SetActive(false);
+      obj.SetActive(false);
     }
     
     /// <summary>
@@ -87,18 +109,20 @@ namespace MyGame
     private T GetEnactive()
     {
       for (int i = 0, count = this.pool.Count; i < count; ++i) {
-        if (!this.pool[i].gameObject.activeSelf) return this.pool[i];
+        if (!this.pool[i].IsActiveSelf) return this.pool[i];
       }
       return null;
     }
 
     /// <summary>
-    /// デフォルトのジェネレーター
+    /// ObjectPoolはGeneratorを設定することが前提なので、設定されてない状態で
+    /// Generatorが必要な処理を呼び出した場合に警告を表示する。
     /// </summary>
-    private T DefaultGenerator()
+    [Conditional("_DEBUG")]
+    private void WarnGeneratorLog()
     {
-      var go = new GameObject("Game Object");
-      return go.AddComponent<T>();
+      if (this.Generator != null) return;
+      Debug.Logger.Warn($"ObjectPool<{typeof(T).Name}>にGeneratorが設定されていません。");
     }
   }
 

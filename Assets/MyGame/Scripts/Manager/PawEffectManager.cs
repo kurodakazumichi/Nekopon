@@ -79,10 +79,11 @@ namespace MyGame
       DebugSystem.Instance.Regist(this);
 
       // ObjectPoolの設定
-      this.pool.SetGenerator(() => {
-        return new GameObject("PawEffect")
-          .AddComponent<PawEffect>()
-          .SetParent(CacheTransform) as PawEffect;
+      this.pool.SetGenerator(() => 
+      {
+        var e = new GameObject("PawEffect").AddComponent<PawEffect>();
+        e.SetParent(CacheTransform);
+        return e;
       });
     }
 

@@ -106,17 +106,20 @@ namespace MyGame.Scene
     {
       // タイトルロゴ
       this.logo = Instantiate(this.logoPrefab).GetComponent<TitleLogo>();
-      this.logo.SetParent(this.CacheTransform).SetActive(false);
+      this.logo.SetParent(this.CacheTransform);
+      this.logo.SetActive(false);
 
       // カーソル
       this.cursor = Instantiate(this.cursorPrefab).GetComponent<Paw>();
-      this.cursor.SetParent(this.CacheTransform).SetActive(false);
+      this.cursor.SetParent(this.CacheTransform);
+      this.cursor.SetActive(false);
       this.cursor.PadNo = 0;
 
       // メニュー
       this.menuPrefabs.ForEach((prefab) => {
         var menu = Instantiate(prefab).GetComponent<Menu>();
-        menu.SetParent(this.CacheTransform).SetActive(false);
+        menu.SetParent(this.CacheTransform);
+        menu.SetActive(false);
         menu.SceneType = SceneSystem.SceneType.Title;
         this.menus.Add(menu);
       });

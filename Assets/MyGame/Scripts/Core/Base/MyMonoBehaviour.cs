@@ -4,12 +4,26 @@ using UnityEngine;
 
 namespace MyGame
 {
+  /// <summary>
+  /// UnityのMonoBehaviourのラッパー
+  /// </summary>
   public class MyMonoBehaviour : MonoBehaviour
   {
+    //-------------------------------------------------------------------------
+    // プロパティ
+
     /// <summary>
     /// Transformコンポーネントのキャッシュ
     /// </summary>
     public Transform CacheTransform { get; private set; }
+
+    /// <summary>
+    /// 自信がアクティブかどうか
+    /// </summary>
+    public bool IsActiveSelf => this.gameObject.activeSelf;
+
+    //-------------------------------------------------------------------------
+    // ライフサイクル
 
     protected virtual void Awake()
     {
@@ -38,27 +52,42 @@ namespace MyGame
     protected virtual void MyAwake() { }
     protected virtual void MyStart() { }
     protected virtual void MyUpdate() { }
-
     protected virtual void OnMyDestory() { }
 
-    public MyMonoBehaviour SetParent(Transform parent, bool worldPositionStays = true)
+    //-------------------------------------------------------------------------
+    // その他
+
+    /// <summary>
+    /// 親を設定する
+    /// </summary>
+    public void SetParent(Transform parent, bool worldPositionStays = true)
     {
       this.CacheTransform.SetParent(parent, worldPositionStays);
-      return this;
     }
 
-    public MyMonoBehaviour SetActive(bool active)
+    /// <summary>
+    /// アクティブを設定する
+    /// </summary>
+    public void SetActive(bool isActive)
     {
-      this.gameObject.SetActive(active);
-      return this;
+      this.gameObject.SetActive(isActive);
     }
 
+    /// <summary>
+    /// コンポーネントを追加する
+    /// </summary>
     public T AddComponent<T>() where T : Component
     {
       return this.gameObject.AddComponent<T>();
     }
 
 #if _DEBUG
+    //-------------------------------------------------------------------------
+    // デバッグ
+
+    /// <summary>
+    /// デバッグ用の基底メソッド
+    /// </summary>
     public virtual void OnDebug()
     {
 

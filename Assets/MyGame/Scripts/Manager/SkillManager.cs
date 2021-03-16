@@ -58,11 +58,10 @@ namespace MyGame
     public void InitPoolForAttack()
     {
       // Generatorを定義
-      this.attacks.SetGenerator(() => 
-      {
-        return new GameObject("Attack")
-          .AddComponent<Attack>()
-          .SetParent(CacheTransform) as Attack;
+      this.attacks.SetGenerator(() => {
+        var attack = new GameObject("Attack").AddComponent<Attack>();
+        attack.SetParent(CacheTransform);
+        return attack;
       });
 
       // 2つ予約

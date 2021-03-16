@@ -186,7 +186,9 @@ namespace MyGame.Unit.Versus
     private void InitCursor()
     {
       this.cursor = new GameObject("curosr").AddComponent<Unit.Versus.Cursor>();
-      this.cursor.SetParent(this.folder).SetActive(false);
+      this.cursor.SetParent(this.folder);
+      this.cursor.SetActive(false);
+
       SyncCursorPosition();
     }
 
@@ -199,7 +201,8 @@ namespace MyGame.Unit.Versus
       for (int i = 0; i < Define.Versus.PAW_TOTAL; ++i) 
       {
         var paw = Object.Instantiate(PawPrefab).GetComponent<Paw>();
-        paw.SetParent(this.folder).SetActive(false);
+        paw.SetParent(this.folder);
+        paw.SetActive(false);
         this.paws[i] = paw;
       }
     }
