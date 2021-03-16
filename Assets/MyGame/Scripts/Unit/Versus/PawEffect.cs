@@ -20,6 +20,14 @@ namespace MyGame.Unit.Versus
     }
 
     //-------------------------------------------------------------------------
+    // 定数
+
+    /// <summary>
+    /// アニメーション速度の下限値
+    /// </summary>
+    private const float MIN_ANIM_SPEED = 0.01f;
+
+    //-------------------------------------------------------------------------
     // メンバ変数
 
     /// <summary>
@@ -78,14 +86,14 @@ namespace MyGame.Unit.Versus
     /// <summary>
     /// セットアップ
     /// </summary
-    void PawEffectManager.IPawEffect.Setup(List<Sprite> sprites, float interval, int sortingOrder)
+    void PawEffectManager.IPawEffect.Setup(List<Sprite> sprites, float animApeed, int sortingOrder)
     {
       // 前の設定が残ってるかもなのでとりまリセット
       Reset();
 
       // Sprite、アニメーション間隔、ソート順を指定
       sprites.ForEach((sprite) => { this.sprites.Add(sprite); });
-      this.interval = interval;
+      this.interval = animApeed;
       this.spriteRenderer.sortingOrder = sortingOrder;
     }
 
@@ -117,7 +125,7 @@ namespace MyGame.Unit.Versus
 
       this.spriteCount = this.sprites.Count;
       this.timer = 0;
-      this.interval = Mathf.Max(0.01f, interval);
+      this.interval = Mathf.Max(MIN_ANIM_SPEED, interval);
       this.SetActive(true);
     }
 

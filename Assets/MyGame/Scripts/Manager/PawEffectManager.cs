@@ -18,7 +18,7 @@ namespace MyGame
       /// <summary>
       /// セットアップ可能
       /// </summary>
-      void Setup(List<Sprite> sprites, float interval, int sortingOrder);
+      void Setup(List<Sprite> sprites, float animSpeed, int sortingOrder);
 
       /// <summary>
       /// 通常状態になれる
@@ -36,6 +36,19 @@ namespace MyGame
     }
 
     //-------------------------------------------------------------------------
+    // 定数
+
+    /// <summary>
+    /// 凍結アニメーションの速度
+    /// </summary>
+    private const float FREEZE_ANIM_SPEED = 0.2f;
+
+    /// <summary>
+    /// 麻痺アニメーションの速度
+    /// </summary>
+    private const float PARALAYSIS_ANIM_SPEED = 0.01f;
+
+    //-------------------------------------------------------------------------
     // メンバ変数
 
     /// <summary>
@@ -47,9 +60,19 @@ namespace MyGame
     // Load, Unload
 
     /// <summary>
+    /// 凍結スプライトの枚数
+    /// </summary>
+    private const int FREEZE_SPRITE_COUNT = 3;
+
+    /// <summary>
     /// 凍結用Spriteリソース
     /// </summary>
     private static readonly List<Sprite> FREEZE_SPRITES = new List<Sprite>();
+
+    /// <summary>
+    /// 麻痺エフェクトの枚数
+    /// </summary>
+    private const int PARALYSIS_SPRITE_COUNT = 4;
 
     /// <summary>
     /// 麻痺用Spriteリソース
@@ -61,13 +84,15 @@ namespace MyGame
       var rs = ResourceSystem.Instance;
 
       // 凍結エフェクトのスプライトは3枚
-      for(int i = 1; i <= 3; ++i) {
-        rs.Load<Sprite>($"Effect.Paw.Freeze.0{i}.sprite", pre, done, (res) => { FREEZE_SPRITES.Add(res); });
+      for(int i = 1; i <= FREEZE_SPRITE_COUNT; ++i) {
+        var address = $"Effect.Paw.Freeze.0{i}.sprite";
+        rs.Load<Sprite>(address, pre, done, (res) => { FREEZE_SPRITES.Add(res); });
       }
 
       // 麻痺エフェクトのスプライトは4枚
-      for(int i = 1; i <= 4; ++i) {
-        rs.Load<Sprite>($"Effect.Paw.Numb.0{i}.sprite", pre, done, (res) => { PARALYSIS_SPRITES.Add(res); });
+      for(int i = 1; i <= PARALYSIS_SPRITE_COUNT; ++i) {
+        var address = $"Effect.Paw.Numb.0{i}.sprite";
+        rs.Load<Sprite>(address, pre, done, (res) => { PARALYSIS_SPRITES.Add(res); });
       }
     }
 
@@ -76,12 +101,12 @@ namespace MyGame
       var rs = ResourceSystem.Instance;
 
       // 凍結エフェクトのスプライトは3枚
-      for (int i = 1; i <= 3; ++i) {
+      for (int i = 1; i <= FREEZE_SPRITE_COUNT; ++i) {
         rs.Unload($"Effect.Paw.Freeze.0{i}.sprite");
       }
 
       // 麻痺エフェクトのスプライトは4枚
-      for (int i = 1; i <= 4; ++i) {
+      for (int i = 1; i <= PARALYSIS_SPRITE_COUNT; ++i) {
         rs.Unload($"Effect.Paw.Numb.0{i}.sprite");
       }
     }
@@ -120,8 +145,8 @@ namespace MyGame
       var e = this.pool.Create();
 
       switch (type) {
-        case Type.Freeze: SetupFreeze(e); break;
-        case Type.Paralysis  : SetupNumb(e); break;
+        case Type.Freeze    : SetupFreeze(e); break;
+        case Type.Paralysis : SetupNumb(e); break;
       }
 
       e.ToUsual();
@@ -145,7 +170,7 @@ namespace MyGame
     {
       e.Setup(
         FREEZE_SPRITES,
-        0.2f,
+        FREEZE_ANIM_SPEED,
         Define.Layer.Order.Layer00
       );
     }
@@ -157,7 +182,7 @@ namespace MyGame
     {
       e.Setup(
         PARALYSIS_SPRITES,
-        0.01f,
+        PARALAYSIS_ANIM_SPEED,
         Define.Layer.Order.Layer10
       );
     }
