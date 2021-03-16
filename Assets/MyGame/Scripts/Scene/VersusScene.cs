@@ -26,16 +26,6 @@ namespace MyGame.Scene
     /// </summary>
     private GameObject backGroundPrefab = null;
 
-    /// <summary>
-    /// SceneManager
-    /// </summary>
-    private SceneSystem scene = null;
-
-    /// <summary>
-    /// VersusManager
-    /// </summary>
-    private VersusManager vs = null;
-
     //-------------------------------------------------------------------------
     // ライフサイクル
 
@@ -48,6 +38,7 @@ namespace MyGame.Scene
       // 必要なシングルトンがあればココで定義
       SingletonSystem.Instance
         .Regist<PawEffectManager>(system)
+        .Regist<SkillManager>(system)
         .Regist<VersusManager>(system);
       
 
@@ -56,12 +47,6 @@ namespace MyGame.Scene
       this.state.Add(State.Setup, OnSetupEnter);
       this.state.Add(State.Usual, null, OnUsualUpdate);
       this.state.SetState(State.Idle);
-    }
-
-    protected override void MyStart()
-    {
-      this.scene = SceneSystem.Instance;
-      this.vs    = VersusManager.Instance;
     }
 
     protected override IEnumerator Load()
@@ -75,6 +60,7 @@ namespace MyGame.Scene
       var rm = ResourceSystem.Instance;
       rm.Load<GameObject>("VS.BackGround.prefab", pre, done, (res) => { this.backGroundPrefab = res; });
       PawEffectManager.Load(pre, done);
+      SkillManager.Load(pre, done);
       VersusManager.Load(pre, done);
 
       // ロード待機
@@ -90,8 +76,8 @@ namespace MyGame.Scene
       var rm = ResourceSystem.Instance;
       rm.Unload("VS.BackGround.prefab");
       PawEffectManager.Unload();
+      SkillManager.Unload();
       VersusManager.Unload();
-
     }
 
     //-------------------------------------------------------------------------
@@ -103,20 +89,24 @@ namespace MyGame.Scene
       var backGround = Instantiate(this.backGroundPrefab);
       backGround.transform.parent = CacheTransform;
 
-      // VersusManagerをセットアップしてあとはお任せ
-      this.vs.Setup(backGround);
+      // 各種マネージャーのセットアップ
+      VersusManager.Instance.Setup(backGround);
+
+      // 通常状態へ遷移
       this.state.SetState(State.Usual);
     }
 
     private void OnUsualUpdate()
     {
       // 対戦が終わるまでループ
-      if (!this.vs.Move()) {
-        this.scene.UnloadSceneAsync(SceneSystem.SceneType.Versus, () => {
-          this.scene.LoadSceneAdditive(SceneSystem.SceneType.Title);
+      if (!VersusManager.Instance.Move()) 
+      {
+        var scene = SceneSystem.Instance;
+
+        scene.UnloadSceneAsync(SceneSystem.SceneType.Versus, () => {
+          scene.LoadSceneAdditive(SceneSystem.SceneType.Title);
         });
       }
     }
-
   }
 }

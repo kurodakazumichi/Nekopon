@@ -44,6 +44,18 @@ namespace MyGame
     }
 
     /// <summary>
+    /// 予約
+    /// </summary>
+    public void Reserve(int count)
+    {
+      for(int i = 0; i < count; ++i) {
+        var obj = Generator();
+        obj.gameObject.SetActive(false);
+        this.pool.Add(obj);
+      }
+    }
+
+    /// <summary>
     /// オブジェクトを生成、プールに非アクティブなオブジェクトがあれば再利用する
     /// </summary>
     public T Create()

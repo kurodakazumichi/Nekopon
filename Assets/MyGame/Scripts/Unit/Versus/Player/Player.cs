@@ -115,14 +115,12 @@ namespace MyGame.Unit.Versus
     {
       Gauges.Load(pre, done);
       Puzzle.Load(pre, done);
-      Versus.Attack.Load(pre, done);
     }
 
     public static void Unload()
     {
       Gauges.Unload();
       Puzzle.Unload();
-      Versus.Attack.Unload();
     }
 
     //-------------------------------------------------------------------------
@@ -168,10 +166,6 @@ namespace MyGame.Unit.Versus
       this.cat.CacheTransform.position = this.Location.Cat;
       this.cat.Init(this.catType, this.Type == Define.App.Player.P2);
 
-      // 攻撃を生成
-      this.attack = new GameObject("Attack").AddComponent<Attack>();
-      this.attack.SetParent(this.folder);
-
       return this;
     }
 
@@ -189,9 +183,6 @@ namespace MyGame.Unit.Versus
 
       // パズルのセットアップ
       this.puzzle.Setup();
-
-      // 攻撃のセットアップ
-      this.attack.Setup();
     }
 
     /// <summary>
@@ -309,8 +300,9 @@ namespace MyGame.Unit.Versus
     /// </summary>
     private void OnVanished(Puzzle.ChainInfo score)
     {
-      // 最初の連鎖時に攻撃オブジェクトを有効化
-      if (score.ChainCount == 1) {
+      // 攻撃ユニットがなければ生成
+      if (this.attack == null) {
+        this.attack = SkillManager.Instance.Create(this.folder);
         this.attack.ToUsual(this.Location.AttackBase);
       }
 
@@ -339,6 +331,7 @@ namespace MyGame.Unit.Versus
       var target = VersusManager.Instance.GetTargetPlayerBy(Type);
       IAction action = new Attack.Action(this.attack, this, target);
       this.attack.ToAttack(this.Location.TargetBase, action);
+      this.attack = null;
     }
 
     /// <summary>

@@ -61,8 +61,7 @@ namespace MyGame.Unit.Versus
         // 相手が反射不可であれば、そのまま相手に攻撃を与える
         else {
           target.TakeAttack(owner);
-          // TODO SkillManagerに返却する作りにしよう
-          attack.ToIdle();
+          SkillManager.Instance.Release(attack);
         }
       }
     }
