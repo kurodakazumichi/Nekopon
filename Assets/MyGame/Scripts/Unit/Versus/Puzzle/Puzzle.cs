@@ -437,6 +437,16 @@ namespace MyGame.Unit.Versus
     }
 
     /// <summary>
+    /// 全てを不可視状態にする
+    /// </summary>
+    public void Invisible()
+    {
+      Util.ForEach(this.paws, (paw, index) => { 
+        paw.Invisible();
+      });
+    }
+
+    /// <summary>
     /// 肉球を回復させる
     /// </summary>
     public void Cure()

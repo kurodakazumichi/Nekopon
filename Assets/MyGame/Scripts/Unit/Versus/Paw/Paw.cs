@@ -12,6 +12,17 @@ namespace MyGame.Unit.Versus
   public partial class Paw : Unit<Paw.State>
   {
     /// <summary>
+    /// 肉球ステータスとしてのインターフェース
+    /// </summary>
+    private interface IStatus
+    {
+      bool IsActive { get; }
+      void Start();
+      void Update();
+      void Finish();
+    }
+
+    /// <summary>
     /// 状態
     /// </summary>
     public enum State {
@@ -28,7 +39,8 @@ namespace MyGame.Unit.Versus
     public enum SubState
     {
       Freeze    = 0, // 凍結
-      Paralysis = 1,   // 麻痺
+      Paralysis = 1, // 麻痺
+      Invisible = 2, // 不可視
     }
 
     //-------------------------------------------------------------------------
@@ -82,7 +94,7 @@ namespace MyGame.Unit.Versus
     /// <summary>
     /// ステータス(凍結、麻痺)
     /// </summary>
-    private readonly List<Status> status = new List<Status>();
+    private readonly List<IStatus> status = new List<IStatus>();
 
     //-------------------------------------------------------------------------
     // プロパティ
@@ -225,18 +237,21 @@ namespace MyGame.Unit.Versus
 
     protected override void MyAwake()
     {
+      // Component取得
       this.spriteRenderer = CacheTransform.Find("Sprite").GetComponent<SpriteRenderer>();
 
-      this.state.Add(State.Idle);
+      // Status:Freeze→Paralysis→Invisibleの順で登録する
+      this.status.Add(new StatusFreeze(CacheTransform));
+      this.status.Add(new StatusParalysis(CacheTransform));
+      this.status.Add(new StatusInvisible(this));
+
+      // 状態構築
+      this.state.Add(State.Idle, OnIdleEnter);
       this.state.Add(State.Vanish, OnVanishEnter, OnVanishUpdate, OnVanishExit);
       this.state.Add(State.Move, OnMoveEnter, OnMoveUpdate, OnMoveExit);
       this.state.Add(State.Usual, OnUsualEnter);
       this.state.Add(State.Selected, OnSelectedEnter, OnSelectedUpdate);
       this.state.SetState(State.Idle);
-
-      // Freeze→Paralysisの順で登録する
-      this.status.Add(new Status(PawEffectManager.Type.Freeze   , Define.Versus.PAW_FREEZE_TIME, CacheTransform));
-      this.status.Add(new Status(PawEffectManager.Type.Paralysis, Define.Versus.PAW_PARALYSIS_TIME, CacheTransform));
     }
 
     protected override void MyUpdate()
@@ -282,12 +297,20 @@ namespace MyGame.Unit.Versus
     }
 
     /// <summary>
+    /// 属性を設定
+    /// </summary>
+    public void SetAttribute(App.Attribute attribute)
+    {
+      this.Attribute = attribute;
+      this.spriteRenderer.sprite = Sprites[this.Attribute];
+    }
+
+    /// <summary>
     /// 属性をランダムに変更
     /// </summary>
     public void RandomAttribute()
     {
-      this.Attribute = MyEnum.Random<App.Attribute>();
-      this.spriteRenderer.sprite = Sprites[this.Attribute];
+      SetAttribute(MyEnum.Random<App.Attribute>());
     }
 
     /// <summary>
@@ -324,6 +347,14 @@ namespace MyGame.Unit.Versus
     }
 
     /// <summary>
+    /// 不可視にする
+    /// </summary>
+    public void Invisible()
+    {
+      this.status[(int)SubState.Invisible].Start();
+    }
+
+    /// <summary>
     /// 肉球を治療する
     /// </summary>
     public void Cure()
@@ -333,6 +364,15 @@ namespace MyGame.Unit.Versus
 
     //-------------------------------------------------------------------------
     // ステートマシン
+
+    //-------------------------------------------------------------------------
+    // Idle
+
+    private void OnIdleEnter()
+    {
+      SetActive(false);
+      Cure();
+    }
 
     //-------------------------------------------------------------------------
     // 消滅
@@ -404,7 +444,7 @@ namespace MyGame.Unit.Versus
     private void OnSelectedEnter()
     {
       SetDefaultParams();
-      this.spriteRenderer.color = new Color(1f, 1f, 1f, 0.5f);
+      SetAlpha(0.5f);
       this.timer = 0;
     }
 
@@ -427,9 +467,36 @@ namespace MyGame.Unit.Versus
     /// </summary>
     private void SetDefaultParams()
     {
+      // 無効ならActiveに
+      if (!IsActiveSelf) {
+        SetActive(true);
+        SetColor(Color.white);
+      }
+
+      // Transformを規定値に
       CacheTransform.localScale = Vector3.one;
       CacheTransform.rotation = Quaternion.identity;
-      this.spriteRenderer.color = Color.white;
+
+      // Alphaを1に(色は維持する)
+      SetAlpha(1f);
+    }
+
+    /// <summary>
+    /// アルファ値をセットする
+    /// </summary>
+    private void SetAlpha(float alpha)
+    {
+      var color = this.spriteRenderer.color;
+      color.a = alpha;
+      this.spriteRenderer.color = color;
+    }
+
+    /// <summary>
+    /// 色をセット
+    /// </summary>
+    private void SetColor(Color color)
+    {
+      this.spriteRenderer.color = color;
     }
 
   }

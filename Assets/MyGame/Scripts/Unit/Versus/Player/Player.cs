@@ -199,28 +199,6 @@ namespace MyGame.Unit.Versus
       this.gauges.Hp = this.status.HpRate;
       this.gauges.Dp = this.status.DpRate;
 
-
-      if (Input.GetKeyDown(KeyCode.Alpha1)) {
-        this.cat.ToUsual();
-      }
-      if (Input.GetKeyDown(KeyCode.Alpha2)) {
-        this.cat.ToDamage();
-      }
-      if (Input.GetKeyDown(KeyCode.Alpha3)) {
-        this.cat.ToAttack();
-      }
-
-      if (Input.GetKeyDown(KeyCode.Alpha2)) {
-        this.puzzle.ShowCursor();
-      }
-      if (Input.GetKeyDown(KeyCode.Alpha3)) {
-        this.puzzle.HideCursor();
-      }
-
-      if (Input.GetKeyDown(KeyCode.D)) {
-        Debug.Logger.Log(this.puzzle.HasMovingPaw);
-      }
-
       // カーソル移動(上下左右)
       if (Input.GetKeyDown(KeyCode.LeftArrow)) {
         this.puzzle.MoveCursorL();
@@ -266,29 +244,33 @@ namespace MyGame.Unit.Versus
         }
       }
 
-      // 凍結
-      if (Input.GetKeyDown(KeyCode.F)) {
-        this.puzzle.Freeze();
-      }
-      // 麻痺
-      if (Input.GetKeyDown(KeyCode.P)) {
-        this.puzzle.Paralyze();
-      }
-      // 回復
-      if (Input.GetKeyDown(KeyCode.O)) {
-        this.puzzle.Cure();
-      }
-      // ランダム化
-      if (Input.GetKeyDown(KeyCode.R)) {
-        this.puzzle.Randomize();
-      }
-
+      // 強制ダメージ(火)
       if (Input.GetKeyDown(KeyCode.Alpha1)) {
         TakeDamage(1000);
       }
-
+      // 状態異常回復(水)
       if (Input.GetKeyDown(KeyCode.Alpha2)) {
+        this.puzzle.Cure();
+      }
+      // 麻痺(雷)
+      if (Input.GetKeyDown(KeyCode.Alpha3)) {
+        this.puzzle.Paralyze();
+      }
+      // 凍結(氷)
+      if (Input.GetKeyDown(KeyCode.Alpha4)) {
+        this.puzzle.Freeze();
+      }
+      // ランダム化
+      if (Input.GetKeyDown(KeyCode.Alpha5)) {
+        this.puzzle.Randomize();
+      }
+      // 体力回復(聖)
+      if (Input.GetKeyDown(KeyCode.Alpha6)) {
         Recover(Random.Range(300, 600));
+      }
+      // 不可視(闇)
+      if (Input.GetKeyDown(KeyCode.Alpha7)) {
+        this.puzzle.Invisible();
       }
     }
 

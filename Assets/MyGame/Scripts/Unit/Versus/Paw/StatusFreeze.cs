@@ -6,33 +6,23 @@ namespace MyGame.Unit.Versus
   public partial class Paw : Unit<Paw.State>
   {
     /// <summary>
-    /// 肉球ステータス(凍結や麻痺の状態)
+    /// エフェクト系の肉球ステータス(凍結や麻痺の状態)
     /// </summary>
-    private class Status
+    private class StatusFreeze : IStatus
     {
       //-------------------------------------------------------------------------
       // メンバ変数
 
       /// <summary>
-      /// エフェクトの種類
-      /// </summary>
-      private PawEffectManager.Type type = default;
-
-      /// <summary>
       /// 親オブジェクト
       /// </summary>
-      public Transform parent = null;
+      private readonly Transform parent = null;
 
       /// <summary>
       /// 肉球エフェクト
       /// </summary>
       private PawEffect effect = null;
 
-      /// <summary>
-      /// 状態異常の時間
-      /// </summary>
-      private float time = 0;
-      
       /// <summary>
       /// タイマー
       /// </summary>
@@ -49,10 +39,8 @@ namespace MyGame.Unit.Versus
       //-------------------------------------------------------------------------
       // メソッド
 
-      public Status(PawEffectManager.Type type, float time, Transform parent)
+      public StatusFreeze(Transform parent)
       {
-        this.type = type;
-        this.time = time;
         this.parent = parent;
       }
 
@@ -62,9 +50,9 @@ namespace MyGame.Unit.Versus
       public void Start()
       {
         this.timer = 0;
-        
+
         if (this.effect == null) {
-          this.effect = PawEffectManager.Instance.Create(this.type);
+          this.effect = PawEffectManager.Instance.Create(PawEffectManager.Type.Freeze);
           this.effect.SetParent(this.parent);
           this.effect.CacheTransform.localPosition = Vector3.zero;
         }
@@ -77,11 +65,11 @@ namespace MyGame.Unit.Versus
       {
         if (this.effect == null) return;
 
-        if (this.time < this.timer) {
+        if (Define.Versus.PAW_FREEZE_TIME < this.timer) {
           Finish();
           return;
         }
-          
+
         this.timer += TimeSystem.Instance.DeltaTime;
       }
 
