@@ -59,11 +59,6 @@ namespace MyGame.Unit.Versus
     private List<Sprite> damageSprites = new List<Sprite>();
     private List<Sprite> attackSprites = new List<Sprite>();
 
-    /// <summary>
-    /// 汎用タイマー
-    /// </summary>
-    private float timer = 0;
-
     //-------------------------------------------------------------------------
     // ライフサイクル
 

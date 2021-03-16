@@ -85,11 +85,6 @@ namespace MyGame.Unit.Versus
     private MyMonoBehaviour Retry => this.guides[Type.Continue];
 
     /// <summary>
-    /// 汎用タイマー
-    /// </summary>
-    private float timer = 0;
-
-    /// <summary>
     /// 動作に要する時間
     /// </summary>
     private float time = 0;

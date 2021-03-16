@@ -18,11 +18,6 @@ namespace MyGame.Unit.Title
     // メンバ変数
 
     /// <summary>
-    /// 汎用タイマー
-    /// </summary>
-    private float timer = 0;
-
-    /// <summary>
     /// 寿命、最初にランダムで設定し、寿命を迎えたら消える
     /// </summary>
     private float lifeTime = 0;

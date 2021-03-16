@@ -87,11 +87,6 @@ namespace MyGame.Unit.Versus
     private Vector3 velocity = Vector3.zero;
 
     /// <summary>
-    /// 汎用タイマー
-    /// </summary>
-    private float timer = 0;
-
-    /// <summary>
     /// 攻撃ヒット時のアクション
     /// </summary>
     private IAction action = null;

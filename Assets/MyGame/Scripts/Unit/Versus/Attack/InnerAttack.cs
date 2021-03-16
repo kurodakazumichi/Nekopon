@@ -31,11 +31,6 @@ namespace MyGame.Unit.Versus
     private SpriteRenderer spriteRenderer = null;
 
     /// <summary>
-    /// タイマー
-    /// </summary>
-    private float timer = 0;
-
-    /// <summary>
     /// 色
     /// </summary>
     private Color color = Color.white;

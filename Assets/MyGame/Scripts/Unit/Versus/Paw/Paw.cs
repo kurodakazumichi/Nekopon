@@ -87,11 +87,6 @@ namespace MyGame.Unit.Versus
     private float movingTime = 1f;
 
     /// <summary>
-    /// 汎用タイマー
-    /// </summary>
-    private float timer = 0;
-
-    /// <summary>
     /// ステータス(凍結、麻痺)
     /// </summary>
     private readonly List<IStatus> status = new List<IStatus>();

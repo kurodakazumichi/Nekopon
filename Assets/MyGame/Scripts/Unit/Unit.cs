@@ -15,6 +15,11 @@ namespace MyGame.Unit
     /// </summary>
     protected StateMachine<TState> state = new StateMachine<TState>();
 
+    /// <summary>
+    /// 汎用タイマー
+    /// </summary>
+    protected float timer = 0;
+
     protected override void Start()
     {
       MyStart();

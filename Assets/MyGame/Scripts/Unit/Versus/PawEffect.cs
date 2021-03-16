@@ -38,12 +38,7 @@ namespace MyGame.Unit.Versus
     /// <summary>
     /// Spriteリスト
     /// </summary>
-    private List<Sprite> sprites = new List<Sprite>();
-
-    /// <summary>
-    /// 汎用タイマー
-    /// </summary>
-    private float timer = 0;
+    private readonly List<Sprite> sprites = new List<Sprite>();
 
     /// <summary>
     /// スプライトの枚数
