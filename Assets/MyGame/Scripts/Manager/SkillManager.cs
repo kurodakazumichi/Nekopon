@@ -10,13 +10,29 @@ namespace MyGame
   /// </summary>
   public class SkillManager : SingletonMonoBehaviour<SkillManager>
   {
+    /// <summary>
+    /// スキルとしてのインターフェース
+    /// </summary>
+    public interface ISkill : IPoolable
+    {
+      /// <summary>
+      /// セットアップ可能
+      /// </summary>
+      void Setup();
+
+      /// <summary>
+      /// Idleに出来る
+      /// </summary>
+      void ToIdle();
+    }
+
     //-------------------------------------------------------------------------
     // メンバ変数
 
     /// <summary>
     /// オブジェクトプール(通常攻撃)
     /// </summary>
-    private ObjectPool<Attack> attacks = new ObjectPool<Attack>();
+    private ObjectPool<ISkill> attacks = new ObjectPool<ISkill>();
 
     //-------------------------------------------------------------------------
     // Load, Unload
@@ -76,17 +92,16 @@ namespace MyGame
       var attack = this.attacks.Create();
       attack.SetParent(parent);
       attack.Setup();
-      return attack;
+      return attack as Attack;
     }
 
     /// <summary>
     /// 攻撃ユニットを返却
     /// </summary>
-    public void Release(Attack attack)
+    public void Release(ISkill attack)
     {
       attack.ToIdle();
-      attack.SetParent(CacheTransform);
-      this.attacks.Release(attack);
+      this.attacks.Release(attack, CacheTransform);
     }
   }
 }

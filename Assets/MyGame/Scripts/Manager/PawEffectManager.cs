@@ -119,9 +119,7 @@ namespace MyGame
     public void Release(PawEffect e)
     {
       if (e == null) return;
-
-      e.SetParent(CacheTransform);
-      this.pool.Release(e);
+      this.pool.Release(e, CacheTransform);
     }
 
     /// <summary>

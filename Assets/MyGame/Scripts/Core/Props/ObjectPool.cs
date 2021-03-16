@@ -16,6 +16,11 @@ namespace MyGame
     void SetActive(bool isActive);
 
     /// <summary>
+    /// 親を指定できる
+    /// </summary>
+    void SetParent(Transform parent, bool worldPositionStays = true);
+
+    /// <summary>
     /// アクティブ状態を取得可能
     /// </summary>
     bool IsActiveSelf { get; }
@@ -97,8 +102,9 @@ namespace MyGame
     /// <summary>
     /// オブジェクトを非アクティブにする
     /// </summary>
-    public void Release(T obj)
+    public void Release(T obj, Transform parent)
     {
+      obj.SetParent(parent);
       obj.SetActive(false);
     }
     
