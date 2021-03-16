@@ -300,8 +300,8 @@ namespace MyGame.Unit.Versus
     /// </summary>
     private void OnVanished(Puzzle.ChainInfo score)
     {
-      // 攻撃ユニットがなければ生成
-      if (this.attack == null) {
+      // 初回の連鎖で、攻撃ユニットがなければ生成
+      if (score.ChainCount == 1 && this.attack == null) {
         this.attack = SkillManager.Instance.Create(this.folder);
         this.attack.ToUsual(this.Location.AttackBase);
       }
@@ -326,10 +326,16 @@ namespace MyGame.Unit.Versus
     /// </summary>
     private void Attack()
     {
+      // 攻撃ユニットがなければ何もしない(できない)
       if (this.attack == null) return;
 
+      // 対戦相手を取得する
       var target = VersusManager.Instance.GetTargetPlayerBy(Type);
+
+      // 攻撃アクションを作成(攻撃ユニット、自分と相手をセット)
       IAction action = new Attack.Action(this.attack, this, target);
+
+      // 攻撃を放つ(攻撃を放った後はActionに委ねる)
       this.attack.ToAttack(this.Location.TargetBase, action);
       this.attack = null;
     }
