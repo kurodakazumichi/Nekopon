@@ -94,12 +94,12 @@ namespace MyGame.Unit.Versus
           case State.FadeIn: 
             return;
 
-          // 降下中ならタイマーリセット(効果を延長)
+          // 効果中ならタイマーリセット(効果を延長)
           case State.Usual: 
             this.timer = 0; 
             break;
 
-          // フェードアウト中だったらフェードインに以降するけど、タイマーは引き継ぐ
+          // フェードアウト中だったらフェードインに移行するけど、タイマーは引き継ぐ
           case State.FadeOut: 
             float timer = FADE_TIME - this.timer;
             this.state.SetState(State.FadeIn); 
