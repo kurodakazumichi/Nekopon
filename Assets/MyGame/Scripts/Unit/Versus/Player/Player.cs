@@ -58,7 +58,7 @@ namespace MyGame.Unit.Versus
     /// <summary>
     /// 親オブジェクト
     /// </summary>
-    private Transform parent = null;
+    private readonly Transform parent = null;
 
     /// <summary>
     /// Playerに関するゲームオブジェクトを格納しておくゲームオブジェクト
@@ -68,7 +68,7 @@ namespace MyGame.Unit.Versus
     /// <summary>
     /// ステータス
     /// </summary>
-    private Status status = null;
+    private readonly Status status = null;
 
     /// <summary>
     /// パズル
@@ -83,7 +83,7 @@ namespace MyGame.Unit.Versus
     /// <summary>
     /// プレイヤー設定
     /// </summary>
-    private IPlayerConfig config = null;
+    private readonly IPlayerConfig config = null;
 
     /// <summary>
     /// 猫
@@ -107,6 +107,11 @@ namespace MyGame.Unit.Versus
     /// 攻撃を反射可能
     /// </summary>
     public bool CanReflect = false;
+
+    /// <summary>
+    /// 無敵フラグ
+    /// </summary>
+    public bool IsInvincible = false;
 
     //-------------------------------------------------------------------------
     // Load, Unload
@@ -198,6 +203,8 @@ namespace MyGame.Unit.Versus
       this.status.Update();
       this.gauges.Hp = this.status.HpRate;
       this.gauges.Dp = this.status.DpRate;
+
+      if (Type == Define.App.Player.P2) return;
 
       // カーソル移動(上下左右)
       if (Input.GetKeyDown(KeyCode.LeftArrow)) {
