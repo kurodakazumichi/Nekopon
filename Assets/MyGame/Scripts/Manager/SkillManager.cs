@@ -26,13 +26,27 @@ namespace MyGame
       void ToIdle();
     }
 
+    /// <summary>
+    /// 属性スキルユニットのInterface
+    /// </summary>
+    public interface ISkill : IPoolable
+    {
+      void Setup();
+      void Fire(Player owner, Player target);
+    }
+
     //-------------------------------------------------------------------------
     // メンバ変数
 
     /// <summary>
     /// オブジェクトプール(通常攻撃)
     /// </summary>
-    private ObjectPool<ISkill> attacks = new ObjectPool<ISkill>();
+    private ObjectPool<IAttack> attacks = new ObjectPool<IAttack>();
+
+    /// <summary>
+    /// 火属性スキルオブジェクトプール
+    /// </summary>
+    private ObjectPool<ISkill> firs = new ObjectPool<ISkill>();
 
     //-------------------------------------------------------------------------
     // Load, Unload
@@ -40,11 +54,13 @@ namespace MyGame
     public static void Load(System.Action pre, System.Action done)
     {
       Attack.Load(pre, done);
+      SkillFir.Load(pre, done);
     }
 
     public static void Unload()
     {
       Attack.Unload();
+      SkillFir.Unload();
     }
 
     //-------------------------------------------------------------------------
@@ -57,6 +73,7 @@ namespace MyGame
 
       // ObjectPoolの初期設定
       InitPoolForAttack();
+      InitPoolForFir();
     }
 
     protected override void OnMyDestory()
@@ -66,7 +83,7 @@ namespace MyGame
     }
 
     //-------------------------------------------------------------------------
-    // 通常攻撃
+    // 初期化関連
 
     /// <summary>
     /// Attackユニットプールの初期設定
@@ -85,6 +102,23 @@ namespace MyGame
     }
 
     /// <summary>
+    /// 火属性スキルオブジェクトプールの初期設定
+    /// </summary>
+    public void InitPoolForFir()
+    {
+      this.firs.SetGenerator(() => { 
+        var unit = new GameObject("SkillFir").AddComponent<SkillFir>();
+        unit.SetParent(CacheTransform);
+        return unit;
+      });
+
+      this.firs.Reserve(2);
+    }
+
+    //-------------------------------------------------------------------------
+    // 通常攻撃
+
+    /// <summary>
     /// 攻撃ユニットを生成
     /// </summary>
     public Attack Create(Transform parent)
@@ -95,10 +129,17 @@ namespace MyGame
       return attack as Attack;
     }
 
+    public ISkill Create(Define.App.Attribute attribute)
+    {
+      var unit = this.firs.Create();
+      unit.Setup();
+      return unit;
+    }
+
     /// <summary>
     /// 攻撃ユニットを返却
     /// </summary>
-    public void Release(ISkill attack)
+    public void Release(IAttack attack)
     {
       attack.ToIdle();
       this.attacks.Release(attack, CacheTransform);

@@ -251,6 +251,14 @@ namespace MyGame
     }
 
     /// <summary>
+    /// 指定したプレイヤーを取得する
+    /// </summary>
+    public Player GetPlayer(App.Player type)
+    {
+      return (type == App.Player.P1)? this.p1 : this.p2;
+    }
+
+    /// <summary>
     /// 指定されたプレイヤーの対になる相手を取得する
     /// </summary>
     public Player GetTargetPlayerBy(App.Player type)

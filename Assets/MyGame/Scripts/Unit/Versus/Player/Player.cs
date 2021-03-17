@@ -253,7 +253,8 @@ namespace MyGame.Unit.Versus
 
       // 強制ダメージ(火)
       if (Input.GetKeyDown(KeyCode.Alpha1)) {
-        TakeDamage(1000);
+        SkillManager.Instance.Create(Define.App.Attribute.Fir)
+          .Fire(this, VersusManager.Instance.GetTargetPlayerBy(Type));
       }
       // 状態異常回復(水)
       if (Input.GetKeyDown(KeyCode.Alpha2)) {
