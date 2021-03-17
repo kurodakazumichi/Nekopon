@@ -27,12 +27,7 @@ namespace MyGame.VersusManagement
     /// <summary>
     /// 自分のパズルの中心あたり
     /// </summary>
-    public Vector3 MyCenter { get; private set; } = Vector3.zero;
-
-    /// <summary>
-    /// 相手のパズルの中心あたり
-    /// </summary>
-    public Vector3 TargetCenter { get; private set; } = Vector3.zero;
+    public Vector3 Center { get; private set; } = Vector3.zero;
 
     /// <summary>
     /// 猫の位置
@@ -55,14 +50,13 @@ namespace MyGame.VersusManagement
     public Location(string myPrefix, string targetPrefix, GameObject go)
     {
       Transform locations = go.transform;
-      Paw          = locations.Find($"{myPrefix}.Paw").position;
-      HpGuage      = locations.Find($"{myPrefix}.Gauge.Hp").position;
-      ApGuage      = locations.Find($"{myPrefix}.Gauge.Ap").position;
-      MyCenter     = locations.Find($"{myPrefix}.Center").position;
-      TargetCenter = locations.Find($"{targetPrefix}.Center").position;
-      Cat          = locations.Find($"{myPrefix}.Cat").position;
-      AttackBase   = locations.Find($"{myPrefix}.AttackBase").position;
-      TargetBase   = locations.Find($"{myPrefix}.TargetBase").position;
+      Paw        = locations.Find($"{myPrefix}.Paw").position;
+      HpGuage    = locations.Find($"{myPrefix}.Gauge.Hp").position;
+      ApGuage    = locations.Find($"{myPrefix}.Gauge.Ap").position;
+      Center     = locations.Find($"{myPrefix}.Center").position;
+      Cat        = locations.Find($"{myPrefix}.Cat").position;
+      AttackBase = locations.Find($"{myPrefix}.AttackBase").position;
+      TargetBase = locations.Find($"{myPrefix}.TargetBase").position;
     }
   }
 }

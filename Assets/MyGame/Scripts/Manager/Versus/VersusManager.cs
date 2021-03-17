@@ -105,8 +105,8 @@ namespace MyGame
       this.guide = new GameObject("Guide").AddComponent<Unit.Versus.Guide>();
       this.guide.SetParent(CacheTransform);
       this.guide.Init(
-        this.locations[App.Player.P1].MyCenter,
-        this.locations[App.Player.P2].MyCenter
+        this.locations[App.Player.P1].Center,
+        this.locations[App.Player.P2].Center
       );
       this.guide.Setup();
 
