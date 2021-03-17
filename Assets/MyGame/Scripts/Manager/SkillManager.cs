@@ -11,9 +11,9 @@ namespace MyGame
   public class SkillManager : SingletonMonoBehaviour<SkillManager>
   {
     /// <summary>
-    /// スキルとしてのインターフェース
+    /// 攻撃ユニットのInterface
     /// </summary>
-    public interface ISkill : IPoolable
+    public interface IAttack : IPoolable
     {
       /// <summary>
       /// セットアップ可能

@@ -7,7 +7,7 @@ namespace MyGame.Unit.Versus
   /// <summary>
   /// 通常攻撃ユニット
   /// </summary>
-  public partial class Attack:Unit<Attack.State>, SkillManager.ISkill
+  public partial class Attack:Unit<Attack.State>, SkillManager.IAttack
   {
     /// <summary>
     /// 状態
