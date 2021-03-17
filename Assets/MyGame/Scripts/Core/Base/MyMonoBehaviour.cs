@@ -49,10 +49,22 @@ namespace MyGame
       this.OnMyDestory();
     }
 
+    protected virtual void OnEnable()
+    {
+      this.OnMyEnable();
+    }
+
+    protected virtual void OnDisable()
+    {
+      this.OnMyDisable();
+    }
+
     protected virtual void MyAwake() { }
     protected virtual void MyStart() { }
     protected virtual void MyUpdate() { }
     protected virtual void OnMyDestory() { }
+    protected virtual void OnMyEnable() { }
+    protected virtual void OnMyDisable() { }
 
     //-------------------------------------------------------------------------
     // その他
