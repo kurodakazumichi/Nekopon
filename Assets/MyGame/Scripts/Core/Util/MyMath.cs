@@ -13,5 +13,13 @@ namespace MyGame
       float pow = Mathf.Pow(10, digit);
       return Mathf.Floor(num * pow) / pow;
     }
+
+    /// <summary>
+    /// 補間
+    /// </summary>
+    public static float Lerp(float from, float to, float rate)
+    {
+      return from + (to - from) * rate;
+    }
   }
 }
