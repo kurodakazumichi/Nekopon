@@ -80,7 +80,7 @@ namespace MyGame.Unit.Versus
       this.spriteRenderer.sortingLayerName = Define.Layer.Sorting.Effect;
 
       // 状態構築
-      this.state.Add(State.Idle, OnIdleEnter);
+      this.state.Add(State.Idle);
       this.state.Add(State.Creation, OnCreationEnter, OnCreationUpdate);
       this.state.Add(State.Attack, OnAttackEnter, OnAttackUpdate, OnAttackExit);
       this.state.SetState(State.Idle);
@@ -108,14 +108,6 @@ namespace MyGame.Unit.Versus
 
     //-------------------------------------------------------------------------
     // ステートマシン
-
-    //-------------------------------------------------------------------------
-    // Idle(無効状態)
-
-    private void OnIdleEnter()
-    {
-      SetActive(false);
-    }
 
     //-------------------------------------------------------------------------
     // Creation
@@ -188,6 +180,9 @@ namespace MyGame.Unit.Versus
       }
 
       // TODO: エフェクトを再生予定
+
+      // スキルを返却
+      SkillManager.Instance.Release(Define.App.Attribute.Fir, this);
     }
   }
 }

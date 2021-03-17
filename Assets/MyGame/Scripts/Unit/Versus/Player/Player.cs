@@ -283,6 +283,32 @@ namespace MyGame.Unit.Versus
     }
 
     //-------------------------------------------------------------------------
+    // 属性スキル系
+
+    public void FireSkill(Define.App.Attribute attribute)
+    {
+      // 属性スキルを取得
+      var skill = SkillManager.Instance.Create(attribute);
+      
+      // スキル発動者と対称を取得
+      var owner = this;
+      var target = VersusManager.Instance.GetTargetPlayerBy(Type);
+
+      // 自分に対するスキルならtargetを自分に設定
+      switch(attribute) 
+      {
+        // 水と聖は対象が自分
+        case Define.App.Attribute.Wat:
+        case Define.App.Attribute.Hol:
+          target = owner;
+          break;
+      }
+
+      // スキル発動
+      skill.Fire(owner, target);
+    }
+
+    //-------------------------------------------------------------------------
     // パズル系
 
     /// <summary>

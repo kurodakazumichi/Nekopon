@@ -129,13 +129,6 @@ namespace MyGame
       return attack as Attack;
     }
 
-    public ISkill Create(Define.App.Attribute attribute)
-    {
-      var unit = this.firs.Create();
-      unit.Setup();
-      return unit;
-    }
-
     /// <summary>
     /// 攻撃ユニットを返却
     /// </summary>
@@ -143,6 +136,35 @@ namespace MyGame
     {
       attack.ToIdle();
       this.attacks.Release(attack, CacheTransform);
+    }
+
+    //-------------------------------------------------------------------------
+    // 属性スキル
+
+    /// <summary>
+    /// 属性スキルユニットを生成
+    /// </summary>
+    public ISkill Create(Define.App.Attribute attribute)
+    {
+      var unit = GetPoolForSkill(attribute).Create();
+      unit.Setup();
+      return unit;
+    }
+
+    /// <summary>
+    /// 属性スキルユニットを返却
+    /// </summary>
+    public void Release(Define.App.Attribute attribute, ISkill skill)
+    {
+      GetPoolForSkill(attribute).Release(skill, CacheTransform);
+    }
+
+    /// <summary>
+    /// 属性スキルプールを取得
+    /// </summary>
+    private ObjectPool<ISkill> GetPoolForSkill(Define.App.Attribute attribute)
+    {
+      return this.firs;
     }
   }
 }
