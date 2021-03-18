@@ -56,7 +56,7 @@ namespace MyGame.Unit.Versus
     /// <summary>
     /// 雫ユニットプール
     /// </summary>
-    private ObjectPool<Drop> drops = new ObjectPool<Skill.Drop>();
+    private ObjectPool<Props.GlowMover> drops = new ObjectPool<Props.GlowMover>();
 
     //-------------------------------------------------------------------------
     // Load, Unload
@@ -64,20 +64,37 @@ namespace MyGame.Unit.Versus
     /// <summary>
     /// 雲のスプライト
     /// </summary>
-    private static Sprite Sprite = null;
+    private static Sprite CloudSprite = null;
+
+    /// <summary>
+    /// 雫のテクスチャ
+    /// </summary>
+    public static List<Sprite> DropSprites = new List<Sprite>();
+
+    /// <summary>
+    /// 加算合成用マテリアル
+    /// </summary>
+    public static Material Material;
 
     public static void Load(System.Action pre, System.Action done)
     {
       var rs = ResourceSystem.Instance;
-      rs.Load<Sprite>("Skill.Cloud.sprite", pre, done, (res) => { Sprite = res; });
-      Drop.Load(pre, done);
+      rs.Load<Sprite>("Skill.Cloud.sprite", pre, done, (res) => { CloudSprite = res; });
+      rs.Load<Sprite>("Skill.Wat.01.sprite", pre, done, (res) => { DropSprites.Add(res); });
+      rs.Load<Sprite>("Skill.Wat.02.sprite", pre, done, (res) => { DropSprites.Add(res); });
+      rs.Load<Material>("Common.Additive.material", pre, done, (res) => { Material = res; });
     }
 
     public static void Unload()
     {
       var rs = ResourceSystem.Instance;
       rs.Unload("Skill.Cloud.sprite");
-      Drop.Unload();
+      rs.Unload("Skill.Wat.01.sprite");
+      rs.Unload("Skill.Wat.02.sprite");
+      rs.Unload("Common.Additive.material");
+      CloudSprite = null;
+      DropSprites.Clear();
+      Material = null;
     }
 
     //-------------------------------------------------------------------------
@@ -90,7 +107,7 @@ namespace MyGame.Unit.Versus
 
       // 雫ユニットのオブジェクトプール初期設定
       this.drops.SetGenerator(() => { 
-        return MyGameObject.Create<Drop>("Drop", CacheTransform);
+        return MyGameObject.Create<Props.GlowMover>("Drop", CacheTransform);
       });
 
       // 50個予約しとく
@@ -109,7 +126,7 @@ namespace MyGame.Unit.Versus
 
     public override void Setup()
     {
-      this.spriteRenderer.sprite = Sprite;
+      this.spriteRenderer.sprite = CloudSprite;
       this.spriteRenderer.sortingLayerName = Define.Layer.Sorting.Effect;
       this.spriteRenderer.sortingOrder = Define.Layer.Order.Layer10;
     }
@@ -184,19 +201,32 @@ namespace MyGame.Unit.Versus
       // 雫を作る
       var drop = this.drops.Create();
 
-      // セットアップ(雫が落ち終わった時に呼ばれるコールバックを設定)
-      drop.Setup((unit) => {
-        this.drops.Release(unit, CacheTransform);
-      });
+      // セットアップ
+      drop.Setup(
+        Util.GetRandom(DropSprites), 
+        Material,
+        Define.Layer.Sorting.Effect
+      );
 
-      // 開始地点と到達地点を決定する
+      // 加算合成具合を設定
+      drop.SetAdditive(Random.Range(0, 10f), 0.7f);
+
+      // 移動後に呼ばれるコールバック設定
+      drop.OnFinish = (unit) => {
+        this.drops.Release(unit, CacheTransform);
+      };
+
+      // ToMoveに渡すパラメータを用意
       Vector3 start = this.target.Location.Top;
       start.x += Random.Range(-DROP_WIDTH, DROP_WIDTH);
+
       Vector3 end = start;
       end.y = -1;
 
+      float time = Random.Range(MIN_RAIN_TIME, MAX_RAIN_TIME);
+
       // 発動
-      drop.Fire(start, end, Random.Range(MIN_RAIN_TIME, MAX_RAIN_TIME));
+      drop.ToMove(start, end, time);
     }
 
     //-------------------------------------------------------------------------

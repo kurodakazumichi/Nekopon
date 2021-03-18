@@ -2,12 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace MyGame.Unit.Versus.Skill
+namespace MyGame.Unit.Props
 {
-  /// <summary>
-  /// 雫エフェクト
-  /// </summary>
-  public class Drop : Unit<Drop.State>, IPoolable
+  public class GlowMover : Unit<GlowMover.State>, IPoolable
   {
     /// <summary>
     /// 状態
@@ -15,7 +12,7 @@ namespace MyGame.Unit.Versus.Skill
     public enum State
     {
       Idle,
-      Moving,
+      Move,
     }
 
     //-------------------------------------------------------------------------
@@ -57,40 +54,19 @@ namespace MyGame.Unit.Versus.Skill
     private float bias = 0f;
 
     /// <summary>
-    /// 雫が消える際に呼ばれるコールバック
+    /// 何かしら状態遷移が終わった際に呼ばれるコールバック
     /// </summary>
-    private System.Action<Drop> OnFinish;
-
-    //-------------------------------------------------------------------------
-    // Load, Unload
+    public System.Action<GlowMover> OnFinish { private get; set; } = null;
 
     /// <summary>
-    /// 雫のテクスチャ
+    /// 加算合成変化のサイクル
     /// </summary>
-    public static List<Sprite> Sprites = new List<Sprite>();
+    private float cycle = 1f;
 
     /// <summary>
-    /// 加算合成用マテリアル
+    /// 最大のアルファ値
     /// </summary>
-    public static Material Material;
-
-    public static void Load(System.Action pre, System.Action done)
-    {
-      var rs = ResourceSystem.Instance;
-      rs.Load<Sprite>("Skill.Wat.01.sprite", pre, done, (res) => { Sprites.Add(res); });
-      rs.Load<Sprite>("Skill.Wat.02.sprite", pre, done, (res) => { Sprites.Add(res); });
-      rs.Load<Material>("Common.Additive.material", pre, done, (res) => { Material = res; });
-    }
-
-    public static void Unload()
-    {
-      var rs = ResourceSystem.Instance;
-      rs.Unload("Skill.Wat.01.sprite");
-      rs.Unload("Skill.Wat.02.sprite");
-      rs.Unload("Common.Additive.material");
-      Sprites.Clear();
-      Material = null;
-    }
+    private float maxAlpha = 1f;
 
     //-------------------------------------------------------------------------
     // ライフサイクル
@@ -99,59 +75,68 @@ namespace MyGame.Unit.Versus.Skill
     {
       // Component取得
       this.main = MyGameObject.Create<SpriteRenderer>("Main", CacheTransform);
-      this.main.sortingLayerName = Define.Layer.Sorting.Effect;
       this.main.sortingOrder = Define.Layer.Order.Layer00;
 
       this.sub = MyGameObject.Create<SpriteRenderer>("Addtive", CacheTransform);
-      this.sub.sortingLayerName = Define.Layer.Sorting.Effect;
       this.sub.sortingOrder = Define.Layer.Order.Layer00 + 1;
-      this.sub.material = Material;
 
       // 状態の構築
       this.state.Add(State.Idle);
-      this.state.Add(State.Moving, OnMovingEnter, OnMovingUpdate);
+      this.state.Add(State.Move, OnMoveEnter, OnMoveUpdate);
       this.state.SetState(State.Idle);
     }
 
     //-------------------------------------------------------------------------
     // セットアップ
 
-    public void Setup(System.Action<Drop> onFinish)
+    /// <summary>
+    /// メインのスプライトと加算合成用マテリアルを渡す
+    /// </summary>
+    public void Setup(Sprite sprite, Material material, string layerName)
     {
-      this.OnFinish = onFinish;
-      int count = Sprites.Count - 1;
-      this.main.sprite  = this.sub.sprite = Sprites[Random.Range(0, count)];
-      this.sub.material = Material;
+      this.main.sprite  = this.sub.sprite = sprite;
+      this.sub.material = material;
+      this.main.sortingLayerName = this.sub.sortingLayerName = layerName;
+    }
+
+    public void SetAdditive(float cycle, float maxAlpha)
+    {
+      this.cycle = cycle;
+      this.maxAlpha = maxAlpha;
     }
 
     //-------------------------------------------------------------------------
     // ステートマシン
 
-    public void Fire(Vector3 start, Vector3 end, float time)
+    public void ToMove(Vector3 start, Vector3 end, float time)
     {
       this.startPosition = start;
-      this.endPosition   = end;
+      this.endPosition = end;
       this.time = time;
-      this.state.SetState(State.Moving);
+      this.state.SetState(State.Move);
     }
 
-    private void OnMovingEnter()
+    //-------------------------------------------------------------------------
+    // Move
+    // startPositionからendPositionに向かって移動
+
+    private void OnMoveEnter()
     {
       CacheTransform.position = startPosition;
       this.color.a = Random.Range(0, 1f);
       this.sub.color = this.color;
       this.timer = 0;
-      this.bias = Random.Range(0, Mathf.PI);
     }
 
-    private void OnMovingUpdate()
+    private void OnMoveUpdate()
     {
       float rate = this.timer / this.time;
 
       CacheTransform.position = Vector3.Lerp(this.startPosition, this.endPosition, rate);
 
-      this.color.a = Mathf.Abs(Mathf.Sin(this.bias + (rate * 5f)));
+      this.color.a = Mathf.Abs(Mathf.Sin(rate * cycle)) * maxAlpha;
       this.sub.color = this.color;
+
       UpdateTimer();
 
       if (this.time < this.timer) {
@@ -159,6 +144,7 @@ namespace MyGame.Unit.Versus.Skill
         this.state.SetState(State.Idle);
       }
     }
+
   }
 
 }

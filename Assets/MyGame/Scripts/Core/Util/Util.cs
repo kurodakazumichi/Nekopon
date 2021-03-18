@@ -39,6 +39,15 @@ namespace MyGame
     }
 
     /// <summary>
+    /// リストの中からランダムに１つ取得する
+    /// </summary>
+    public static T GetRandom<T>(List<T> list)
+    {
+      int lastIndex = list.Count - 1;
+      return list[UnityEngine.Random.Range(0, lastIndex)];
+    }
+
+    /// <summary>
     /// 配列の指定したindexの要素を取得を試みる
     /// </summary>
     public static T TryGet<T>(T[] array, int index, T def = default)
