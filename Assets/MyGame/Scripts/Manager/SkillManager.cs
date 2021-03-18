@@ -63,6 +63,7 @@ namespace MyGame
       Attack.Load(pre, done);
       SkillFir.Load(pre, done);
       SkillWat.Load(pre, done);
+      SkillThu.Load(pre, done);
     }
 
     public static void Unload()
@@ -70,6 +71,7 @@ namespace MyGame
       Attack.Unload();
       SkillFir.Unload();
       SkillWat.Unload();
+      SkillThu.Unload();
     }
 
     //-------------------------------------------------------------------------
@@ -84,6 +86,7 @@ namespace MyGame
       InitPoolForAttack();
       InitPoolForSkill<SkillFir>(Define.App.Attribute.Fir);
       InitPoolForSkill<SkillWat>(Define.App.Attribute.Wat);
+      InitPoolForSkill<SkillThu>(Define.App.Attribute.Thu);
     }
 
     protected override void OnMyDestory()

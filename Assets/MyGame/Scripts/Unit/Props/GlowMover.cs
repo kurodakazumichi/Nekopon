@@ -12,7 +12,9 @@ namespace MyGame.Unit.Props
     public enum State
     {
       Idle,
-      Move,
+      Move,  // 移動
+      Scale, // スケーリング
+      Flash, // ぴかぴか
     }
 
     //-------------------------------------------------------------------------
@@ -34,29 +36,19 @@ namespace MyGame.Unit.Props
     private Color color = Color.white;
 
     /// <summary>
-    /// 開始地点
+    /// 開始ベクトル
     /// </summary>
-    private Vector3 startPosition = Vector3.zero;
+    private Vector3 start = Vector3.zero;
 
     /// <summary>
-    /// 目標地点
+    /// 目標ベクトル
     /// </summary>
-    private Vector3 endPosition = Vector3.zero;
+    private Vector3 end = Vector3.zero;
 
     /// <summary>
     /// 降り注ぐ時間
     /// </summary>
     private float time = 0;
-
-    /// <summary>
-    /// 偏り
-    /// </summary>
-    private float bias = 0f;
-
-    /// <summary>
-    /// 何かしら状態遷移が終わった際に呼ばれるコールバック
-    /// </summary>
-    public System.Action<GlowMover> OnFinish { private get; set; } = null;
 
     /// <summary>
     /// 加算合成変化のサイクル
@@ -67,6 +59,29 @@ namespace MyGame.Unit.Props
     /// 最大のアルファ値
     /// </summary>
     private float maxAlpha = 1f;
+
+    /// <summary>
+    /// Tweenタイプ
+    /// </summary>
+    public Tween.Type Tween { private get; set; } = default;
+
+    /// <summary>
+    /// 何かしら状態遷移が終わった際に呼ばれるコールバック
+    /// </summary>
+    public System.Action<GlowMover> OnFinish { private get; set; } = null;
+
+    /// <summary>
+    /// 最小のアルファ値
+    /// </summary>
+    public float MinAlpha { private get; set; } = 0f;
+
+    //-------------------------------------------------------------------------
+    // プロパティ
+
+    /// <summary>
+    /// アイドルかどうか
+    /// </summary>
+    public bool IsIdle => (this.state.StateKey == State.Idle);
 
     //-------------------------------------------------------------------------
     // ライフサイクル
@@ -83,6 +98,8 @@ namespace MyGame.Unit.Props
       // 状態の構築
       this.state.Add(State.Idle);
       this.state.Add(State.Move, OnMoveEnter, OnMoveUpdate);
+      this.state.Add(State.Scale, OnScaleEnter, OnScaleUpdate);
+      this.state.Add(State.Flash, OnFlashEnter, OnFlashUpdate);
       this.state.SetState(State.Idle);
     }
 
@@ -99,6 +116,13 @@ namespace MyGame.Unit.Props
       this.main.sortingLayerName = this.sub.sortingLayerName = layerName;
     }
 
+    private void Setup(Vector3 start, Vector3 end, float time)
+    {
+      this.start = start;
+      this.end = end;
+      this.time = time;
+    }
+
     public void SetAdditive(float cycle, float maxAlpha)
     {
       this.cycle = cycle;
@@ -110,19 +134,30 @@ namespace MyGame.Unit.Props
 
     public void ToMove(Vector3 start, Vector3 end, float time)
     {
-      this.startPosition = start;
-      this.endPosition = end;
-      this.time = time;
+      Setup(start, end, time);
       this.state.SetState(State.Move);
+    }
+
+    public void ToScale(Vector3 start, Vector3 end, float time)
+    {
+      Setup(start, end, time);
+      this.state.SetState(State.Scale);
+    }
+
+    public void ToFlash(float time, float cycle, float maxAlpha)
+    {
+      this.SetAdditive(cycle, maxAlpha);
+      this.time = time;
+      this.state.SetState(State.Flash);
     }
 
     //-------------------------------------------------------------------------
     // Move
-    // startPositionからendPositionに向かって移動
+    // startからendまで移動
 
     private void OnMoveEnter()
     {
-      CacheTransform.position = startPosition;
+      CacheTransform.position = start;
       this.color.a = Random.Range(0, 1f);
       this.sub.color = this.color;
       this.timer = 0;
@@ -130,9 +165,9 @@ namespace MyGame.Unit.Props
 
     private void OnMoveUpdate()
     {
-      float rate = this.timer / this.time;
+      float rate = MyGame.Tween.easing(this.Tween, this.timer / this.time);
 
-      CacheTransform.position = Vector3.Lerp(this.startPosition, this.endPosition, rate);
+      CacheTransform.position = Vector3.Lerp(this.start, this.end, rate);
 
       this.color.a = Mathf.Abs(Mathf.Sin(rate * cycle)) * maxAlpha;
       this.sub.color = this.color;
@@ -141,6 +176,59 @@ namespace MyGame.Unit.Props
 
       if (this.time < this.timer) {
         OnFinish?.Invoke(this);
+        this.state.SetState(State.Idle);
+      }
+    }
+
+    //-------------------------------------------------------------------------
+    // Scale
+    // startからendまでスケーリング
+
+    private void OnScaleEnter()
+    {
+      CacheTransform.localScale = start;
+      this.color.a = 0;
+      this.sub.color = this.color;
+      this.timer = 0;
+    }
+
+    private void OnScaleUpdate()
+    {
+      float rate = MyGame.Tween.easing(this.Tween, this.timer / this.time);
+
+      CacheTransform.localScale
+        = MyVector3.Lerp(start, end, rate);
+
+      UpdateTimer();
+
+      if (this.time < this.timer) {
+        this.state.SetState(State.Idle);
+      }
+    }
+
+    //-------------------------------------------------------------------------
+    // Flash
+    // ピカピカする
+
+    private void OnFlashEnter()
+    {
+      CacheTransform.localScale = Vector3.one;
+      this.timer = 0;
+      this.color.a = 0;
+      this.sub.color = this.color;
+    }
+
+    private void OnFlashUpdate()
+    {
+      float rate = this.timer / this.time;
+      rate = MyGame.Tween.easing(this.Tween, Mathf.Abs(Mathf.Sin(rate * this.cycle)));
+      this.color.a = rate * this.maxAlpha;
+      this.color.a = Mathf.Max(MinAlpha, this.color.a);
+      this.sub.color = this.color;
+
+      UpdateTimer();
+
+      if (this.time < this.timer) {
         this.state.SetState(State.Idle);
       }
     }

@@ -204,8 +204,6 @@ namespace MyGame.Unit.Versus
       this.gauges.Hp = this.status.HpRate;
       this.gauges.Dp = this.status.DpRate;
 
-      if (Type == Define.App.Player.P2) return;
-
       // カーソル移動(上下左右)
       if (Input.GetKeyDown(KeyCode.LeftArrow)) {
         this.puzzle.MoveCursorL();
@@ -261,7 +259,7 @@ namespace MyGame.Unit.Versus
       }
       // 麻痺(雷)
       if (Input.GetKeyDown(KeyCode.Alpha3)) {
-        this.puzzle.Paralyze();
+        FireSkill(Define.App.Attribute.Thu);
       }
       // 凍結(氷)
       if (Input.GetKeyDown(KeyCode.Alpha4)) {
