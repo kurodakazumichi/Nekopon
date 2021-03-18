@@ -2,7 +2,6 @@
 
 namespace MyGame
 {
-
   public static class MyMath
   {
     /// <summary>

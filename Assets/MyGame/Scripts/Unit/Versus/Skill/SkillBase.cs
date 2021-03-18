@@ -51,16 +51,5 @@ namespace MyGame.Unit.Versus
       this.owner = owner;
       this.target = target;
     }
-
-    //-------------------------------------------------------------------------
-    // 汎用
-
-    /// <summary>
-    /// タイマーの更新
-    /// </summary>
-    protected void UpdateTimer()
-    {
-      this.timer += TimeSystem.Instance.DeltaTime;
-    }
   }
 }

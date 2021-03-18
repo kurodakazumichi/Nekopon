@@ -25,11 +25,6 @@ namespace MyGame.VersusManagement
     public Vector3 Paw { get; private set; } = Vector3.zero;
 
     /// <summary>
-    /// 自分のパズルの中心あたり
-    /// </summary>
-    public Vector3 Center { get; private set; } = Vector3.zero;
-
-    /// <summary>
     /// 猫の位置
     /// </summary>
     public Vector3 Cat { get; private set; } = Vector3.zero;
@@ -40,9 +35,14 @@ namespace MyGame.VersusManagement
     public Vector3 AttackBase { get; private set; } = Vector3.zero;
 
     /// <summary>
-    /// 攻撃対象の位置
+    /// 自分のパズルの上部
     /// </summary>
-    public Vector3 TargetBase { get; private set; } = Vector3.zero;
+    public Vector3 Top { get; private set; } = Vector3.zero;
+
+    /// <summary>
+    /// 自分のパズルの中心あたり
+    /// </summary>
+    public Vector3 Center { get; private set; } = Vector3.zero;
 
     /// <summary>
     /// コンストラクタ
@@ -56,7 +56,7 @@ namespace MyGame.VersusManagement
       Center     = locations.Find($"{myPrefix}.Center").position;
       Cat        = locations.Find($"{myPrefix}.Cat").position;
       AttackBase = locations.Find($"{myPrefix}.AttackBase").position;
-      TargetBase = locations.Find($"{myPrefix}.TargetBase").position;
+      Top        = locations.Find($"{myPrefix}.TargetBase").position;
     }
   }
 }

@@ -55,7 +55,7 @@ namespace MyGame.Unit.Versus
         // 相手が反射可能であれば、攻撃対象を入れ替え再攻撃
         if (target.CanReflect) {
           Swap();
-          attack.ToAttack(this.owner.Location.TargetBase, this);
+          attack.ToAttack(this.target.Location.Top, this);
         } 
         
         // 相手が反射不可であれば、そのまま相手に攻撃を与える

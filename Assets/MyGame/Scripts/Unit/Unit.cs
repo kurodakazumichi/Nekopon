@@ -34,5 +34,13 @@ namespace MyGame.Unit
     {
       this.state.Update();
     }
+
+    /// <summary>
+    /// タイマーの更新
+    /// </summary>
+    protected virtual void UpdateTimer()
+    {
+      this.timer += TimeSystem.Instance.DeltaTime;
+    }
   }
 }

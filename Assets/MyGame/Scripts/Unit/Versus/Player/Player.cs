@@ -253,12 +253,11 @@ namespace MyGame.Unit.Versus
 
       // 強制ダメージ(火)
       if (Input.GetKeyDown(KeyCode.Alpha1)) {
-        SkillManager.Instance.Create(Define.App.Attribute.Fir)
-          .Fire(this, VersusManager.Instance.GetTargetPlayerBy(Type));
+        FireSkill(Define.App.Attribute.Fir);
       }
       // 状態異常回復(水)
       if (Input.GetKeyDown(KeyCode.Alpha2)) {
-        this.puzzle.Cure();
+        FireSkill(Define.App.Attribute.Wat);
       }
       // 麻痺(雷)
       if (Input.GetKeyDown(KeyCode.Alpha3)) {
@@ -334,6 +333,30 @@ namespace MyGame.Unit.Versus
       this.attack.SetIntensity(this.status.PowerRate);
     }
 
+    /// <summary>
+    /// 回復する
+    /// </summary>
+    public void Cure()
+    {
+      this.puzzle.Cure();
+    }
+
+    /// <summary>
+    /// 麻痺する
+    /// </summary>
+    public void Paralyze()
+    {
+      this.puzzle.Paralyze();
+    }
+
+    /// <summary>
+    /// 凍結する
+    /// </summary>
+    public void Freeze()
+    {
+      this.puzzle.Freeze();
+    }
+
     //-------------------------------------------------------------------------
     // プレイヤー関連
 
@@ -352,7 +375,7 @@ namespace MyGame.Unit.Versus
       IAction action = new Attack.Action(this.attack, this, target);
 
       // 攻撃を放つ(攻撃を放った後はActionに委ねる)
-      this.attack.ToAttack(this.Location.TargetBase, action);
+      this.attack.ToAttack(target.Location.Top, action);
       this.attack = null;
     }
 

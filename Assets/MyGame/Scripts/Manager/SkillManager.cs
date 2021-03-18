@@ -31,7 +31,14 @@ namespace MyGame
     /// </summary>
     public interface ISkill : IPoolable
     {
+      /// <summary>
+      /// セットアップ可能
+      /// </summary>
       void Setup();
+
+      /// <summary>
+      /// 発動可能
+      /// </summary>
       void Fire(Player owner, Player target);
     }
 
@@ -44,9 +51,9 @@ namespace MyGame
     private ObjectPool<IAttack> attacks = new ObjectPool<IAttack>();
 
     /// <summary>
-    /// 火属性スキルオブジェクトプール
+    /// 属性スキル用オブジェクトプール
     /// </summary>
-    private ObjectPool<ISkill> firs = new ObjectPool<ISkill>();
+    private Dictionary<int, ObjectPool<ISkill>> skills = new Dictionary<int, ObjectPool<ISkill>>();
 
     //-------------------------------------------------------------------------
     // Load, Unload
@@ -55,12 +62,14 @@ namespace MyGame
     {
       Attack.Load(pre, done);
       SkillFir.Load(pre, done);
+      SkillWat.Load(pre, done);
     }
 
     public static void Unload()
     {
       Attack.Unload();
       SkillFir.Unload();
+      SkillWat.Unload();
     }
 
     //-------------------------------------------------------------------------
@@ -73,7 +82,8 @@ namespace MyGame
 
       // ObjectPoolの初期設定
       InitPoolForAttack();
-      InitPoolForFir();
+      InitPoolForSkill<SkillFir>(Define.App.Attribute.Fir);
+      InitPoolForSkill<SkillWat>(Define.App.Attribute.Wat);
     }
 
     protected override void OnMyDestory()
@@ -88,7 +98,7 @@ namespace MyGame
     /// <summary>
     /// Attackユニットプールの初期設定
     /// </summary>
-    public void InitPoolForAttack()
+    private void InitPoolForAttack()
     {
       // Generatorを定義
       this.attacks.SetGenerator(() => {
@@ -102,17 +112,25 @@ namespace MyGame
     }
 
     /// <summary>
-    /// 火属性スキルオブジェクトプールの初期設定
+    /// 属性スキル用オブジェクトプールの初期設定
     /// </summary>
-    public void InitPoolForFir()
+    /// <typeparam name="T">Componentであり、ISkillを実装している</typeparam>
+    /// <param name="attribute">属性</param>
+    private void InitPoolForSkill<T>(Define.App.Attribute attribute) where T : Component, ISkill
     {
-      this.firs.SetGenerator(() => { 
-        var unit = new GameObject("SkillFir").AddComponent<SkillFir>();
-        unit.SetParent(CacheTransform);
-        return unit;
+      // プール生成
+      var pool = new ObjectPool<ISkill>();
+
+      // Generator設定
+      pool.SetGenerator(() => { 
+        return MyGameObject.Create<T>("Skill", CacheTransform);
       });
 
-      this.firs.Reserve(2);
+      // 2人分予約
+      pool.Reserve(2);
+
+      // 登録
+      this.skills.Add((int)attribute, pool);
     }
 
     //-------------------------------------------------------------------------
@@ -164,7 +182,7 @@ namespace MyGame
     /// </summary>
     private ObjectPool<ISkill> GetPoolForSkill(Define.App.Attribute attribute)
     {
-      return this.firs;
+      return this.skills[(int)attribute];
     }
   }
 }

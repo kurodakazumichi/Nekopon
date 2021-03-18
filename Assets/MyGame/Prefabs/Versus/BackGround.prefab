@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 215435562951105352}
   m_Layer: 0
-  m_Name: P1.TargetBase
+  m_Name: P2.TargetBase
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -465,7 +465,7 @@ GameObject:
   m_Component:
   - component: {fileID: 211538647662092459}
   m_Layer: 0
-  m_Name: P2.TargetBase
+  m_Name: P1.TargetBase
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

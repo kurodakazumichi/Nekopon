@@ -15,7 +15,7 @@ namespace MyGame.Unit.Versus
     /// </summary>
     public enum State { 
       Idle,
-      Creation,
+      Create,
       Attack,
     }
 
@@ -81,7 +81,7 @@ namespace MyGame.Unit.Versus
 
       // 状態構築
       this.state.Add(State.Idle);
-      this.state.Add(State.Creation, OnCreationEnter, OnCreationUpdate);
+      this.state.Add(State.Create, OnCreateEnter, OnCreateUpdate);
       this.state.Add(State.Attack, OnAttackEnter, OnAttackUpdate, OnAttackExit);
       this.state.SetState(State.Idle);
     }
@@ -103,7 +103,7 @@ namespace MyGame.Unit.Versus
     public override void Fire(Player owner, Player target)
     {
       base.Fire(owner, target);
-      this.state.SetState(State.Creation);
+      this.state.SetState(State.Create);
     }
 
     //-------------------------------------------------------------------------
@@ -113,7 +113,7 @@ namespace MyGame.Unit.Versus
     // Creation
     // 猫の位置から猫の頭上あたりに爆弾が出現する
 
-    private void OnCreationEnter()
+    private void OnCreateEnter()
     {
       CacheTransform.localScale = Vector3.zero;
       this.basePosition   = this.owner.Location.Cat;
@@ -121,7 +121,7 @@ namespace MyGame.Unit.Versus
       this.timer = 0;
     }
 
-    private void OnCreationUpdate()
+    private void OnCreateUpdate()
     {
       float rate = this.timer / CREATION_TIME;
 
