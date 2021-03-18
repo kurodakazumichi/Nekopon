@@ -172,13 +172,14 @@ namespace MyGame.Unit.Versus
       Util.ForEach(this.thunders, (thunder, _) => {
         thunder.SetActive(true);
         thunder.CacheTransform.position = this.target.Location.Center;
-        thunder.MinAlpha = STRIKE_MIN_ALPHA;
-        thunder.ToFlash(STRIKE_TIME, STRIKE_FLASH_CYCLE, 1f);
+        thunder.SetFlash(STRIKE_FLASH_CYCLE, STRIKE_MIN_ALPHA, 1f);
+        thunder.ToFlash(STRIKE_TIME);
       });
 
       // 雲をフラッシュ
       this.cloud.CacheTransform.localScale = Vector3.one;
-      this.cloud.ToFlash(STRIKE_TIME, STRIKE_FLASH_CYCLE, CLOUD_MAX_ALPHA);
+      this.cloud.SetFlash(STRIKE_FLASH_CYCLE, 0f, CLOUD_MAX_ALPHA);
+      this.cloud.ToFlash(STRIKE_TIME);
 
       if (this.target.IsInvincible) {
         // 無敵ならガードSE

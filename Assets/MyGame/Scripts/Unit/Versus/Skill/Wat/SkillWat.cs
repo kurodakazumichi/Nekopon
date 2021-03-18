@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using MyGame.Unit.Versus.Skill;
 
 namespace MyGame.Unit.Versus
 {
@@ -209,7 +208,7 @@ namespace MyGame.Unit.Versus
       );
 
       // 加算合成具合を設定
-      drop.SetAdditive(Random.Range(0, 10f), 0.7f);
+      drop.SetFlash(Random.Range(0, 10f), 0f, 0.7f);
 
       // 移動後に呼ばれるコールバック設定
       drop.OnFinish = (unit) => {
