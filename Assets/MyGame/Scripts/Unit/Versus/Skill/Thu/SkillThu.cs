@@ -33,11 +33,6 @@ namespace MyGame.Unit.Versus
     private const float STRIKE_FLASH_CYCLE = 30f;
 
     /// <summary>
-    /// 落雷の最小アルファ値
-    /// </summary>
-    private const float STRIKE_MIN_ALPHA = 0.5f;
-
-    /// <summary>
     /// 落雷時の雲の最小アルファ値
     /// </summary>
     private const float CLOUD_MAX_ALPHA = 0.3f;
@@ -47,11 +42,6 @@ namespace MyGame.Unit.Versus
     /// </summary>
     private const float CLEAR_TIME = 0.5f;
 
-    /// <summary>
-    /// 雷の数
-    /// </summary>
-    private const int THUNDER_COUNT = 2;
-
     //-------------------------------------------------------------------------
     // メンバ変数
 
@@ -60,23 +50,13 @@ namespace MyGame.Unit.Versus
     /// </summary>
     private Props.GlowMover cloud = null;
 
-    /// <summary>
-    /// 雷ユニット
-    /// </summary>
-    private Props.GlowMover[] thunders = new Props.GlowMover[THUNDER_COUNT];
-
     //-------------------------------------------------------------------------
     // Load, Unload
 
     /// <summary>
     /// 雲のスプライト
     /// </summary>
-    private static Sprite CloudSprite = null;
-
-    /// <summary>
-    /// 雷のスプライト
-    /// </summary>
-    private static Sprite ThunderSprite = null;
+    private static Sprite Sprite = null;
 
     /// <summary>
     /// 加算合成用マテリアル
@@ -86,8 +66,7 @@ namespace MyGame.Unit.Versus
     public static void Load(System.Action pre, System.Action done)
     {
       var rs = ResourceSystem.Instance;
-      rs.Load<Sprite>("Skill.Cloud.sprite", pre, done, (res) => { CloudSprite = res; });
-      rs.Load<Sprite>("Skill.Thu.01.sprite", pre, done, (res) => { ThunderSprite = res; });
+      rs.Load<Sprite>("Skill.Cloud.sprite", pre, done, (res) => { Sprite = res; });
       rs.Load<Material>("Common.Additive.material", pre, done, (res) => { Material = res; });
     }
 
@@ -95,10 +74,8 @@ namespace MyGame.Unit.Versus
     {
       var rs = ResourceSystem.Instance;
       rs.Unload("Skill.Cloud.sprite");
-      rs.Unload("Skill.Thu.01.sprite");
       rs.Unload("Common.Additive.material");
-      CloudSprite = null;
-      ThunderSprite = null;
+      Sprite = null;
       Material = null;
     }
 
@@ -109,10 +86,6 @@ namespace MyGame.Unit.Versus
     {
       // ユニット生成
       this.cloud = MyGameObject.Create<Props.GlowMover>("Cloud", CacheTransform);
-
-      for(int i = 0; i < THUNDER_COUNT; ++i) {
-        this.thunders[i] = MyGameObject.Create<Props.GlowMover>("Thunder", CacheTransform);
-      }
 
       // 状態の構築
       this.state.Add(State.Idle);
@@ -127,12 +100,7 @@ namespace MyGame.Unit.Versus
 
     public override void Setup()
     {
-      this.cloud.Setup(CloudSprite, Material, Define.Layer.Sorting.Effect);
-
-      Util.ForEach(this.thunders, (thunder, index) => {
-        thunder.Setup(ThunderSprite, Material, Define.Layer.Sorting.Default);
-        thunder.SetActive(false);
-      });
+      this.cloud.Setup(Sprite, Material, Define.Layer.Sorting.Effect);
     }
 
     public override void Fire(Player owner, Player target)
@@ -147,9 +115,6 @@ namespace MyGame.Unit.Versus
 
     private void OnCreateEnter()
     {
-      // 雷を無効化
-      SetActiveThunders(false);
-
       // 雲を登場させる
       this.cloud.CacheTransform.position = this.target.Location.Top;
       this.cloud.Tween = Tween.Type.EaseOutBack;
@@ -168,13 +133,9 @@ namespace MyGame.Unit.Versus
 
     private void OnStrikeEnter()
     {
-      // 雷をフラッシュ
-      Util.ForEach(this.thunders, (thunder, _) => {
-        thunder.SetActive(true);
-        thunder.CacheTransform.position = this.target.Location.Center;
-        thunder.SetFlash(STRIKE_FLASH_CYCLE, STRIKE_MIN_ALPHA, 1f);
-        thunder.ToFlash(STRIKE_TIME);
-      });
+      // 雷を生成
+      EffectManager.Instance.Create(EffectManager.Type.Thunder)
+        .Fire(this.target.Location.Center);
 
       // 雲をフラッシュ
       this.cloud.CacheTransform.localScale = Vector3.one;
@@ -200,9 +161,6 @@ namespace MyGame.Unit.Versus
     
     private void OnClearEnter()
     {
-      // 雷を無効化
-      SetActiveThunders(false);
-
       // 雲を縮小
       this.cloud.Tween = Tween.Type.EaseInBack;
       this.cloud.ToScale(Vector3.one, Vector3.zero, CLEAR_TIME);
@@ -218,17 +176,6 @@ namespace MyGame.Unit.Versus
     {
       // スキルを返却
       SkillManager.Instance.Release(Define.App.Attribute.Thu, this);
-    }
-
-    //-------------------------------------------------------------------------
-    // その他
-
-    /// <summary>
-    /// 雷の有効無効
-    /// </summary>
-    private void SetActiveThunders(bool isActive)
-    {
-      Util.ForEach(this.thunders, ((thunder, _) => { thunder.SetActive(isActive); }));
     }
   }
 }
