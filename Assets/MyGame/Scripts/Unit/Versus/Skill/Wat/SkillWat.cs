@@ -25,24 +25,9 @@ namespace MyGame.Unit.Versus
     private const float CREATE_TIME = 0.2f;
 
     /// <summary>
-    /// 雨が降り注ぐ時間
+    /// 雲の片付けに要する時間
     /// </summary>
-    private const float RAIN_TIME = 0.7f;
-
-    /// <summary>
-    /// 雫の落ちる時間(最小)
-    /// </summary>
-    private const float MIN_RAIN_TIME = 0.5f;
-
-    /// <summary>
-    /// 雫の落ちる時間(最大)
-    /// </summary>
-    private const float MAX_RAIN_TIME = 1f;
-
-    /// <summary>
-    /// 雫をランダム配置する際のばらつき幅(半分)
-    /// </summary>
-    private const float DROP_WIDTH = 0.3f;
+    const float CLEAN_TIME = 1f;
 
     //-------------------------------------------------------------------------
     // メンバ変数
@@ -53,9 +38,9 @@ namespace MyGame.Unit.Versus
     private SpriteRenderer spriteRenderer = null;
 
     /// <summary>
-    /// 雫ユニットプール
+    /// 雨のエフェクト
     /// </summary>
-    private ObjectPool<Props.GlowMover> drops = new ObjectPool<Props.GlowMover>();
+    EffectManager.IEffect effect = null;
 
     //-------------------------------------------------------------------------
     // Load, Unload
@@ -63,37 +48,19 @@ namespace MyGame.Unit.Versus
     /// <summary>
     /// 雲のスプライト
     /// </summary>
-    private static Sprite CloudSprite = null;
-
-    /// <summary>
-    /// 雫のテクスチャ
-    /// </summary>
-    public static List<Sprite> DropSprites = new List<Sprite>();
-
-    /// <summary>
-    /// 加算合成用マテリアル
-    /// </summary>
-    public static Material Material;
+    private static Sprite Sprite = null;
 
     public static void Load(System.Action pre, System.Action done)
     {
       var rs = ResourceSystem.Instance;
-      rs.Load<Sprite>("Skill.Cloud.sprite", pre, done, (res) => { CloudSprite = res; });
-      rs.Load<Sprite>("Skill.Wat.01.sprite", pre, done, (res) => { DropSprites.Add(res); });
-      rs.Load<Sprite>("Skill.Wat.02.sprite", pre, done, (res) => { DropSprites.Add(res); });
-      rs.Load<Material>("Common.Additive.material", pre, done, (res) => { Material = res; });
+      rs.Load<Sprite>("Skill.Cloud.sprite", pre, done, (res) => { Sprite = res; });
     }
 
     public static void Unload()
     {
       var rs = ResourceSystem.Instance;
       rs.Unload("Skill.Cloud.sprite");
-      rs.Unload("Skill.Wat.01.sprite");
-      rs.Unload("Skill.Wat.02.sprite");
-      rs.Unload("Common.Additive.material");
-      CloudSprite = null;
-      DropSprites.Clear();
-      Material = null;
+      Sprite = null;
     }
 
     //-------------------------------------------------------------------------
@@ -103,14 +70,6 @@ namespace MyGame.Unit.Versus
     {
       // SpriteRenderer追加
       this.spriteRenderer = AddComponent<SpriteRenderer>();
-
-      // 雫ユニットのオブジェクトプール初期設定
-      this.drops.SetGenerator(() => { 
-        return MyGameObject.Create<Props.GlowMover>("Drop", CacheTransform);
-      });
-
-      // 50個予約しとく
-      this.drops.Reserve(50);
 
       // 状態の構築
       this.state.Add(State.Idle);
@@ -125,7 +84,7 @@ namespace MyGame.Unit.Versus
 
     public override void Setup()
     {
-      this.spriteRenderer.sprite = CloudSprite;
+      this.spriteRenderer.sprite = Sprite;
       this.spriteRenderer.sortingLayerName = Define.Layer.Sorting.Effect;
       this.spriteRenderer.sortingOrder = Define.Layer.Order.Layer10;
     }
@@ -171,61 +130,24 @@ namespace MyGame.Unit.Versus
     private void OnRainEnter()
     {
       this.timer = 0;
+
+      // 雨のエフェクトを生成
+      this.effect = EffectManager.Instance.Create(EffectManager.Type.Rain);
+      this.effect.Fire(this.target.Location.Top);
     }
 
     private void OnRainUpdate()
     {
-      // 1フレームで2雫作っておくか、可変フレーム対応になってないけどまぁヨシッ
-      CreateDrop();
-      CreateDrop();
-
-      UpdateTimer();
-
-      if (RAIN_TIME < this.timer) {
-        this.state.SetState(State.Clear);
-      }
+      if (!this.effect.IsIdle) return;
+      this.state.SetState(State.Clear);
     }
 
     private void OnRainExit()
     {
+      this.effect = null;
+
       // 状態回復
       this.target.Cure();
-    }
-
-    /// <summary>
-    /// 雨の雫を生成する
-    /// </summary>
-    private void CreateDrop()
-    {
-      // 雫を作る
-      var drop = this.drops.Create();
-
-      // セットアップ
-      drop.Setup(
-        Util.GetRandom(DropSprites), 
-        Material,
-        Define.Layer.Sorting.Effect
-      );
-
-      // 加算合成具合を設定
-      drop.SetFlash(Random.Range(0, 10f), 0f, 0.7f);
-
-      // 移動後に呼ばれるコールバック設定
-      drop.OnFinish = (unit) => {
-        this.drops.Release(unit, CacheTransform);
-      };
-
-      // ToMoveに渡すパラメータを用意
-      Vector3 start = this.target.Location.Top;
-      start.x += Random.Range(-DROP_WIDTH, DROP_WIDTH);
-
-      Vector3 end = start;
-      end.y = -1;
-
-      float time = Random.Range(MIN_RAIN_TIME, MAX_RAIN_TIME);
-
-      // 発動
-      drop.ToMove(start, end, time);
     }
 
     //-------------------------------------------------------------------------
@@ -239,14 +161,14 @@ namespace MyGame.Unit.Versus
 
     private void OnCleanUpdate()
     {
-      float rate = this.timer / MAX_RAIN_TIME;
+      float rate = this.timer / CLEAN_TIME;
 
       CacheTransform.localScale
         = MyVector3.Lerp(Vector3.one, Vector3.zero, Tween.EaseInBack(rate));
 
       UpdateTimer();
 
-      if (MAX_RAIN_TIME < this.timer) {
+      if (CLEAN_TIME < this.timer) {
         this.state.SetState(State.Idle);
       }
     }

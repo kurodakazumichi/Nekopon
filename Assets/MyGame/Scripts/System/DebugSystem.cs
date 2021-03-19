@@ -47,8 +47,6 @@ namespace MyGame
 
     protected override void MyUpdate()
     {
-      var pad = InputSystem.Instance.GetPad(0);
-
       if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.D)) {
         this.isShow = !this.isShow;
       }
@@ -59,19 +57,24 @@ namespace MyGame
     private void OnGUI()
     {
       if (!isShow) return;
-      
+     
       using (var sv = new GUILayout.ScrollViewScope(this.scrollPosition)) {
-        using (new GUILayout.HorizontalScope(GUILayout.Width(Screen.width - 10))) {
-          this.scrollPosition = sv.scrollPosition;
-          Util.ForEach(this.monos, (name, mono) => {
-            if (GUILayout.Button(name)) {
-              this.current = mono;
-            }
-          });
-        }
 
-        if (this.current) {
-          this.current.OnDebug();
+        using (new GUILayout.HorizontalScope(GUI.skin.box)) {
+          this.scrollPosition = sv.scrollPosition;
+
+          using (new GUILayout.VerticalScope(GUILayout.Width(100))) {
+            Util.ForEach(this.monos, (name, mono) => {
+              if (GUILayout.Button(name)) {
+                this.current = mono;
+              }
+            });
+          }
+          using (new GUILayout.VerticalScope(GUILayout.Width(Screen.width - 150))) {
+            if (this.current) {
+              this.current.OnDebug();
+            }
+          }
         }
       }
     }
