@@ -3,8 +3,11 @@ using UnityEngine;
 
 namespace MyGame.Unit.Effect
 {
-  public class Rain : Unit<Rain.State>, EffectManager.IEffect
+  public class Rain : EffectBase<Rain.State>
   {
+    /// <summary>
+    /// 状態
+    /// </summary>
     public enum State {
       Idle,
       Rain,
@@ -96,16 +99,17 @@ namespace MyGame.Unit.Effect
     //-------------------------------------------------------------------------
     // IEffectの実装
 
-    public bool IsIdle => (this.state.StateKey != State.Rain);
+    /// <summary>
+    /// 雨を降らしている状態以外はIdle扱いにする
+    /// </summary>
+    public override bool IsIdle => (this.state.StateKey != State.Rain);
 
-    public void Setup()
+    /// <summary>
+    /// 発動
+    /// </summary>
+    public override void Fire(Vector3 position)
     {
-      
-    }
-
-    public void Fire(Vector3 position)
-    {
-      CacheTransform.position = position;
+      base.Fire(position);
       this.state.SetState(State.Rain);
     }
 
