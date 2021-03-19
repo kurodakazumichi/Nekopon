@@ -11,6 +11,7 @@ namespace MyGame
     /// </summary>
     public enum Type
     {
+      EaseUniform,
       EaseInSine,
       EaseOutSine,
       EaseInOutSine,
@@ -25,6 +26,7 @@ namespace MyGame
     public static float easing(Type type, float t)
     {
       switch(type) {
+        case Type.EaseUniform: return EaseUniform(t);
         case Type.EaseInSine: return EaseInSine(t);
         case Type.EaseOutSine: return EaseOutSine(t);
         case Type.EaseInOutSine: return EaseInOutSine(t);
@@ -36,6 +38,11 @@ namespace MyGame
         case Type.EaseOutElastic: return EaseOutElastic(t);
         default: return EaseInSine(t);
       }
+    }
+
+    public static float EaseUniform(float t)
+    {
+      return t;
     }
 
     public static float EaseInSine(float t)

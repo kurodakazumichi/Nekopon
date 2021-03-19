@@ -35,6 +35,7 @@ namespace MyGame
     {
       Rain,
       Thunder,
+      Ice,
     }
 
     //-------------------------------------------------------------------------
@@ -52,12 +53,14 @@ namespace MyGame
     {
       Rain.Load(pre, done);
       Thunder.Load(pre, done);
+      Ice.Load(pre, done);
     }
 
     public static void Unload()
     {
       Rain.Unload();
       Thunder.Unload();
+      Ice.Unload();
     }
 
     //-------------------------------------------------------------------------
@@ -71,6 +74,7 @@ namespace MyGame
       // ObjectPoolの初期設定
       InitPool<Rain>(Type.Rain);
       InitPool<Thunder>(Type.Thunder);
+      InitPool<Ice>(Type.Ice);
     }
 
     protected override void OnMyDestory()

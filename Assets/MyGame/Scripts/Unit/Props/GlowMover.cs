@@ -152,11 +152,11 @@ namespace MyGame.Unit.Props
     /// <summary>
     /// Flashの設定
     /// </summary>
-    public void SetFlash(float cycle, float min, float max)
+    public void SetFlash(float cycle, float minBrightness, float maxBrightness)
     {
       this.cycle = cycle;
-      this.minAlpha = min;
-      this.maxAlpha = max;
+      this.minAlpha = minBrightness;
+      this.maxAlpha = maxBrightness;
 
       this.color.a = 0;
       this.additive.color = this.color;
@@ -172,6 +172,19 @@ namespace MyGame.Unit.Props
 
     //-------------------------------------------------------------------------
     // ステートマシン
+
+    //-------------------------------------------------------------------------
+    // Idle
+
+    private void OnIdleEnter()
+    {
+      OnFinish?.Invoke(this);
+      OnFinish = null;
+      DisableFlash();
+    }
+
+    //-------------------------------------------------------------------------
+    // Move
 
     public void ToMove(Vector3 start, Vector3 end, float time)
     {
@@ -194,16 +207,6 @@ namespace MyGame.Unit.Props
     public void ToUsual()
     {
       this.state.SetState(State.Usual);
-    }
-
-    //-------------------------------------------------------------------------
-    // Idle
-
-    private void OnIdleEnter()
-    {
-      OnFinish?.Invoke(this);
-      OnFinish = null;
-      DisableFlash();
     }
 
     //-------------------------------------------------------------------------
