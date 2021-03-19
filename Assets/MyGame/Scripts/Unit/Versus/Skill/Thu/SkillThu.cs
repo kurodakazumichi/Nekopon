@@ -23,16 +23,6 @@ namespace MyGame.Unit.Versus
     private const float CREATE_TIME = 0.2f;
 
     /// <summary>
-    /// 落雷に要する時間
-    /// </summary>
-    private const float STRIKE_TIME = Effect.Thunder.TIME;
-
-    /// <summary>
-    /// 落雷の点滅サイクル
-    /// </summary>
-    private const float STRIKE_FLASH_CYCLE = Effect.Thunder.CYCLE;
-
-    /// <summary>
     /// 落雷時の雲の最小アルファ値
     /// </summary>
     private const float CLOUD_MAX_ALPHA = 0.3f;
@@ -139,8 +129,8 @@ namespace MyGame.Unit.Versus
 
       // 雲をフラッシュ
       this.cloud.CacheTransform.localScale = Vector3.one;
-      this.cloud.SetFlash(STRIKE_FLASH_CYCLE, 0f, CLOUD_MAX_ALPHA);
-      this.cloud.ToFlash(STRIKE_TIME);
+      this.cloud.SetFlash(Effect.Thunder.CYCLE, 0f, CLOUD_MAX_ALPHA);
+      this.cloud.ToFlash(Effect.Thunder.TIME);
 
       if (this.target.IsInvincible) {
         // 無敵ならガードSE
