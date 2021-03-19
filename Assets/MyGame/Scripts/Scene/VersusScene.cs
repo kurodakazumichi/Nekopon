@@ -39,6 +39,7 @@ namespace MyGame.Scene
       SingletonSystem.Instance
         .Regist<PawEffectManager>(system)
         .Regist<SkillManager>(system)
+        .Regist<EffectManager>(system)
         .Regist<VersusManager>(system);
       
 
@@ -61,6 +62,7 @@ namespace MyGame.Scene
       rm.Load<GameObject>("VS.BackGround.prefab", pre, done, (res) => { this.backGroundPrefab = res; });
       PawEffectManager.Load(pre, done);
       SkillManager.Load(pre, done);
+      EffectManager.Load(pre, done);
       VersusManager.Load(pre, done);
 
       // ロード待機
@@ -77,6 +79,7 @@ namespace MyGame.Scene
       rm.Unload("VS.BackGround.prefab");
       PawEffectManager.Unload();
       SkillManager.Unload();
+      EffectManager.Unload();
       VersusManager.Unload();
     }
 

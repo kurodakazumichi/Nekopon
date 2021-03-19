@@ -201,6 +201,8 @@ namespace MyGame.Unit.Props
 
     private void OnIdleEnter()
     {
+      OnFinish?.Invoke(this);
+      OnFinish = null;
       DisableFlash();
     }
 
@@ -220,7 +222,6 @@ namespace MyGame.Unit.Props
       CacheTransform.position = Vector3.Lerp(this.start, this.end, rate);
 
       if (this.time < this.timer) {
-        OnFinish?.Invoke(this);
         this.state.SetState(State.Idle);
       }
     }
