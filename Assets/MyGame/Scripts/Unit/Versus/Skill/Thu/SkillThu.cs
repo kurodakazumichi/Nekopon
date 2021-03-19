@@ -25,12 +25,12 @@ namespace MyGame.Unit.Versus
     /// <summary>
     /// 落雷に要する時間
     /// </summary>
-    private const float STRIKE_TIME = 0.7f;
+    private const float STRIKE_TIME = Effect.Thunder.TIME;
 
     /// <summary>
     /// 落雷の点滅サイクル
     /// </summary>
-    private const float STRIKE_FLASH_CYCLE = 30f;
+    private const float STRIKE_FLASH_CYCLE = Effect.Thunder.CYCLE;
 
     /// <summary>
     /// 落雷時の雲の最小アルファ値

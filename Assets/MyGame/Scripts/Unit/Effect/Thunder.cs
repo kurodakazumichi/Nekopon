@@ -22,17 +22,17 @@ namespace MyGame.Unit.Effect
     /// <summary>
     /// 落雷に要する時間
     /// </summary>
-    private const float STRIKE_TIME = 0.7f;
+    public const float TIME = 0.7f;
 
     /// <summary>
     /// 落雷の点滅サイクル
     /// </summary>
-    private const float STRIKE_FLASH_CYCLE = 30f;
+    public const float CYCLE = 30f;
 
     /// <summary>
     /// 落雷の最小アルファ値
     /// </summary>
-    private const float STRIKE_MIN_ALPHA = 0.5f;
+    public const float MIN_ALPHA = 0.5f;
 
     /// <summary>
     /// 雷の数
@@ -122,8 +122,8 @@ namespace MyGame.Unit.Effect
       // 雷をフラッシュ
       Util.ForEach(this.movers, (mover, _) => {
         mover.SetActive(true);
-        mover.SetFlash(STRIKE_FLASH_CYCLE, STRIKE_MIN_ALPHA, 1f);
-        mover.ToFlash(STRIKE_TIME);
+        mover.SetFlash(CYCLE, MIN_ALPHA, 1f);
+        mover.ToFlash(TIME);
       });
     }
 
@@ -131,7 +131,7 @@ namespace MyGame.Unit.Effect
     {
       UpdateTimer();
 
-      if (this.timer < STRIKE_TIME) return;
+      if (this.timer < TIME) return;
       this.state.SetState(State.Idle);
     }
 
