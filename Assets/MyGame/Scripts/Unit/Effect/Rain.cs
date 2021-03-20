@@ -37,6 +37,11 @@ namespace MyGame.Unit.Effect
     /// </summary>
     private const float DROP_WIDTH = 0.3f;
 
+    /// <summary>
+    /// 1フレーム当たりの雫の数
+    /// </summary>
+    private const int DROP_COUNT = 5;
+
     //-------------------------------------------------------------------------
     // メンバ変数
 
@@ -121,8 +126,9 @@ namespace MyGame.Unit.Effect
 
     private void OnRainUpdate()
     {
-      CreateDrop();
-      CreateDrop();
+      for(int i = 0; i < DROP_COUNT; ++i) {
+        CreateDrop();
+      }
 
       UpdateTimer();
 
