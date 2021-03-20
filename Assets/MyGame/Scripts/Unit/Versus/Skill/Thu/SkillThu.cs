@@ -38,7 +38,7 @@ namespace MyGame.Unit.Versus
     /// <summary>
     /// 雲ユニット
     /// </summary>
-    private Props.GlowMover cloud = null;
+    private Mover.Glow cloud = null;
 
     //-------------------------------------------------------------------------
     // Load, Unload
@@ -48,25 +48,19 @@ namespace MyGame.Unit.Versus
     /// </summary>
     private static Sprite Sprite = null;
 
-    /// <summary>
-    /// 加算合成用マテリアル
-    /// </summary>
-    private static Material Material;
-
     public static void Load(System.Action pre, System.Action done)
     {
       var rs = ResourceSystem.Instance;
       rs.Load<Sprite>("Skill.Cloud.sprite", pre, done, (res) => { Sprite = res; });
-      rs.Load<Material>("Common.Additive.material", pre, done, (res) => { Material = res; });
+      Mover.Glow.Load(pre, done);
     }
 
     public static void Unload()
     {
       var rs = ResourceSystem.Instance;
       rs.Unload("Skill.Cloud.sprite");
-      rs.Unload("Common.Additive.material");
+      Mover.Glow.Unload();
       Sprite = null;
-      Material = null;
     }
 
     //-------------------------------------------------------------------------
@@ -75,7 +69,7 @@ namespace MyGame.Unit.Versus
     protected override void MyAwake()
     {
       // ユニット生成
-      this.cloud = MyGameObject.Create<Props.GlowMover>("Cloud", CacheTransform);
+      this.cloud = MyGameObject.Create<Mover.Glow>("Cloud", CacheTransform);
 
       // 状態の構築
       this.state.Add(State.Idle);
@@ -90,7 +84,7 @@ namespace MyGame.Unit.Versus
 
     public override void Setup()
     {
-      this.cloud.Setup(Sprite, Material, Define.Layer.Sorting.Effect);
+      this.cloud.Setup(Sprite, Define.Layer.Sorting.Effect);
     }
 
     public override void Fire(Player owner, Player target)

@@ -4,7 +4,9 @@ using UnityEngine;
 
 namespace MyGame.Unit.Effect
 {
-
+  /// <summary>
+  /// 雷のエフェクト
+  /// </summary>
   public class Thunder : EffectBase<Thunder.State>
   {
     /// <summary>
@@ -45,7 +47,7 @@ namespace MyGame.Unit.Effect
     /// <summary>
     /// 雷ユニット
     /// </summary>
-    private Props.GlowMover[] movers = new Props.GlowMover[THUNDER_COUNT];
+    private Mover.Glow[] movers = new Mover.Glow[THUNDER_COUNT];
 
     //-------------------------------------------------------------------------
     // Load, Unload
@@ -55,25 +57,19 @@ namespace MyGame.Unit.Effect
     /// </summary>
     public static Sprite Sprite = null;
 
-    /// <summary>
-    /// 加算合成用マテリアル
-    /// </summary>
-    public static Material Material = null;
-
     public static void Load(System.Action pre, System.Action done)
     {
       var rs = ResourceSystem.Instance;
       rs.Load<Sprite>("Skill.Thu.01.sprite", pre, done, (res) => { Sprite = res; });
-      rs.Load<Material>("Common.Additive.material", pre, done, (res) => { Material = res; });
+      Mover.Glow.Load(pre, done);
     }
 
     public static void Unload()
     {
       var rs = ResourceSystem.Instance;
       rs.Unload("Skill.Thu.01.sprite");
-      rs.Unload("Common.Additive.material");
+      Mover.Glow.Unload();
       Sprite = null;
-      Material = null;
     }
 
     //-------------------------------------------------------------------------
@@ -83,7 +79,7 @@ namespace MyGame.Unit.Effect
     {
       // 雷を生成
       for (int i = 0; i < THUNDER_COUNT; ++i) {
-        this.movers[i] = MyGameObject.Create<Props.GlowMover>("Thunder", CacheTransform);
+        this.movers[i] = MyGameObject.Create<Mover.Glow>("Thunder", CacheTransform);
       }
 
       // 状態の構築
@@ -100,7 +96,7 @@ namespace MyGame.Unit.Effect
     public override void Setup()
     {
       Util.ForEach(this.movers, (thunder, index) => {
-        thunder.Setup(Sprite, Material, Define.Layer.Sorting.Effect);
+        thunder.Setup(Sprite, Define.Layer.Sorting.Effect);
         thunder.SetActive(false);
       });
     }

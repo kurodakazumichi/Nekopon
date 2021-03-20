@@ -87,8 +87,8 @@ namespace MyGame.Unit.Effect
     //-------------------------------------------------------------------------
     // メンバ変数
 
-    private Props.GlowMover[] inners = new Props.GlowMover[INNER_COUNT];
-    private Props.GlowMover[] outers = new Props.GlowMover[OUTER_COUNT];
+    private Mover.Glow[] inners = new Mover.Glow[INNER_COUNT];
+    private Mover.Glow[] outers = new Mover.Glow[OUTER_COUNT];
 
     //-------------------------------------------------------------------------
     // Load, Unload
@@ -129,11 +129,11 @@ namespace MyGame.Unit.Effect
     protected override void MyAwake()
     {
       for (int i = 0; i < INNER_COUNT; ++i) {
-        this.inners[i] = MyGameObject.Create<Props.GlowMover>("Inner", CacheTransform);
+        this.inners[i] = MyGameObject.Create<Mover.Glow>("Inner", CacheTransform);
       }
 
       for (int i = 0; i < OUTER_COUNT; ++i) {  
-        this.outers[i] = MyGameObject.Create<Props.GlowMover>("Outer", CacheTransform);
+        this.outers[i] = MyGameObject.Create<Mover.Glow>("Outer", CacheTransform);
       }
 
       // 状態の構築
@@ -157,11 +157,11 @@ namespace MyGame.Unit.Effect
     public override void Setup()
     {
       Util.ForEach(this.inners, (mover, _) => { 
-        mover.Setup(InnerSprite, Material, Define.Layer.Sorting.Effect);
+        mover.Setup(InnerSprite, Define.Layer.Sorting.Effect);
       });
 
       Util.ForEach(this.outers, (mover, _) => {
-        mover.Setup(OuterSprite, Material, Define.Layer.Sorting.Effect);
+        mover.Setup(OuterSprite, Define.Layer.Sorting.Effect);
       });
     }
 
@@ -185,11 +185,11 @@ namespace MyGame.Unit.Effect
     {
       Util.ForEach(this.inners, (mover, _) => {
         mover.SetFlash(FLASH_CYCLE, 0, MAX_BRIGHTNESS);
-        mover.ToUsual();
+        mover.ToUsual(Vector3.zero, Vector3.one);
       });
       Util.ForEach(this.outers, (mover, _) => {
         mover.SetFlash(FLASH_CYCLE, 0, MAX_BRIGHTNESS);
-        mover.ToUsual();
+        mover.ToUsual(Vector3.zero, Vector3.one);
       });
 
       this.timer = 0;
@@ -215,7 +215,7 @@ namespace MyGame.Unit.Effect
     /// <summary>
     /// 円運動
     /// </summary>
-    private void Circle(Props.GlowMover mover, int index, int count, float radius, float velocity, float angular)
+    private void Circle(Mover.Glow mover, int index, int count, float radius, float velocity, float angular)
     {
       // Position制御
       var a = 360f / count * index;
@@ -255,7 +255,7 @@ namespace MyGame.Unit.Effect
     /// <summary>
     /// はじける動き
     /// </summary>
-    private void Burst(Props.GlowMover mover)
+    private void Burst(Mover.Glow mover)
     {
       var p1 = CacheTransform.position;
       var p2 = mover.CacheTransform.position;

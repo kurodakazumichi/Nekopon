@@ -43,7 +43,7 @@ namespace MyGame.Unit.Effect
     /// <summary>
     /// 雫ユニットプール
     /// </summary>
-    private ObjectPool<Props.GlowMover> pool = new ObjectPool<Props.GlowMover>();
+    private ObjectPool<Mover.Glow> pool = new ObjectPool<Mover.Glow>();
 
     //-------------------------------------------------------------------------
     // Load, Unload
@@ -53,17 +53,12 @@ namespace MyGame.Unit.Effect
     /// </summary>
     public static List<Sprite> Sprites = new List<Sprite>();
 
-    /// <summary>
-    /// 加算合成用マテリアル
-    /// </summary>
-    public static Material Material;
-
     public static void Load(System.Action pre, System.Action done)
     {
       var rs = ResourceSystem.Instance;
       rs.Load<Sprite>("Skill.Wat.01.sprite", pre, done, (res) => { Sprites.Add(res); });
       rs.Load<Sprite>("Skill.Wat.02.sprite", pre, done, (res) => { Sprites.Add(res); });
-      rs.Load<Material>("Common.Additive.material", pre, done, (res) => { Material = res; });
+      Mover.Glow.Load(pre, done);
     }
 
     public static void Unload()
@@ -71,9 +66,8 @@ namespace MyGame.Unit.Effect
       var rs = ResourceSystem.Instance;
       rs.Unload("Skill.Wat.01.sprite");
       rs.Unload("Skill.Wat.02.sprite");
-      rs.Unload("Common.Additive.material");
+      Mover.Glow.Unload();
       Sprites.Clear();
-      Material = null;
     }
 
     //-------------------------------------------------------------------------
@@ -83,7 +77,7 @@ namespace MyGame.Unit.Effect
     {
       // 雫ユニットのオブジェクトプール初期設定
       this.pool.SetGenerator(() => {
-        return MyGameObject.Create<Props.GlowMover>("Drop", CacheTransform);
+        return MyGameObject.Create<Mover.Glow>("Drop", CacheTransform);
       });
 
       // 50個予約しとく
@@ -174,7 +168,6 @@ namespace MyGame.Unit.Effect
       // セットアップ
       drop.Setup(
         Util.GetRandom(Sprites),
-        Material,
         Define.Layer.Sorting.Effect
       );
 
@@ -182,7 +175,7 @@ namespace MyGame.Unit.Effect
       drop.SetFlash(Random.Range(0, 10f), 0f, 0.7f);
 
       // 移動後に呼ばれるコールバック設定
-      drop.OnFinish = (unit) => {
+      drop.OnIdle = (unit) => {
         this.pool.Release(unit, CacheTransform);
       };
 
