@@ -14,6 +14,7 @@ namespace MyGame
     {
       void Setup();
       void Setup(Props props);
+      void SetTrace(Props props, float time);
       void Fire(Vector3 position);
 
       Sprite Sprite { set; }
@@ -120,33 +121,94 @@ namespace MyGame
 #if _DEBUG
 
     public static Sprite __Sprite;
-    private float __alphaAcceleration = 0f;
-    private float __speed = 0f;
+    private bool __enableTrace = false;
+    private float __traceTime = 0.1f;
+    private Props __props = new Props();
+    private Props __trace = new Props();
+
     //-------------------------------------------------------------------------
     // デバッグ
     public override void OnDebug()
     {
       using (new GUILayout.VerticalScope()) {
-        GUILayout.Label("AlphaAcceleration");
-        __alphaAcceleration = GUILayout.HorizontalSlider(__alphaAcceleration, -1f, 1f);
-        GUILayout.Label("Speed");
-        __speed = GUILayout.HorizontalSlider(__speed, -1f, 1f);
+
+        // Traceを有効にする
+        __enableTrace = GUILayout.Toggle(__enableTrace, "Trace");
+
+        if (!__enableTrace) {
+          OnDebugProps(__props);
+        } else {
+          using (new GUILayout.HorizontalScope()) {
+            __traceTime = GUILayout.HorizontalSlider(__traceTime, 0.01f, 1f);
+          }
+          OnDebugProps(__trace);
+        }
+
         MyEnum.ForEach<Type>((type) => {
           if (GUILayout.Button($"{type}")) {
             var p = Create(type);
+            __props.Sprite = __Sprite;
+            p.Setup(__props);
 
-            var props = new Props(){
-              Sprite = __Sprite,
-              Velocity = Vector3.right * __speed,
-              Brightness = 0.1f,
-              AlphaAcceleration = __alphaAcceleration,
-            };
+            if (__enableTrace) {
+              __trace.Sprite = __Sprite;
+              p.SetTrace(__trace, __traceTime);
+            }
 
-            p.Setup(props);
             p.Fire(Vector3.zero);
           }
         });
       }
+    }
+
+
+
+    private void OnDebugProps(Props props)
+    {
+      using (new GUILayout.HorizontalScope(GUI.skin.box)) {
+
+        GUIVerticalScope(() => {
+          GUILayout.Label("Alpha");
+          props.Alpha = GUILayout.HorizontalSlider(props.Alpha, 0, 1f);
+        });
+        GUIVerticalScope(() => {
+          GUILayout.Label("Brightness");
+          props.Brightness = GUILayout.HorizontalSlider(props.Brightness, 0, 1f);
+        });
+      }
+
+      using (new GUILayout.HorizontalScope(GUI.skin.box)) 
+      {
+        GUIVerticalScope(() => {
+          GUILayout.Label("AlphaAcceleration");
+          props.AlphaAcceleration
+            = GUILayout.HorizontalSlider(props.AlphaAcceleration, -1f, 1f);
+        });
+        GUIVerticalScope(() => {
+          GUILayout.Label("RotationAcceleration");
+          props.RotationAcceleration
+            = GUILayout.HorizontalSlider(props.RotationAcceleration, -360f, 360f);
+        });
+      }
+
+      using (new GUILayout.HorizontalScope(GUI.skin.box)) 
+      {
+        GUIVerticalScope(() => {
+          GUILayout.Label("LifeTime");
+          props.LifeTime = GUILayout.HorizontalSlider(props.LifeTime, 0f, 10f);
+        });
+        GUIVerticalScope(() => {
+          GUILayout.Label("Velocity");
+          props.Velocity.x = GUILayout.HorizontalSlider(props.Velocity.x, -1f, 1f);
+        });
+      }
+
+      props.IsOnlyGlow = GUILayout.Toggle(props.IsOnlyGlow, "IsOnlyGlow");
+    }
+
+    private void GUIVerticalScope(System.Action action)
+    {
+      using (new GUILayout.VerticalScope()) { action(); }
     }
 #endif
   }

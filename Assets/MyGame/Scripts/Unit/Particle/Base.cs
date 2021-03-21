@@ -16,19 +16,20 @@ namespace MyGame.Unit.Particle
     public float Alpha = 1f;
     public float Brightness = 0f;
     public string LayerName = Define.Layer.Sorting.Effect;
+    public bool IsOnlyGlow = false;
 
     //-------------------------------------------------------------------------
-    // 以下は処理中に直接使用するパラメータ
+    // 各種パラメータ
 
     public Vector3 Velocity;
     public float AlphaAcceleration = 0f;
     public float LifeTime = 1f;
+    public float RotationAcceleration = 0f;
     
   };
   /// <summary>
   /// Particleのベース
   /// </summary>
-  /// <typeparam name="TState"></typeparam>
   public abstract class Base<TState> : Unit<TState>, ParticleManager.IParticle where TState : System.Enum
   {
     //-------------------------------------------------------------------------
@@ -50,9 +51,14 @@ namespace MyGame.Unit.Particle
     protected Color color = Color.white;
 
     /// <summary>
-    /// パーティクルに関するパラメータが詰まったもの
+    /// 痕跡用のProps
     /// </summary>
-    protected Props props = null;
+    protected Props trace = null;
+
+    /// <summary>
+    /// トレース用タイマー
+    /// </summary>
+    protected float traceTimer = 0;
 
     //-------------------------------------------------------------------------
     // プロパティ
@@ -85,9 +91,6 @@ namespace MyGame.Unit.Particle
     /// </summary>
     public virtual void Setup(Props props)
     {
-      // propsを保持
-      this.props = props;
-
       // SpriteRendererに関するパラメータ設定
       Sprite = props.Sprite;
 
@@ -100,6 +103,23 @@ namespace MyGame.Unit.Particle
 
       Alpha      = props.Alpha;
       Brightness = props.Brightness;
+
+      Velocity             = props.Velocity;
+      RotationAcceleration = props.RotationAcceleration;
+      AlphaAcceleration    = props.AlphaAcceleration;
+      LifeTime             = props.LifeTime;
+
+      // Glow Onlyだったらmainは非アクティブ
+      this.main.gameObject.SetActive(!props.IsOnlyGlow);
+    }
+
+    /// <summary>
+    /// 痕跡の設定
+    /// </summary>
+    public void SetTrace(Props props, float time)
+    {
+      this.trace = props;
+      TraceTime = time;
     }
 
     /// <summary>
@@ -124,6 +144,7 @@ namespace MyGame.Unit.Particle
       set {
         this.color.a = value;
         this.main.color = this.color;
+        Brightness = Mathf.Min(Brightness, value);
       }
     }
 
@@ -133,7 +154,7 @@ namespace MyGame.Unit.Particle
     public float Brightness {
       get { return this.glow.color.a; }
       set {
-        this.color.a = value * this.main.color.a; // mainのアルファが下がっていれば輝度も下がる
+        this.color.a = Mathf.Min(value, Alpha);
         this.glow.color = this.color;
       }
     }
@@ -151,25 +172,26 @@ namespace MyGame.Unit.Particle
     /// <summary>
     /// アルファ加速度
     /// </summary>
-    public float AlphaAcceleration {
-      get { return this.props.AlphaAcceleration; }
-      set { this.props.AlphaAcceleration = value; }
-    }
+    public float AlphaAcceleration { get; set; }
 
     /// <summary>
     /// 寿命
     /// </summary>
-    public float LifeTime {
-      get { return this.props.LifeTime; }
-      set { this.props.LifeTime = value; }
-    }
+    public float LifeTime { get; set; }
 
     /// <summary>
     /// 速度
     /// </summary>
-    public Vector3 Velocity {
-      get { return this.props.Velocity; }
-      set { this.props.Velocity = value; }
-    }
+    public Vector3 Velocity { get; set; }
+
+    /// <summary>
+    /// 回転加速度
+    /// </summary>
+    public float RotationAcceleration { get; set; }
+
+    /// <summary>
+    /// 痕跡を残す時間
+    /// </summary>
+    public float TraceTime { get; set; }
   }
 }

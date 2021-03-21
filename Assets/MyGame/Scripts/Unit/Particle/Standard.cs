@@ -71,17 +71,9 @@ namespace MyGame.Unit.Particle
       this.glow.sortingOrder = Define.Layer.Order.Layer00 + 1;
 
       // 状態の構築
-      this.state.Add(State.Idle, OnIdleEnter);
-      this.state.Add(State.Usual, OnUsualEnter, OnUsualUpdate);
+      this.state.Add(State.Idle);
+      this.state.Add(State.Usual, OnUsualEnter, OnUsualUpdate, OnUsualExit);
       this.state.SetState(State.Idle);
-    }
-
-    //-------------------------------------------------------------------------
-    // Idle
-
-    private void OnIdleEnter()
-    {
-      ParticleManager.Instance.Release(ParticleManager.Type.Standard, this);
     }
 
     //-------------------------------------------------------------------------
@@ -90,6 +82,7 @@ namespace MyGame.Unit.Particle
     private void OnUsualEnter()
     {
       this.timer = 0;
+      this.traceTimer = 0;
     }
 
     private void OnUsualUpdate()
@@ -98,7 +91,8 @@ namespace MyGame.Unit.Particle
 
       OperatePosition(deltaTime);
       OperateAlpha(deltaTime);
-
+      OperateRotation(deltaTime);
+      OperationTrace(deltaTime);
       UpdateTimer();
 
       if (NeedToIdle) {
@@ -106,16 +100,52 @@ namespace MyGame.Unit.Particle
       }
     }
 
+    private void OnUsualExit()
+    {
+      this.trace = null;
+      ParticleManager.Instance.Release(ParticleManager.Type.Standard, this);
+    }
+
+    /// <summary>
+    /// 座標の移動
+    /// </summary>
+    /// <param name="deltaTime"></param>
     private void OperatePosition(float deltaTime)
     {
       CacheTransform.position += Velocity * deltaTime;
     }
 
+    /// <summary>
+    /// アルファ加速度
+    /// </summary>
     private void OperateAlpha(float deltaTime)
     {
       Alpha += AlphaAcceleration * deltaTime;
     }
 
+    private void OperateRotation(float deltaTime)
+    {
+      CacheTransform.Rotate(Vector3.forward, RotationAcceleration * deltaTime);
+    }
+
+    private void OperationTrace(float deltaTime)
+    {
+      if (this.trace == null) return;
+
+      if (TraceTime < this.traceTimer) {
+        var p = ParticleManager.Instance.Create(ParticleManager.Type.Standard);
+        p.Setup();
+        p.Setup(this.trace);
+        p.Fire(CacheTransform.position);
+        this.traceTimer = 0;
+      }
+
+      this.traceTimer += deltaTime;
+    }
+
+    /// <summary>
+    /// Idleになる必要があるか
+    /// </summary>
     private bool NeedToIdle
     {
       get {
