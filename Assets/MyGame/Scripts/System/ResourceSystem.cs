@@ -59,12 +59,12 @@ namespace MyGame
     /// <param name="done">ロード完了時に呼ばれる関数</param>
     public void Load<T>(string address, Action pre, Action done, Action<T> post = null) where T : UnityEngine.Object
     {
-      pre();
+      pre?.Invoke();
       Addressables.LoadAssetAsync<T>(address).Completed += op => 
       {
         // ロード完了時コールバックを実行
         post?.Invoke(op.Result);
-        done();
+        done?.Invoke();
 
         if (op.Result == null) {
           Debug.Logger.Error($"ResourceManager.Load:{address}がロードできませんでした。");
