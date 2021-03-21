@@ -37,6 +37,11 @@ namespace MyGame
     // メンバ変数
 
     /// <summary>
+    /// 現在のオブジェクトプールの位置を指すIndex
+    /// </summary>
+    private int currentIndex = -1;
+
+    /// <summary>
     /// オブジェクト格納プール
     /// </summary>
     private List<T> pool = new List<T>();
@@ -72,11 +77,15 @@ namespace MyGame
       // 警告ログ
       WarnGeneratorLog();
 
+      // 予約はプールが空の時だけ
+      if (this.pool.Count != 0) return;
+
       for (int i = 0; i < count; ++i) {
         var obj = Generator();
         obj.SetActive(false);
         this.pool.Add(obj);
       }
+      this.currentIndex = count - 1;
     }
 
     /// <summary>
@@ -92,7 +101,6 @@ namespace MyGame
       if (obj == null) 
       {
         obj = Generator();
-        this.pool.Add(obj);
       }
 
       obj.SetActive(true);
@@ -106,6 +114,13 @@ namespace MyGame
     {
       obj.SetParent(parent);
       obj.SetActive(false);
+
+      if (this.pool.Count - 1 == currentIndex) {
+        this.pool.Add(obj);
+      } else {
+        this.pool[currentIndex + 1] = obj;
+      }
+      ++currentIndex;
     }
     
     /// <summary>
@@ -114,10 +129,15 @@ namespace MyGame
     /// <returns></returns>
     private T GetEnactive()
     {
-      for (int i = 0, count = this.pool.Count; i < count; ++i) {
-        if (!this.pool[i].IsActiveSelf) return this.pool[i];
-      }
-      return null;
+      // 現在の位置が先頭だったらpoolは空
+      if (currentIndex == -1) return null;
+
+      return this.pool[currentIndex--];
+
+      //for (int i = 0, count = this.pool.Count; i < count; ++i) {
+      //  if (!this.pool[i].IsActiveSelf) return this.pool[i];
+      //}
+      //return null;
     }
 
     /// <summary>
