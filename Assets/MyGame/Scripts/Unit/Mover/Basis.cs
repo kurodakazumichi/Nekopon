@@ -18,7 +18,7 @@ namespace MyGame.Unit.Mover
     /// <summary>
     /// Idleになった時に呼ばれるコールバック
     /// </summary>
-    public System.Action<Glow> OnIdle { private get; set; } = null;
+    public System.Action<Basis> OnIdle { private get; set; } = null;
 
     /// <summary>
     /// 色
@@ -42,13 +42,6 @@ namespace MyGame.Unit.Mover
     /// アイドルかどうか
     /// </summary>
     public bool IsIdle => this.op.IsIdle;
-
-    /// <summary>
-    /// Tweenのタイプ
-    /// </summary>
-    public Tween.Type Tween {
-      set { this.op.Tween = value; }
-    }
 
     //-------------------------------------------------------------------------
     // IMoverの実装
@@ -77,6 +70,45 @@ namespace MyGame.Unit.Mover
       set { Alpha = value; }
     }
 
+    /// <summary>
+    /// Tweenのタイプ
+    /// </summary>
+    public Tween.Type Tween {
+      set { this.op.Tween = value; }
+    }
+
+    /// <summary>
+    /// 移動
+    /// </summary>
+    public void ToMove(Vector3 start, Vector3 end, float time)
+    {
+      this.op.ToMove(start, end, time);
+    }
+
+    /// <summary>
+    /// スケーリング
+    /// </summary>
+    public void ToScale(Vector3 start, Vector3 end, float time)
+    {
+      this.op.ToScale(start, end, time);
+    }
+
+    /// <summary>
+    /// 通常
+    /// </summary>
+    public void ToUsual(Vector3 position, Vector3 scale)
+    {
+      this.op.ToUsual(position, scale);
+    }
+
+    /// <summary>
+    /// Flash
+    /// </summary>
+    public void ToFlash(float time)
+    {
+      this.op.ToFlash(time);
+    }
+
     //-------------------------------------------------------------------------
     // ライフサイクル
 
@@ -87,6 +119,7 @@ namespace MyGame.Unit.Mover
 
       // 自身を設定
       this.op.SetMover(this);
+      this.op.OnIdle = () => { OnIdle?.Invoke(this); };
     }
 
     protected override void MyUpdate()
@@ -97,9 +130,9 @@ namespace MyGame.Unit.Mover
     //-------------------------------------------------------------------------
     // セットアップ
 
-    public void Setup(Sprite sprite, string layerName)
+    public void Setup(Sprite sprite, Material material, string layerName)
     {
-      this.op.Setup(sprite, null, layerName);
+      this.op.Setup(sprite, material, layerName);
     }
 
     /// <summary>
@@ -116,29 +149,6 @@ namespace MyGame.Unit.Mover
     public void DisableFlash()
     {
       this.op.DisableFlash();
-    }
-
-    //-------------------------------------------------------------------------
-    // ステートマシン
-
-    public void ToMove(Vector3 start, Vector3 end, float time)
-    {
-      this.op.ToMove(start, end, time);
-    }
-
-    public void ToScale(Vector3 start, Vector3 end, float time)
-    {
-      this.op.ToScale(start, end, time);
-    }
-
-    public void ToUsual(Vector3 position, Vector3 scale)
-    {
-      this.op.ToUsual(position, scale);
-    }
-
-    public void ToFlash(float time)
-    {
-      this.op.ToFlash(time);
     }
   }
 }

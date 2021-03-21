@@ -77,6 +77,11 @@ namespace MyGame.Unit.Mover
     /// </summary>
     private float time = 0;
 
+    /// <summary>
+    /// Flashが有効かどうか
+    /// </summary>
+    private bool isEnableFlash = false;
+
     //-------------------------------------------------------------------------
     // プロパティ
 
@@ -109,8 +114,11 @@ namespace MyGame.Unit.Mover
     {
       this.state.Update();
 
-      if (!IsIdle) {
+      if (this.isEnableFlash) {
         UpdateBrightness();
+      }
+
+      if (!IsIdle) {
         this.timer += TimeSystem.Instance.DeltaTime;
       }
     }
@@ -173,6 +181,7 @@ namespace MyGame.Unit.Mover
       this.minAlpha = minBrightness;
       this.maxAlpha = maxBrightness;
       Brightness = 0;
+      this.isEnableFlash = true;
     }
 
     /// <summary>
@@ -180,7 +189,7 @@ namespace MyGame.Unit.Mover
     /// </summary>
     public void DisableFlash()
     {
-      SetFlash(0, 0, 0);
+      this.isEnableFlash = false;
     }
 
     //-------------------------------------------------------------------------

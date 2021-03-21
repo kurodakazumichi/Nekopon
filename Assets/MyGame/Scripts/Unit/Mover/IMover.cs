@@ -26,5 +26,15 @@ namespace MyGame.Unit.Mover
     /// 輝度のアクセッサ
     /// </summary>
     float Brightness { get; set; }
+
+    /// <summary>
+    /// Tweenタイプを指定可能
+    /// </summary>
+    Tween.Type Tween { set; }
+
+    void ToMove(Vector3 start, Vector3 end, float time);
+    void ToScale(Vector3 start, Vector3 end, float time);
+    void ToUsual(Vector3 position, Vector3 scale);
+    void ToFlash(float time);
   }
 }

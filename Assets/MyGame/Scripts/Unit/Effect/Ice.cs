@@ -17,7 +17,7 @@ namespace MyGame.Unit.Effect
     }
 
     //-------------------------------------------------------------------------
-    // メンバ変数
+    // 定数
 
     /// <summary>
     /// 回転の時間
@@ -215,7 +215,7 @@ namespace MyGame.Unit.Effect
     /// <summary>
     /// 円運動
     /// </summary>
-    private void Circle(Mover.Glow mover, int index, int count, float radius, float velocity, float angular)
+    private void Circle(Mover.IMover mover, int index, int count, float radius, float velocity, float angular)
     {
       // Position制御
       var a = 360f / count * index;
@@ -255,7 +255,7 @@ namespace MyGame.Unit.Effect
     /// <summary>
     /// はじける動き
     /// </summary>
-    private void Burst(Mover.Glow mover)
+    private void Burst(Mover.IMover mover)
     {
       var p1 = CacheTransform.position;
       var p2 = mover.CacheTransform.position;
