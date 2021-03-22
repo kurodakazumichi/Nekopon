@@ -15,16 +15,17 @@ namespace MyGame
       void Setup();
       void Setup(Props props);
       void SetTrace(Props props, float time);
-      void Fire(Vector3 position);
+      void Fire(Vector3 position, Vector3? scale = null, Quaternion? rotation = null);
 
       Sprite Sprite { set; }
       string LayerName { set; }
       float Alpha { set; }
       float Brightness { set; }
 
-
-      float AlphaAcceleration { set; }
       Vector3 Velocity { set; }
+      float ScaleAcceleration { set; }
+      float RotationAcceleration { set; }
+      float AlphaAcceleration { set; }
       float LifeTime { set; }
     }
 
@@ -175,6 +176,8 @@ namespace MyGame
           GUILayout.Label("Brightness");
           props.Brightness = GUILayout.HorizontalSlider(props.Brightness, 0, 1f);
         });
+
+        props.IsOnlyGlow = GUILayout.Toggle(props.IsOnlyGlow, "IsOnlyGlow");
       }
 
       using (new GUILayout.HorizontalScope(GUI.skin.box)) 
@@ -183,6 +186,11 @@ namespace MyGame
           GUILayout.Label("AlphaAcceleration");
           props.AlphaAcceleration
             = GUILayout.HorizontalSlider(props.AlphaAcceleration, -1f, 1f);
+        });
+        GUIVerticalScope(() => {
+          GUILayout.Label("ScaleAcceleration");
+          props.ScaleAcceleration
+            = GUILayout.HorizontalSlider(props.ScaleAcceleration, -1f, 1f);
         });
         GUIVerticalScope(() => {
           GUILayout.Label("RotationAcceleration");
@@ -201,9 +209,9 @@ namespace MyGame
           GUILayout.Label("Velocity");
           props.Velocity.x = GUILayout.HorizontalSlider(props.Velocity.x, -1f, 1f);
         });
+        props.IsSelfDestructive 
+          = GUILayout.Toggle(props.IsSelfDestructive, "IsSelfDestructive");
       }
-
-      props.IsOnlyGlow = GUILayout.Toggle(props.IsOnlyGlow, "IsOnlyGlow");
     }
 
     private void GUIVerticalScope(System.Action action)

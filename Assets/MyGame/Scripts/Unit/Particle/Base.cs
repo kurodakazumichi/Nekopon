@@ -25,7 +25,12 @@ namespace MyGame.Unit.Particle
     public float AlphaAcceleration = 0f;
     public float LifeTime = 1f;
     public float RotationAcceleration = 0f;
-    
+    public float ScaleAcceleration = 0f;
+
+    /// <summary>
+    /// 自分自身で勝手に破棄するかどうか
+    /// </summary>
+    public bool IsSelfDestructive = true;
   };
   /// <summary>
   /// Particleのベース
@@ -82,6 +87,14 @@ namespace MyGame.Unit.Particle
     }
 
     //-------------------------------------------------------------------------
+    // メソッド
+
+    /// <summary>
+    /// 破壊
+    /// </summary>
+    public abstract void Destory();
+
+    //-------------------------------------------------------------------------
     // IParticleの実装
 
     public abstract void Setup();
@@ -107,7 +120,9 @@ namespace MyGame.Unit.Particle
       Velocity             = props.Velocity;
       RotationAcceleration = props.RotationAcceleration;
       AlphaAcceleration    = props.AlphaAcceleration;
+      ScaleAcceleration    = props.ScaleAcceleration;
       LifeTime             = props.LifeTime;
+      IsSelfDestructive    = props.IsSelfDestructive;
 
       // Glow Onlyだったらmainは非アクティブ
       this.main.gameObject.SetActive(!props.IsOnlyGlow);
@@ -125,7 +140,12 @@ namespace MyGame.Unit.Particle
     /// <summary>
     /// 発動
     /// </summary>
-    public abstract void Fire(Vector3 position);
+    public virtual void Fire(Vector3 position, Vector3? scale, Quaternion? rotation)
+    {
+      CacheTransform.position = position;
+      CacheTransform.localScale = scale ?? Vector3.one;
+      CacheTransform.rotation = rotation ?? Quaternion.identity;
+    }
 
     /// <summary>
     /// Spriteのsetter
@@ -190,8 +210,18 @@ namespace MyGame.Unit.Particle
     public float RotationAcceleration { get; set; }
 
     /// <summary>
+    /// スケール加速度
+    /// </summary>
+    public float ScaleAcceleration { get; set; }
+
+    /// <summary>
     /// 痕跡を残す時間
     /// </summary>
     public float TraceTime { get; set; }
+
+    /// <summary>
+    /// 自分自身で破壊するかどうか
+    /// </summary>
+    public bool IsSelfDestructive { get; set; }
   }
 }

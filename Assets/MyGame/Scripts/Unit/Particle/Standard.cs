@@ -52,9 +52,13 @@ namespace MyGame.Unit.Particle
     /// <summary>
     /// 発動
     /// </summary>
-    public override void Fire(Vector3 position)
+    public override void Fire(
+      Vector3 position, 
+      Vector3? scale = null, 
+      Quaternion? rotation = null
+    )
     {
-      CacheTransform.position = position;
+      base.Fire(position, scale, rotation);
       this.state.SetState(State.Usual);
     }
 
@@ -76,6 +80,14 @@ namespace MyGame.Unit.Particle
       this.state.SetState(State.Idle);
     }
 
+    /// <summary>
+    /// 破壊
+    /// </summary>
+    public override void Destory()
+    {
+      this.state.SetState(State.Idle);
+    }
+
     //-------------------------------------------------------------------------
     // Usual
 
@@ -90,8 +102,9 @@ namespace MyGame.Unit.Particle
       float deltaTime = TimeSystem.Instance.DeltaTime;
 
       OperatePosition(deltaTime);
-      OperateAlpha(deltaTime);
+      OperateScale(deltaTime);
       OperateRotation(deltaTime);
+      OperateAlpha(deltaTime);
       OperationTrace(deltaTime);
       UpdateTimer();
 
@@ -114,18 +127,35 @@ namespace MyGame.Unit.Particle
     {
       CacheTransform.position += Velocity * deltaTime;
     }
+    
+    private void OperateScale(float deltaTime)
+    {
+      if (ScaleAcceleration == 0) return;
+     
+      CacheTransform.localScale += Vector3.one * ScaleAcceleration * deltaTime;
+
+      if (
+        CacheTransform.localScale.x < 0 ||
+        CacheTransform.localScale.y < 0 ||
+        CacheTransform.localScale.z < 0
+      ) {
+        CacheTransform.localScale = Vector3.zero;
+      }
+    }
+
+    private void OperateRotation(float deltaTime)
+    {
+      if (RotationAcceleration == 0) return;
+      CacheTransform.Rotate(Vector3.forward, RotationAcceleration * deltaTime);
+    }
 
     /// <summary>
     /// アルファ加速度
     /// </summary>
     private void OperateAlpha(float deltaTime)
     {
+      if (AlphaAcceleration == 0) return;
       Alpha += AlphaAcceleration * deltaTime;
-    }
-
-    private void OperateRotation(float deltaTime)
-    {
-      CacheTransform.Rotate(Vector3.forward, RotationAcceleration * deltaTime);
     }
 
     private void OperationTrace(float deltaTime)
@@ -136,7 +166,7 @@ namespace MyGame.Unit.Particle
         var p = ParticleManager.Instance.Create(ParticleManager.Type.Standard);
         p.Setup();
         p.Setup(this.trace);
-        p.Fire(CacheTransform.position);
+        p.Fire(CacheTransform.position, CacheTransform.localScale, CacheTransform.rotation);
         this.traceTimer = 0;
       }
 
@@ -149,6 +179,8 @@ namespace MyGame.Unit.Particle
     private bool NeedToIdle
     {
       get {
+        // 自己破壊しない設定の場合は外部から破壊しない限りIdleにならない
+        if (!this.IsSelfDestructive) return false;
         if (this.Alpha < 0) return true;
         if (this.LifeTime < this.timer) return true;
         return false;
