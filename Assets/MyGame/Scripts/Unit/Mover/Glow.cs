@@ -136,6 +136,7 @@ namespace MyGame.Unit.Mover
       
       this.op.Setup(this.main, sprite, null, layerName);
       this.op.Setup(this.glow, sprite, Material, layerName);
+      Brightness = 0;
     }
 
     /// <summary>

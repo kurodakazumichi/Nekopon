@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using MyGame.Unit.Particle;
 
 namespace MyGame.Unit.Effect
 {
@@ -23,14 +24,9 @@ namespace MyGame.Unit.Effect
     private const float ACTIVE_TIME = 0.7f;
 
     /// <summary>
-    /// 雫の落ちる時間(最小)
-    /// </summary>
-    private const float MIN_RAIN_TIME = 0.5f;
-
-    /// <summary>
     /// 雫の落ちる時間(最大)
     /// </summary>
-    private const float MAX_RAIN_TIME = 1f;
+    private const float RAIN_TIME = 1f;
 
     /// <summary>
     /// 雫をランダム配置する際のばらつき幅(半分)
@@ -38,9 +34,31 @@ namespace MyGame.Unit.Effect
     private const float DROP_WIDTH = 0.3f;
 
     /// <summary>
-    /// 1フレーム当たりの雫の数
+    /// 軌跡の生成間隔(最小～最大)
     /// </summary>
-    private const int DROP_COUNT = 5;
+    private const float MIN_TRACE_TIME = 0.05f;
+    private const float MAX_TRACE_TIME = 0.1f;
+
+    /// <summary>
+    /// 雫のパーティクル設定
+    /// </summary>
+    private static readonly Props DROP_PROPS = new Props(){ 
+      Gravity = 5f,
+      Brightness = 0.2f,
+      LifeTime = RAIN_TIME
+    };
+
+    /// <summary>
+    /// 雫の軌跡設定
+    /// </summary>
+    private static readonly Props DROP_TRACE_PROPS = new Props() {
+      IsOnlyGlow = true,
+      Gravity = 0.1f,
+      ScaleAcceleration = -1.5f,
+      AlphaAcceleration = -1.5f,
+      Brightness = 1f,
+      LifeTime = RAIN_TIME * 0.5f,
+    };
 
     //-------------------------------------------------------------------------
     // メンバ変数
@@ -126,9 +144,7 @@ namespace MyGame.Unit.Effect
 
     private void OnRainUpdate()
     {
-      for(int i = 0; i < DROP_COUNT; ++i) {
-        CreateDrop();
-      }
+      CreateDrop();
 
       UpdateTimer();
 
@@ -150,7 +166,7 @@ namespace MyGame.Unit.Effect
     {
       UpdateTimer();
 
-      if (MAX_RAIN_TIME < this.timer) {
+      if (RAIN_TIME < this.timer) {
         this.state.SetState(State.Idle);
       }
     }
@@ -168,34 +184,23 @@ namespace MyGame.Unit.Effect
     /// </summary>
     private void CreateDrop()
     {
-      // 雫を作る
-      var drop = this.pool.Create();
+      // 位置決め
+      Vector3 position = CacheTransform.position;
+      position.x += Random.Range(-DROP_WIDTH, DROP_WIDTH);
 
-      // セットアップ
-      drop.Setup(
-        Util.GetRandom(Sprites),
-        Define.Layer.Sorting.Effect
-      );
+      // Sprite決定
+      var sprite = Util.GetRandom(Sprites);
 
-      // 加算合成具合を設定
-      drop.SetFlash(Random.Range(0, 10f), 0f, 0.7f);
+      // パーティクル生成
+      var p = ParticleManager.Instance.Create(ParticleManager.Type.Standard);
+      DROP_PROPS.Sprite = sprite;
+      p.Setup(DROP_PROPS);
 
-      // 移動後に呼ばれるコールバック設定
-      drop.OnIdle = (unit) => {
-        this.pool.Release(unit, CacheTransform);
-      };
-
-      // ToMoveに渡すパラメータを用意
-      Vector3 start = CacheTransform.position;
-      start.x += Random.Range(-DROP_WIDTH, DROP_WIDTH);
-
-      Vector3 end = start;
-      end.y = -1;
-
-      float time = Random.Range(MIN_RAIN_TIME, MAX_RAIN_TIME);
+      DROP_TRACE_PROPS.Sprite = sprite;
+      p.SetTrace(DROP_TRACE_PROPS, Random.Range(MIN_TRACE_TIME, MAX_TRACE_TIME));
 
       // 発動
-      drop.ToMove(start, end, time);
+      p.Fire(position);
     }
   }
 

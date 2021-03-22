@@ -105,7 +105,7 @@ namespace MyGame.Unit.Mover
       this.state.Add(State.Idle, OnIdleEnter);
       this.state.Add(State.Move, OnMoveEnter, OnMoveUpdate);
       this.state.Add(State.Scale, OnScaleEnter, OnScaleUpdate);
-      this.state.Add(State.Flash, OnFlashEnter, OnFlashUpdate);
+      this.state.Add(State.Flash, OnFlashEnter, OnFlashUpdate, OnFlashExit);
       this.state.Add(State.Usual);
       this.state.SetState(State.Idle);
     }
@@ -289,6 +289,11 @@ namespace MyGame.Unit.Mover
         this.state.SetState(State.Idle);
         DisableFlash();
       }
+    }
+
+    private void OnFlashExit()
+    {
+      Brightness = 0;
     }
   }
 }

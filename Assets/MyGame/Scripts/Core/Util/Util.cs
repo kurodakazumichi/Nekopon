@@ -43,8 +43,7 @@ namespace MyGame
     /// </summary>
     public static T GetRandom<T>(List<T> list)
     {
-      int lastIndex = list.Count - 1;
-      return list[UnityEngine.Random.Range(0, lastIndex)];
+      return list[UnityEngine.Random.Range(0, list.Count)];
     }
 
     /// <summary>
