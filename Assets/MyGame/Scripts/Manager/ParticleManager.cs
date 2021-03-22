@@ -162,8 +162,6 @@ namespace MyGame
       }
     }
 
-
-
     private void OnDebugProps(Props props)
     {
       using (new GUILayout.HorizontalScope(GUI.skin.box)) {
@@ -177,7 +175,7 @@ namespace MyGame
           props.Brightness = GUILayout.HorizontalSlider(props.Brightness, 0, 1f);
         });
 
-        props.IsOnlyGlow = GUILayout.Toggle(props.IsOnlyGlow, "IsOnlyGlow");
+
       }
 
       using (new GUILayout.HorizontalScope(GUI.skin.box)) 
@@ -209,7 +207,17 @@ namespace MyGame
           GUILayout.Label("Velocity");
           props.Velocity.x = GUILayout.HorizontalSlider(props.Velocity.x, -1f, 1f);
         });
-        props.IsSelfDestructive 
+        GUIVerticalScope(() => { 
+          GUILayout.Label("Gravity");
+          props.Gravity = GUILayout.HorizontalSlider(props.Gravity, -1f, 1f);
+        });
+      }
+
+      using (new GUILayout.HorizontalScope(GUI.skin.box)) {
+        props.IsOnlyGlow 
+          = GUILayout.Toggle(props.IsOnlyGlow, "IsOnlyGlow");
+
+        props.IsSelfDestructive
           = GUILayout.Toggle(props.IsSelfDestructive, "IsSelfDestructive");
       }
     }

@@ -33,7 +33,7 @@ namespace MyGame.Unit.Particle
       rs.Unload("Common.Additive.material");
       Material = null;
     }
-
+    
     //-------------------------------------------------------------------------
     // プロパティ
 
@@ -102,6 +102,7 @@ namespace MyGame.Unit.Particle
       float deltaTime = TimeSystem.Instance.DeltaTime;
 
       OperatePosition(deltaTime);
+      OperateGravity(deltaTime);
       OperateScale(deltaTime);
       OperateRotation(deltaTime);
       OperateAlpha(deltaTime);
@@ -117,74 +118,6 @@ namespace MyGame.Unit.Particle
     {
       this.trace = null;
       ParticleManager.Instance.Release(ParticleManager.Type.Standard, this);
-    }
-
-    /// <summary>
-    /// 座標の移動
-    /// </summary>
-    /// <param name="deltaTime"></param>
-    private void OperatePosition(float deltaTime)
-    {
-      CacheTransform.position += Velocity * deltaTime;
-    }
-    
-    private void OperateScale(float deltaTime)
-    {
-      if (ScaleAcceleration == 0) return;
-     
-      CacheTransform.localScale += Vector3.one * ScaleAcceleration * deltaTime;
-
-      if (
-        CacheTransform.localScale.x < 0 ||
-        CacheTransform.localScale.y < 0 ||
-        CacheTransform.localScale.z < 0
-      ) {
-        CacheTransform.localScale = Vector3.zero;
-      }
-    }
-
-    private void OperateRotation(float deltaTime)
-    {
-      if (RotationAcceleration == 0) return;
-      CacheTransform.Rotate(Vector3.forward, RotationAcceleration * deltaTime);
-    }
-
-    /// <summary>
-    /// アルファ加速度
-    /// </summary>
-    private void OperateAlpha(float deltaTime)
-    {
-      if (AlphaAcceleration == 0) return;
-      Alpha += AlphaAcceleration * deltaTime;
-    }
-
-    private void OperationTrace(float deltaTime)
-    {
-      if (this.trace == null) return;
-
-      if (TraceTime < this.traceTimer) {
-        var p = ParticleManager.Instance.Create(ParticleManager.Type.Standard);
-        p.Setup();
-        p.Setup(this.trace);
-        p.Fire(CacheTransform.position, CacheTransform.localScale, CacheTransform.rotation);
-        this.traceTimer = 0;
-      }
-
-      this.traceTimer += deltaTime;
-    }
-
-    /// <summary>
-    /// Idleになる必要があるか
-    /// </summary>
-    private bool NeedToIdle
-    {
-      get {
-        // 自己破壊しない設定の場合は外部から破壊しない限りIdleにならない
-        if (!this.IsSelfDestructive) return false;
-        if (this.Alpha < 0) return true;
-        if (this.LifeTime < this.timer) return true;
-        return false;
-      }
     }
   }
 }

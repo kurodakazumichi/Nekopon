@@ -8,7 +8,7 @@ namespace MyGame.Unit.Particle
   public class Props
   {
     //-------------------------------------------------------------------------
-    // 以下はSpriteRendererに割り当てる必要があるパラメーター
+    // SpriteRenderer系
 
     public Sprite Sprite = null;
     public Material MainMaterial = null;
@@ -19,9 +19,10 @@ namespace MyGame.Unit.Particle
     public bool IsOnlyGlow = false;
 
     //-------------------------------------------------------------------------
-    // 各種パラメータ
+    // 操作系
 
     public Vector3 Velocity;
+    public float Gravity = 0f;
     public float AlphaAcceleration = 0f;
     public float LifeTime = 1f;
     public float RotationAcceleration = 0f;
@@ -87,14 +88,6 @@ namespace MyGame.Unit.Particle
     }
 
     //-------------------------------------------------------------------------
-    // メソッド
-
-    /// <summary>
-    /// 破壊
-    /// </summary>
-    public abstract void Destory();
-
-    //-------------------------------------------------------------------------
     // IParticleの実装
 
     public abstract void Setup();
@@ -118,6 +111,7 @@ namespace MyGame.Unit.Particle
       Brightness = props.Brightness;
 
       Velocity             = props.Velocity;
+      Gravity              = props.Gravity;
       RotationAcceleration = props.RotationAcceleration;
       AlphaAcceleration    = props.AlphaAcceleration;
       ScaleAcceleration    = props.ScaleAcceleration;
@@ -190,6 +184,26 @@ namespace MyGame.Unit.Particle
     }
 
     /// <summary>
+    /// 速度
+    /// </summary>
+    public Vector3 Velocity { get; set; }
+
+    /// <summary>
+    /// 重力
+    /// </summary>
+    public float Gravity { get; set; }
+
+    /// <summary>
+    /// スケール加速度
+    /// </summary>
+    public float ScaleAcceleration { get; set; }
+
+    /// <summary>
+    /// 回転加速度
+    /// </summary>
+    public float RotationAcceleration { get; set; }
+
+    /// <summary>
     /// アルファ加速度
     /// </summary>
     public float AlphaAcceleration { get; set; }
@@ -200,21 +214,6 @@ namespace MyGame.Unit.Particle
     public float LifeTime { get; set; }
 
     /// <summary>
-    /// 速度
-    /// </summary>
-    public Vector3 Velocity { get; set; }
-
-    /// <summary>
-    /// 回転加速度
-    /// </summary>
-    public float RotationAcceleration { get; set; }
-
-    /// <summary>
-    /// スケール加速度
-    /// </summary>
-    public float ScaleAcceleration { get; set; }
-
-    /// <summary>
     /// 痕跡を残す時間
     /// </summary>
     public float TraceTime { get; set; }
@@ -223,5 +222,98 @@ namespace MyGame.Unit.Particle
     /// 自分自身で破壊するかどうか
     /// </summary>
     public bool IsSelfDestructive { get; set; }
+
+    //-------------------------------------------------------------------------
+    // メソッド
+
+    /// <summary>
+    /// 座標の操作
+    /// </summary>
+    protected virtual void OperatePosition(float deltaTime)
+    {
+      CacheTransform.position += Velocity * deltaTime;
+    }
+
+    protected virtual void OperateGravity(float deltaTime)
+    {
+      if (Gravity == 0) return;
+      var v = Velocity;
+      v.y -= Gravity * deltaTime;
+      Velocity = v;
+    }
+
+    /// <summary>
+    /// スケールの操作
+    /// </summary>
+    protected virtual void OperateScale(float deltaTime)
+    {
+      if (ScaleAcceleration == 0) return;
+
+      CacheTransform.localScale += Vector3.one * ScaleAcceleration * deltaTime;
+
+      if (
+        CacheTransform.localScale.x < 0 ||
+        CacheTransform.localScale.y < 0 ||
+        CacheTransform.localScale.z < 0
+      ) {
+        CacheTransform.localScale = Vector3.zero;
+      }
+    }
+
+    /// <summary>
+    /// 回転の操作
+    /// </summary>
+    /// <param name="deltaTime"></param>
+    protected virtual void OperateRotation(float deltaTime)
+    {
+      if (RotationAcceleration == 0) return;
+      CacheTransform.Rotate(Vector3.forward, RotationAcceleration * deltaTime);
+    }
+
+    /// <summary>
+    /// アルファの操作
+    /// </summary>
+    protected virtual void OperateAlpha(float deltaTime)
+    {
+      if (AlphaAcceleration == 0) return;
+      Alpha += AlphaAcceleration * deltaTime;
+    }
+
+    /// <summary>
+    /// 軌跡の操作
+    /// </summary>
+    /// <param name="deltaTime"></param>
+    protected virtual void OperationTrace(float deltaTime)
+    {
+      if (this.trace == null) return;
+
+      if (TraceTime < this.traceTimer) {
+        var p = ParticleManager.Instance.Create(ParticleManager.Type.Standard);
+        p.Setup();
+        p.Setup(this.trace);
+        p.Fire(CacheTransform.position, CacheTransform.localScale, CacheTransform.rotation);
+        this.traceTimer = 0;
+      }
+
+      this.traceTimer += deltaTime;
+    }
+
+    /// <summary>
+    /// Idleになる必要があるか
+    /// </summary>
+    protected virtual bool NeedToIdle {
+      get {
+        // 自己破壊しない設定の場合は外部から破壊しない限りIdleにならない
+        if (!this.IsSelfDestructive) return false;
+        if (this.Alpha < 0) return true;
+        if (this.LifeTime < this.timer) return true;
+        return false;
+      }
+    }
+
+    /// <summary>
+    /// 破壊
+    /// </summary>
+    public abstract void Destory();
   }
 }
