@@ -66,6 +66,7 @@ namespace MyGame.Unit.Versus
     {
       // SpriteRendererをアタッチ
       this.spriteRenderer = this.gameObject.AddComponent<SpriteRenderer>();
+      this.spriteRenderer.sortingLayerName = Define.Layer.Sorting.Cat;
 
       // 状態の構築
       this.state.Add(State.Idle);

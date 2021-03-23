@@ -5,30 +5,100 @@ using MyGame.Unit.Particle;
 
 namespace MyGame
 {
+  /// <summary>
+  /// パーティクルのインターフェース
+  /// </summary>
+  public interface IParticle : IPoolable
+  {
+    //-------------------------------------------------------------------------
+    // メソッド
+
+    /// <summary>
+    /// 標準セットアップ
+    /// </summary>
+    void Setup();
+
+    /// <summary>
+    /// Propsを要するセットアップ
+    /// </summary>
+    void Setup(Props props);
+
+    /// <summary>
+    /// 軌跡の設定
+    /// </summary>
+    void SetTrace(Props props, float time = 0);
+
+    /// <summary>
+    /// 発動
+    /// </summary>
+    void Fire(Vector3 position, Vector3? scale = null, Quaternion? rotation = null);
+
+    //-------------------------------------------------------------------------
+    // プロパティ系
+
+    /// <summary>
+    /// Transform
+    /// </summary>
+    Transform CacheTransform { get; }
+
+    /// <summary>
+    /// スプライト
+    /// </summary>
+    Sprite Sprite { get; set; }
+
+    /// <summary>
+    /// 描画レイヤー名
+    /// </summary>
+    string LayerName { set; }
+
+    /// <summary>
+    /// アルファ
+    /// </summary>
+    float Alpha { set; }
+
+    /// <summary>
+    /// 輝度
+    /// </summary>
+    float Brightness { set; }
+
+    /// <summary>
+    /// 速度
+    /// </summary>
+    Vector3 Velocity { set; }
+
+    /// <summary>
+    /// スケーリング速度
+    /// </summary>
+    float ScaleAcceleration { set; }
+
+    /// <summary>
+    /// 回転速度
+    /// </summary>
+    float RotationAcceleration { set; }
+
+    /// <summary>
+    /// 透過速度
+    /// </summary>
+    float AlphaAcceleration { set; }
+
+    /// <summary>
+    /// 寿命
+    /// </summary>
+    float LifeTime { set; }
+
+    /// <summary>
+    /// 自滅するかどうかのフラグ
+    /// </summary>
+    bool IsSelfDestructive { set; }
+
+    /// <summary>
+    /// 軌跡生成時間
+    /// </summary>
+    float TraceTime { set; }
+  }
+
   public class ParticleManager : SingletonMonoBehaviour<ParticleManager>
   {
-    /// <summary>
-    /// パーティクルのインターフェース
-    /// </summary>
-    public interface IParticle : IPoolable
-    {
-      void Setup();
-      void Setup(Props props);
-      void SetTrace(Props props, float time);
-      void Fire(Vector3 position, Vector3? scale = null, Quaternion? rotation = null);
-
-      Sprite Sprite { set; }
-      string LayerName { set; }
-      float Alpha { set; }
-      float Brightness { set; }
-
-      Vector3 Velocity { set; }
-      float ScaleAcceleration { set; }
-      float RotationAcceleration { set; }
-      float AlphaAcceleration { set; }
-      float LifeTime { set; }
-    }
-
     /// <summary>
     /// パーティクルの種類
     /// </summary>
@@ -214,8 +284,11 @@ namespace MyGame
       }
 
       using (new GUILayout.HorizontalScope(GUI.skin.box)) {
-        props.IsOnlyGlow 
-          = GUILayout.Toggle(props.IsOnlyGlow, "IsOnlyGlow");
+        props.MainIsEnabled
+          = GUILayout.Toggle(props.MainIsEnabled, "MainIsEnabled");
+
+        props.GlowIsEnabled 
+          = GUILayout.Toggle(props.GlowIsEnabled, "GlowIsEnabled");
 
         props.IsSelfDestructive
           = GUILayout.Toggle(props.IsSelfDestructive, "IsSelfDestructive");

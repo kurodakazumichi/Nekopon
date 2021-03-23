@@ -52,21 +52,13 @@ namespace MyGame.Unit.Effect
     /// 雫の軌跡設定
     /// </summary>
     private static readonly Props DROP_TRACE_PROPS = new Props() {
-      IsOnlyGlow = true,
+      MainIsEnabled = false,
       Gravity = 0.1f,
       ScaleAcceleration = -1.5f,
       AlphaAcceleration = -1.5f,
       Brightness = 1f,
       LifeTime = RAIN_TIME * 0.5f,
     };
-
-    //-------------------------------------------------------------------------
-    // メンバ変数
-
-    /// <summary>
-    /// 雫ユニットプール
-    /// </summary>
-    private ObjectPool<Mover.Glow> pool = new ObjectPool<Mover.Glow>();
 
     //-------------------------------------------------------------------------
     // Load, Unload
@@ -98,14 +90,6 @@ namespace MyGame.Unit.Effect
 
     protected override void MyAwake()
     {
-      // 雫ユニットのオブジェクトプール初期設定
-      this.pool.SetGenerator(() => {
-        return MyGameObject.Create<Mover.Glow>("Drop", CacheTransform);
-      });
-
-      // 50個予約しとく
-      this.pool.Reserve(50);
-
       // 状態の構築
       this.state.Add(State.Idle);
       this.state.Add(State.Rain, OnRainEnter, OnRainUpdate);

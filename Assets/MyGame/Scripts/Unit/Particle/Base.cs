@@ -3,40 +3,9 @@
 namespace MyGame.Unit.Particle
 {
   /// <summary>
-  /// パーティクルを生成するのに必要なパラメータ
-  /// </summary>
-  public class Props
-  {
-    //-------------------------------------------------------------------------
-    // SpriteRenderer系
-
-    public Sprite Sprite = null;
-    public Material MainMaterial = null;
-    public Material GlowMaterial = null;
-    public float Alpha = 1f;
-    public float Brightness = 0f;
-    public string LayerName = Define.Layer.Sorting.Effect;
-    public bool IsOnlyGlow = false;
-
-    //-------------------------------------------------------------------------
-    // 操作系
-
-    public Vector3 Velocity;
-    public float Gravity = 0f;
-    public float AlphaAcceleration = 0f;
-    public float LifeTime = 1f;
-    public float RotationAcceleration = 0f;
-    public float ScaleAcceleration = 0f;
-
-    /// <summary>
-    /// 自分自身で勝手に破棄するかどうか
-    /// </summary>
-    public bool IsSelfDestructive = true;
-  };
-  /// <summary>
   /// Particleのベース
   /// </summary>
-  public abstract class Base<TState> : Unit<TState>, ParticleManager.IParticle where TState : System.Enum
+  public abstract class Base<TState> : Unit<TState>, IParticle where TState : System.Enum
   {
     //-------------------------------------------------------------------------
     // メンバ変数
@@ -59,12 +28,17 @@ namespace MyGame.Unit.Particle
     /// <summary>
     /// 痕跡用のProps
     /// </summary>
-    protected Props trace = null;
+    protected Props trace = new Props();
 
     /// <summary>
     /// トレース用タイマー
     /// </summary>
     protected float traceTimer = 0;
+
+    /// <summary>
+    /// 軌跡が有効かどうか
+    /// </summary>
+    protected bool isTraceEnabled = false;
 
     //-------------------------------------------------------------------------
     // プロパティ
@@ -99,6 +73,7 @@ namespace MyGame.Unit.Particle
     {
       // SpriteRendererに関するパラメータ設定
       Sprite = props.Sprite;
+      LayerName = props.LayerName;
 
       if (props.MainMaterial) {
         MainMaterial = props.MainMaterial;
@@ -118,17 +93,19 @@ namespace MyGame.Unit.Particle
       LifeTime             = props.LifeTime;
       IsSelfDestructive    = props.IsSelfDestructive;
 
-      // Glow Onlyだったらmainは非アクティブ
-      this.main.gameObject.SetActive(!props.IsOnlyGlow);
+      this.main.gameObject.SetActive(props.MainIsEnabled);
+      this.glow.gameObject.SetActive(props.GlowIsEnabled);
     }
 
     /// <summary>
     /// 痕跡の設定
     /// </summary>
-    public void SetTrace(Props props, float time)
+    public void SetTrace(Props props, float time = 0)
     {
-      this.trace = props;
+      this.isTraceEnabled = (props != null);
+      this.trace.Copy(props);
       TraceTime = time;
+      this.traceTimer = 0;
     }
 
     /// <summary>
@@ -145,6 +122,7 @@ namespace MyGame.Unit.Particle
     /// Spriteのsetter
     /// </summary>
     public Sprite Sprite {
+      get { return this.main.sprite; }
       set {
         this.main.sprite = this.glow.sprite = value;
       }
@@ -234,6 +212,10 @@ namespace MyGame.Unit.Particle
       CacheTransform.position += Velocity * deltaTime;
     }
 
+    /// <summary>
+    /// 重力を操作
+    /// </summary>
+    /// <param name="deltaTime"></param>
     protected virtual void OperateGravity(float deltaTime)
     {
       if (Gravity == 0) return;
@@ -282,20 +264,28 @@ namespace MyGame.Unit.Particle
     /// <summary>
     /// 軌跡の操作
     /// </summary>
-    /// <param name="deltaTime"></param>
-    protected virtual void OperationTrace(float deltaTime)
+    protected virtual void OperateTrace(float deltaTime)
     {
-      if (this.trace == null) return;
+      if (!this.isTraceEnabled) return;
 
-      if (TraceTime < this.traceTimer) {
+      if (this.traceTimer < 0) {
         var p = ParticleManager.Instance.Create(ParticleManager.Type.Standard);
         p.Setup();
         p.Setup(this.trace);
         p.Fire(CacheTransform.position, CacheTransform.localScale, CacheTransform.rotation);
-        this.traceTimer = 0;
+        this.traceTimer = TraceTime;
       }
 
-      this.traceTimer += deltaTime;
+      this.traceTimer -= deltaTime;
+    }
+
+    /// <summary>
+    /// 寿命の操作
+    /// </summary>
+    protected virtual void OperateLifeTime(float deltaTime)
+    {
+      if (!IsSelfDestructive) return;
+      this.LifeTime -= deltaTime;
     }
 
     /// <summary>

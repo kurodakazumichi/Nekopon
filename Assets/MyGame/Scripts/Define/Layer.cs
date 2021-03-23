@@ -10,6 +10,7 @@ namespace MyGame.Define
     {
       public const string Background = "Background";
       public const string Default = "Default";
+      public const string Cat = "Cat";
       public const string Effect = "Effect";
       public const string UI = "UI";
     }

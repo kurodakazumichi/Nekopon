@@ -106,8 +106,8 @@ namespace MyGame.Unit.Particle
       OperateScale(deltaTime);
       OperateRotation(deltaTime);
       OperateAlpha(deltaTime);
-      OperationTrace(deltaTime);
-      UpdateTimer();
+      OperateTrace(deltaTime);
+      OperateLifeTime(deltaTime);
 
       if (NeedToIdle) {
         this.state.SetState(State.Idle);
@@ -116,7 +116,7 @@ namespace MyGame.Unit.Particle
 
     private void OnUsualExit()
     {
-      this.trace = null;
+      isTraceEnabled = false;
       ParticleManager.Instance.Release(ParticleManager.Type.Standard, this);
     }
   }
