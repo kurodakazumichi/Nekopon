@@ -8,9 +8,9 @@ namespace MyGame.Unit.Effect
   public abstract class EffectBase<T> : Unit<T>, EffectManager.IEffect where T : System.Enum
   {
     /// <summary>
-    /// エフェクトがIdle状態であることを表す
+    /// エフェクトの効果発動時に呼びたいアクション
     /// </summary>
-    public virtual bool IsIdle => true;
+    public System.Action Action { protected get; set; } = null;
 
     /// <summary>
     /// セットアップ

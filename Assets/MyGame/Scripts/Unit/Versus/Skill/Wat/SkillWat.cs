@@ -74,7 +74,7 @@ namespace MyGame.Unit.Versus
       // 状態の構築
       this.state.Add(State.Idle);
       this.state.Add(State.Create, OnCreateEnter, OnCreateUpdate);
-      this.state.Add(State.Rain, OnRainEnter, OnRainUpdate, OnRainExit);
+      this.state.Add(State.Rain, OnRainEnter, null, OnRainExit);
       this.state.Add(State.Clear, OnCleanEnter, OnCleanUpdate, OnCleanExit);
       this.state.SetState(State.Idle);
     }
@@ -133,21 +133,23 @@ namespace MyGame.Unit.Versus
 
       // 雨のエフェクトを生成
       this.effect = EffectManager.Instance.Create(EffectManager.Type.Rain);
-      this.effect.Fire(this.target.Location.Top);
-    }
 
-    private void OnRainUpdate()
-    {
-      if (!this.effect.IsIdle) return;
-      this.state.SetState(State.Clear);
+      // エフェクト効果発動
+      this.effect.Action = () => 
+      {
+        // 状態回復
+        this.target.Cure();
+        this.state.SetState(State.Clear);
+      };
+
+      this.effect.Fire(this.target.Location.Top);
+
     }
 
     private void OnRainExit()
     {
+      this.effect.Action = null;
       this.effect = null;
-
-      // 状態回復
-      this.target.Cure();
     }
 
     //-------------------------------------------------------------------------

@@ -13,9 +13,9 @@ namespace MyGame
     public interface IEffect : IPoolable
     {
       /// <summary>
-      /// Idle状態が分かる
+      /// エフェクトの効果発動時に呼びたいアクションを設定可能
       /// </summary>
-      bool IsIdle { get; }
+      System.Action Action { set; }
 
       /// <summary>
       /// セットアップ可能

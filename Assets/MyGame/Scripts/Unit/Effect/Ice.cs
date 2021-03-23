@@ -176,11 +176,6 @@ namespace MyGame.Unit.Effect
     // IEffectの実装
 
     /// <summary>
-    /// 氷がぐるぐるしてる間以外はIdle扱いとしよう
-    /// </summary>
-    public override bool IsIdle => (this.state.StateKey != State.Circle);
-
-    /// <summary>
     /// Spriteを設定する
     /// </summary>
     public override void Setup()
@@ -278,6 +273,8 @@ namespace MyGame.Unit.Effect
 
     private void OnBurstEnter() 
     {
+      Action?.Invoke();
+
       this.timer = 0;
       Util.ForEach(this.inners, (particle, _) => { Burst(particle); });
       Util.ForEach(this.outers, (particle, _) => { Burst(particle); });

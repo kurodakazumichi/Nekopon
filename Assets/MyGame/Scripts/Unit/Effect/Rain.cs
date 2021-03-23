@@ -101,11 +101,6 @@ namespace MyGame.Unit.Effect
     // IEffectの実装
 
     /// <summary>
-    /// 雨を降らしている状態以外はIdle扱いにする
-    /// </summary>
-    public override bool IsIdle => (this.state.StateKey != State.Rain);
-
-    /// <summary>
     /// 発動
     /// </summary>
     public override void Fire(Vector3 position)
@@ -133,6 +128,7 @@ namespace MyGame.Unit.Effect
       UpdateTimer();
 
       if (ACTIVE_TIME < this.timer) {
+        Action?.Invoke();
         this.state.SetState(State.Wait);
       }
     }

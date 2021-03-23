@@ -91,8 +91,6 @@ namespace MyGame.Unit.Effect
     //-------------------------------------------------------------------------
     // IEffectの実装
 
-    public override bool IsIdle => (this.state.StateKey == State.Idle);
-
     public override void Setup()
     {
       Util.ForEach(this.movers, (thunder, index) => {
