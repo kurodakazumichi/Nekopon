@@ -27,60 +27,19 @@ namespace MyGame.Unit.Effect
     private const float CIRCLE_TIME = 1f;
 
     /// <summary>
-    /// 内側の結晶の数
-    /// </summary>
-    private const int INNER_COUNT = 5;
-
-    /// <summary>
-    /// 内側の半径
-    /// </summary>
-    private const float INNER_RADIUS = 0.13f;
-
-    /// <summary>
-    /// 内側の移動速度
-    /// </summary>
-    private const float INNER_VELOCITY = 180f;
-
-    /// <summary>
-    /// 外側の結晶の数
-    /// </summary>
-    private const int OUTER_COUNT = 10;
-
-    /// <summary>
-    /// 外側の半径
-    /// </summary>
-    private const float OUTER_RADIUS = 0.3f;
-
-    /// <summary>
-    /// 外側の移動速度
-    /// </summary>
-    private const float OUTER_VELOCITY = -180f;
-
-    /// <summary>
     /// バーストに要する時間
     /// </summary>
     private const float BURST_TIME = 0.3f;
 
     /// <summary>
-    /// バースト時の移動速度
+    /// 内側の結晶の数
     /// </summary>
-    private const float BURST_VELOCITY = 5f;
+    private const int INNER_COUNT = 5;
 
     /// <summary>
-    /// 円運動中の軌跡を出す間隔
+    /// 外側の結晶の数
     /// </summary>
-    private const float CURCLE_TRACE_TIME = 0.15f;
-
-    /// <summary>
-    /// バースト時：軌跡を出す感覚
-    /// </summary>
-    private const float BURST_TRACE_TIME = 0.5f;
-
-    /// <summary>
-    /// バースト時：雪が降る速度を決めるための重力(最大・最小)
-    /// </summary>
-    const float MIN_BURST_GRAVITY = 1f;
-    const float MAX_BURST_GRAVITY = 5f;
+    private const int OUTER_COUNT = 10;
 
     /// <summary>
     /// Inner Particleの設定
@@ -187,6 +146,9 @@ namespace MyGame.Unit.Effect
 
       var pm = ParticleManager.Instance;
 
+      // 円運動中の軌跡を出す間隔
+      const float CURCLE_TRACE_TIME = 0.15f;
+
       // 内側のParticleを生成
       for (int i = 0; i < INNER_COUNT; ++i) 
       {
@@ -240,6 +202,11 @@ namespace MyGame.Unit.Effect
 
     private void OnCircleUpdate()
     {
+      const float INNER_RADIUS   = 0.13f; // 内側の半径
+      const float INNER_VELOCITY = 180f;  // 内側の速度
+      const float OUTER_RADIUS   = 0.3f;  // 外側の半径
+      const float OUTER_VELOCITY = -180f; // 外側の移動速度
+
       Util.ForEach(this.inners, (particle, index) => {
         Circle(particle, index, INNER_COUNT, INNER_RADIUS, INNER_VELOCITY);
       });
@@ -307,17 +274,22 @@ namespace MyGame.Unit.Effect
     /// </summary>
     private void Burst(IParticle particle)
     {
+      const float VELOCITY    = 5f;
+      const float TRACE_TIME  = 0.5f;
+      const float MIN_GRAVITY = 1f;
+      const float MAX_GRAVITY = 5f;
+
       // 原点からParticleに向かうベクトルから速度を決定
       var p1 = CacheTransform.position;
       var p2 = particle.CacheTransform.position;
-      var v = (p2 - p1).normalized * BURST_VELOCITY;
+      var v = (p2 - p1).normalized * VELOCITY;
       particle.Velocity = v;
 
       // その他設定
-      BURST_TRACE_PROPS.Sprite = particle.Sprite;
-      BURST_TRACE_PROPS.Gravity = Random.Range(MIN_BURST_GRAVITY, MAX_BURST_GRAVITY);
+      BURST_TRACE_PROPS.Sprite  = particle.Sprite;
+      BURST_TRACE_PROPS.Gravity = Random.Range(MIN_GRAVITY, MAX_GRAVITY);
             
-      particle.SetTrace(BURST_TRACE_PROPS, BURST_TRACE_TIME);
+      particle.SetTrace(BURST_TRACE_PROPS, TRACE_TIME);
     }
   }
 }
