@@ -263,7 +263,7 @@ namespace MyGame.Unit.Versus
       }
       // 凍結(氷)
       if (Input.GetKeyDown(KeyCode.Alpha4)) {
-        this.puzzle.Freeze();
+        FireSkill(Define.App.Attribute.Tre);
       }
       // ランダム化
       if (Input.GetKeyDown(KeyCode.Alpha5)) {
@@ -353,6 +353,22 @@ namespace MyGame.Unit.Versus
     public void Freeze()
     {
       this.puzzle.Freeze();
+    }
+
+    /// <summary>
+    /// パズルをランダムに変更する
+    /// </summary>
+    public void Randomize()
+    {
+      this.puzzle.Randomize();
+    }
+
+    /// <summary>
+    /// パズルを不可視にする
+    /// </summary>
+    public void Invisible()
+    {
+      this.puzzle.Invisible();
     }
 
     //-------------------------------------------------------------------------

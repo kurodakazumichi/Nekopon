@@ -34,7 +34,7 @@ namespace MyGame.Unit.Effect
     /// <summary>
     /// BURSTに要する時間
     /// </summary>
-    private const float BURST_TIME = 1f;
+    private const float BURST_TIME = 0.5f;
 
     /// <summary>
     /// 葉っぱパーティクルの設定
@@ -198,7 +198,7 @@ namespace MyGame.Unit.Effect
         = (POSITION_BIAS + progress * POSITION_ADJUST + Mathf.Pow(progress, SPIRAL_POWER));
 
       leaf.CacheTransform.position
-        = rotation * direction * length;
+        = CacheTransform.position + rotation * direction * length;
 
       // スケールを計算
       var scale = Mathf.Min(1, progress + MIN_SCALE);
@@ -247,10 +247,6 @@ namespace MyGame.Unit.Effect
 
       EffectManager.Instance.Release(EffectManager.Type.Leaves, this);
     }
-    /// <summary>
-    /// BURST時のパーティクル設定
-    /// 移動速度、フェード速度、回転速度
-    /// </summary>
 
     /// <summary>
     /// 葉っぱをはじけさせる

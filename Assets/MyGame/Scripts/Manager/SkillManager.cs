@@ -64,6 +64,7 @@ namespace MyGame
       SkillFir.Load(pre, done);
       SkillWat.Load(pre, done);
       SkillThu.Load(pre, done);
+      SkillTre.Load(pre, done);
     }
 
     public static void Unload()
@@ -72,6 +73,7 @@ namespace MyGame
       SkillFir.Unload();
       SkillWat.Unload();
       SkillThu.Unload();
+      SkillTre.Unload();
     }
 
     //-------------------------------------------------------------------------
@@ -87,6 +89,7 @@ namespace MyGame
       InitPoolForSkill<SkillFir>(Define.App.Attribute.Fir);
       InitPoolForSkill<SkillWat>(Define.App.Attribute.Wat);
       InitPoolForSkill<SkillThu>(Define.App.Attribute.Thu);
+      InitPoolForSkill<SkillTre>(Define.App.Attribute.Tre);
     }
 
     protected override void OnMyDestory()
@@ -126,7 +129,7 @@ namespace MyGame
 
       // Generator設定
       pool.SetGenerator(() => { 
-        return MyGameObject.Create<T>("Skill", CacheTransform);
+        return MyGameObject.Create<T>($"{attribute}", CacheTransform);
       });
 
       // 2人分予約
