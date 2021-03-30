@@ -24,11 +24,6 @@ namespace MyGame.Unit.Versus
     private const float CREATE_TIME = 0.2f;
 
     /// <summary>
-    /// 落雷時の雲の最小アルファ値
-    /// </summary>
-    private const float CLOUD_MAX_ALPHA = 0.3f;
-
-    /// <summary>
     /// 雲が消えるのに要する時間
     /// </summary>
     private const float CLEAR_TIME = 0.5f;
@@ -118,13 +113,16 @@ namespace MyGame.Unit.Versus
 
     private void OnStrikeEnter()
     {
+      /// 落雷時の雲の最大輝度
+      const float CLOUD_MAX_BRIGHTNESS = 0.3f;
+
       // 雷を生成
       EffectManager.Instance.Create(EffectManager.Type.Thunder)
         .Fire(this.target.Location.Center);
 
       // 雲をフラッシュ
       this.cloud.CacheTransform.localScale = Vector3.one;
-      this.cloud.SetFlash(Effect.Thunder.CYCLE, 0f, CLOUD_MAX_ALPHA);
+      this.cloud.SetFlash(Effect.Thunder.CYCLE, 0f, CLOUD_MAX_BRIGHTNESS);
       this.cloud.ToFlash(Effect.Thunder.TIME);
 
       if (this.target.IsInvincible) {
