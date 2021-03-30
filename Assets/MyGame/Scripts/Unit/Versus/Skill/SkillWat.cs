@@ -177,7 +177,7 @@ namespace MyGame.Unit.Versus
 
     private void OnCleanExit()
     {
-      SkillManager.Instance.Release(Define.App.Attribute.Wat, this);
+      SkillManager.Instance.Release(this);
     }
   }
 }

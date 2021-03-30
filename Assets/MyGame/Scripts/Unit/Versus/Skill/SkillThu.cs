@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using MyGame.Define;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -159,7 +160,7 @@ namespace MyGame.Unit.Versus
     private void OnClearExit()
     {
       // スキルを返却
-      SkillManager.Instance.Release(Define.App.Attribute.Thu, this);
+      SkillManager.Instance.Release(this);
     }
   }
 }

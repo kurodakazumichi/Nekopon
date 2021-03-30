@@ -182,7 +182,7 @@ namespace MyGame.Unit.Versus
       // TODO: エフェクトを再生予定
 
       // スキルを返却
-      SkillManager.Instance.Release(Define.App.Attribute.Fir, this);
+      SkillManager.Instance.Release(this);
     }
   }
 }

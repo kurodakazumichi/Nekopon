@@ -32,6 +32,16 @@ namespace MyGame
     public interface ISkill : IPoolable
     {
       /// <summary>
+      /// 属性
+      /// </summary>
+      Define.App.Attribute Attribute { get; }
+
+      /// <summary>
+      /// 初期化
+      /// </summary>
+      ISkill Init(Define.App.Attribute attribute);
+
+      /// <summary>
       /// セットアップ可能
       /// </summary>
       void Setup();
@@ -131,8 +141,11 @@ namespace MyGame
       var pool = new ObjectPool<ISkill>();
 
       // Generator設定
-      pool.SetGenerator(() => { 
-        return MyGameObject.Create<T>($"{attribute}", CacheTransform);
+      pool.SetGenerator(() => 
+      { 
+        return MyGameObject
+          .Create<T>($"{attribute}", CacheTransform)
+          .Init(attribute);
       });
 
       // 2人分予約
@@ -181,9 +194,9 @@ namespace MyGame
     /// <summary>
     /// 属性スキルユニットを返却
     /// </summary>
-    public void Release(Define.App.Attribute attribute, ISkill skill)
+    public void Release(ISkill skill)
     {
-      GetPoolForSkill(attribute).Release(skill, CacheTransform);
+      GetPoolForSkill(skill.Attribute).Release(skill, CacheTransform);
     }
 
     /// <summary>

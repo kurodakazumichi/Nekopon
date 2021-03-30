@@ -86,7 +86,7 @@ namespace MyGame.Unit.Versus
       this.effect.Action = null;
       this.effect = null;
 
-      SkillManager.Instance.Release(Define.App.Attribute.Ice, this);
+      SkillManager.Instance.Release(this);
     }
   }
 

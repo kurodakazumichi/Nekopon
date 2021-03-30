@@ -33,7 +33,21 @@ namespace MyGame.Unit.Versus
     protected Player target = null;
 
     //-------------------------------------------------------------------------
+    // プロパティ
+
+    /// <summary>
+    /// スキルの属性
+    /// </summary>
+    public Define.App.Attribute Attribute { get; private set; }
+
+    //-------------------------------------------------------------------------
     // ISkill Interfaceの実装
+
+    public virtual SkillManager.ISkill Init(Define.App.Attribute attribute)
+    {
+      Attribute = attribute;
+      return this;
+    }
 
     /// <summary>
     /// スキルのセットアップ(Resourceの設定)
