@@ -64,6 +64,7 @@ namespace MyGame
       SkillFir.Load(pre, done);
       SkillWat.Load(pre, done);
       SkillThu.Load(pre, done);
+      SkillIce.Load(pre, done);
       SkillTre.Load(pre, done);
     }
 
@@ -73,6 +74,7 @@ namespace MyGame
       SkillFir.Unload();
       SkillWat.Unload();
       SkillThu.Unload();
+      SkillIce.Unload();
       SkillTre.Unload();
     }
 
@@ -89,6 +91,7 @@ namespace MyGame
       InitPoolForSkill<SkillFir>(Define.App.Attribute.Fir);
       InitPoolForSkill<SkillWat>(Define.App.Attribute.Wat);
       InitPoolForSkill<SkillThu>(Define.App.Attribute.Thu);
+      InitPoolForSkill<SkillIce>(Define.App.Attribute.Ice);
       InitPoolForSkill<SkillTre>(Define.App.Attribute.Tre);
     }
 

@@ -263,11 +263,11 @@ namespace MyGame.Unit.Versus
       }
       // 凍結(氷)
       if (Input.GetKeyDown(KeyCode.Alpha4)) {
-        FireSkill(Define.App.Attribute.Tre);
+        FireSkill(Define.App.Attribute.Ice);
       }
       // ランダム化
       if (Input.GetKeyDown(KeyCode.Alpha5)) {
-        this.puzzle.Randomize();
+        FireSkill(Define.App.Attribute.Tre);
       }
       // 体力回復(聖)
       if (Input.GetKeyDown(KeyCode.Alpha6)) {

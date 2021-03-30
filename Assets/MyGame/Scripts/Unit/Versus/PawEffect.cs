@@ -56,7 +56,7 @@ namespace MyGame.Unit.Versus
     protected override void MyAwake()
     {
       this.spriteRenderer = AddComponent<SpriteRenderer>();
-      this.spriteRenderer.sortingLayerName = Define.Layer.Sorting.Effect;
+      this.spriteRenderer.sortingLayerName = Define.Layer.Sorting.PawEffect;
 
       // 状態を構築
       this.state.Add(State.Idle, OnIdleEnter);

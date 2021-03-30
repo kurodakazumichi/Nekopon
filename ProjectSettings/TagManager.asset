@@ -47,6 +47,9 @@ TagManager:
   - name: Cat
     uniqueID: 2846008435
     locked: 0
+  - name: PawEffect
+    uniqueID: 3453545883
+    locked: 0
   - name: Effect
     uniqueID: 1853913881
     locked: 0
