@@ -29,17 +29,6 @@ namespace MyGame.Unit.Effect
     private const float RAIN_TIME = 1f;
 
     /// <summary>
-    /// 雫をランダム配置する際のばらつき幅(半分)
-    /// </summary>
-    private const float DROP_WIDTH = 0.3f;
-
-    /// <summary>
-    /// 軌跡の生成間隔(最小～最大)
-    /// </summary>
-    private const float MIN_TRACE_TIME = 0.05f;
-    private const float MAX_TRACE_TIME = 0.1f;
-
-    /// <summary>
     /// 雫のパーティクル設定
     /// </summary>
     private static readonly Props DROP_PROPS = new Props(){ 
@@ -164,6 +153,10 @@ namespace MyGame.Unit.Effect
     /// </summary>
     private void CreateDrop()
     {
+      const float DROP_WIDTH     = 0.3f;  // 雨が1点から降ると不自然なのでばらつきを持たせるための幅
+      const float TRACE_MIN_TIME = 0.05f; // 軌跡を生成する時間(最速)
+      const float TRACE_MAX_TIME = 0.1f;  // 軌跡を生成する時間(最遅)
+
       // 位置決め
       Vector3 position = CacheTransform.position;
       position.x += Random.Range(-DROP_WIDTH, DROP_WIDTH);
@@ -177,7 +170,7 @@ namespace MyGame.Unit.Effect
       p.Setup(DROP_PROPS);
 
       DROP_TRACE_PROPS.Sprite = sprite;
-      p.SetTrace(DROP_TRACE_PROPS, Random.Range(MIN_TRACE_TIME, MAX_TRACE_TIME));
+      p.SetTrace(DROP_TRACE_PROPS, Random.Range(TRACE_MIN_TIME, TRACE_MAX_TIME));
 
       // 発動
       p.Fire(position);
