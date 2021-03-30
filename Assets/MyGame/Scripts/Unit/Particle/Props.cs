@@ -38,6 +38,10 @@ namespace MyGame.Unit.Particle
 
     public void Copy(Props props)
     {
+      if (props == null) {
+        return;
+      }
+
       Sprite               = props.Sprite;
       MainMaterial         = props.MainMaterial;
       GlowMaterial         = props.GlowMaterial;

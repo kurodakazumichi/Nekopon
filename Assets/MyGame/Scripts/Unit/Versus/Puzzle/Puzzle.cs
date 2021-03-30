@@ -412,7 +412,7 @@ namespace MyGame.Unit.Versus
     public void Freeze()
     {
       Util.ForEach(this.paws, (paw, index) => { 
-        if (Util.HasLuck(Define.Versus.PAW_FREEZE_RATE)) paw.Freeze();
+        if (Util.GoodLuck(Define.Versus.PAW_FREEZE_RATE)) paw.Freeze();
       });
     }
 
@@ -423,7 +423,7 @@ namespace MyGame.Unit.Versus
     {
       Util.ForEach(this.paws, (paw, index) => 
       {
-        if (Util.HasLuck(Define.Versus.PAW_PARALYSIS_RATE)) 
+        if (Util.GoodLuck(Define.Versus.PAW_PARALYSIS_RATE)) 
         {
           // 肉球を麻痺らせる
           paw.Paralyze();

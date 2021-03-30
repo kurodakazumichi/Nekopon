@@ -85,7 +85,7 @@ namespace MyGame.Unit.Effect
     /// <summary>
     /// Inner Particleの設定
     /// </summary>
-    private static Props INNER_PROPS = new Props() 
+    private static readonly Props INNER_PROPS = new Props() 
     {
       IsSelfDestructive = false,
       RotationAcceleration = 360f,
@@ -94,7 +94,7 @@ namespace MyGame.Unit.Effect
     /// <summary>
     /// Outer Particleの設定
     /// </summary>
-    private static Props OUTER_PROPS = new Props() {
+    private static readonly Props OUTER_PROPS = new Props() {
       IsSelfDestructive = false,
       RotationAcceleration = -360f,
     };
@@ -102,7 +102,7 @@ namespace MyGame.Unit.Effect
     /// <summary>
     /// サークル中の軌跡設定
     /// </summary>
-    private static Props CIRCLE_TRACE_PROPS = new Props() {
+    private static readonly Props CIRCLE_TRACE_PROPS = new Props() {
       ScaleAcceleration = -8f,
       Brightness = 0.1f,
       AlphaAcceleration = -3f
@@ -111,7 +111,7 @@ namespace MyGame.Unit.Effect
     /// <summary>
     /// バースト中の軌跡設定
     /// </summary>
-    private static Props BURST_TRACE_PROPS = new Props() {
+    private static readonly Props BURST_TRACE_PROPS = new Props() {
       MainIsEnabled = false,
       ScaleAcceleration = -1f,
       AlphaAcceleration = -0.5f,
@@ -124,8 +124,8 @@ namespace MyGame.Unit.Effect
     //-------------------------------------------------------------------------
     // メンバ変数
 
-    private IParticle[] inners = new IParticle[INNER_COUNT];
-    private IParticle[] outers = new IParticle[OUTER_COUNT];
+    private readonly IParticle[] inners = new IParticle[INNER_COUNT];
+    private readonly IParticle[] outers = new IParticle[OUTER_COUNT];
 
     //-------------------------------------------------------------------------
     // Load, Unload

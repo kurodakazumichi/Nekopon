@@ -70,7 +70,11 @@ namespace MyGame
       return null;
     }
 
-    public static bool HasLuck(float rate)
+    /// <summary>
+    /// 幸あれ！と祈ると指定した確率でtrueが返ってくる、幸がなければfalse
+    /// rateは0~1で指定
+    /// </summary>
+    public static bool GoodLuck(float rate)
     {
       return (UnityEngine.Random.Range(0, 1f) <= rate);
     }

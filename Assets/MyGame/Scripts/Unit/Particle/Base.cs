@@ -103,7 +103,11 @@ namespace MyGame.Unit.Particle
     public void SetTrace(Props props, float time = 0)
     {
       this.isTraceEnabled = (props != null);
-      this.trace.Copy(props);
+
+      if (props != null) {
+        this.trace.Copy(props);
+      }
+      
       TraceTime = time;
       this.traceTimer = 0;
     }
