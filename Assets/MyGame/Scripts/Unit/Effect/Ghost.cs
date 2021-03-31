@@ -23,7 +23,14 @@ namespace MyGame.Unit.Effect
     /// </summary>
     private const int GHOST_COUNT = 10;
 
+    /// <summary>
+    /// 幽霊が出る時間
+    /// </summary>
     private const float HAUNTED_TIME = 1f;
+
+    /// <summary>
+    /// 幽霊が去る時間
+    /// </summary>
     private const float LEAVE_TIME = 1f;
 
     /// <summary>
@@ -123,6 +130,8 @@ namespace MyGame.Unit.Effect
 
         ghost.CacheTransform.position
           = CacheTransform.position + rotation * Vector3.right * RADIUS;
+
+        ghost.Alpha = Mathf.Min(1f, this.timer * 3f);
       });
 
       UpdateTimer();
@@ -139,9 +148,11 @@ namespace MyGame.Unit.Effect
     private void OnLeaveEnter()
     {
       Util.ForEach(this.ghosts, (ghost, index) => { 
-        ghost.Velocity = new Vector3(Random.Range(-1f, 1f), 1f, 0);
         ghost.IsSelfDestructive = true;
         ghost.LifeTime = LEAVE_TIME;
+        ghost.AlphaAcceleration = -1f;
+        ghost.Brightness = 0.2f;
+        ghost.Sprite = Sprite2;
       });
 
       Action?.Invoke();
