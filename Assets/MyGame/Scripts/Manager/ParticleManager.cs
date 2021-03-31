@@ -44,7 +44,17 @@ namespace MyGame
     /// <summary>
     /// スプライト
     /// </summary>
-    Sprite Sprite { get; set; }
+    Sprite Sprite { set; }
+
+    /// <summary>
+    /// Mainスプライト
+    /// </summary>
+    Sprite MainSprite { get; set; }
+
+    /// <summary>
+    /// Glowスプライト
+    /// </summary>
+    Sprite GlowSprite { get; set; }
 
     /// <summary>
     /// 描画レイヤー名

@@ -126,10 +126,25 @@ namespace MyGame.Unit.Particle
     /// Spriteのsetter
     /// </summary>
     public Sprite Sprite {
-      get { return this.main.sprite; }
       set {
         this.main.sprite = this.glow.sprite = value;
       }
+    }
+
+    /// <summary>
+    /// MainSprite
+    /// </summary>
+    public Sprite MainSprite {
+      get { return this.main.sprite; }
+      set { this.main.sprite = value; }
+    }
+
+    /// <summary>
+    /// GlowSprite
+    /// </summary>
+    public Sprite GlowSprite {
+      get { return this.glow.sprite; }
+      set { this.glow.sprite = value; }
     }
 
     /// <summary>
@@ -168,42 +183,42 @@ namespace MyGame.Unit.Particle
     /// <summary>
     /// 速度
     /// </summary>
-    public Vector3 Velocity { get; set; }
+    public Vector3 Velocity { get; set; } = Vector3.zero;
 
     /// <summary>
     /// 重力
     /// </summary>
-    public float Gravity { get; set; }
+    public float Gravity { get; set; } = 0f;
 
     /// <summary>
     /// スケール加速度
     /// </summary>
-    public float ScaleAcceleration { get; set; }
+    public float ScaleAcceleration { get; set; } = 0f;
 
     /// <summary>
     /// 回転加速度
     /// </summary>
-    public float RotationAcceleration { get; set; }
+    public float RotationAcceleration { get; set; } = 0f;
 
     /// <summary>
     /// アルファ加速度
     /// </summary>
-    public float AlphaAcceleration { get; set; }
+    public float AlphaAcceleration { get; set; } = 0f;
 
     /// <summary>
     /// 寿命
     /// </summary>
-    public float LifeTime { get; set; }
+    public float LifeTime { get; set; } = 1f;
 
     /// <summary>
     /// 痕跡を残す時間
     /// </summary>
-    public float TraceTime { get; set; }
+    public float TraceTime { get; set; } = 0f;
 
     /// <summary>
     /// 自分自身で破壊するかどうか
     /// </summary>
-    public bool IsSelfDestructive { get; set; }
+    public bool IsSelfDestructive { get; set; } = true;
 
     //-------------------------------------------------------------------------
     // メソッド

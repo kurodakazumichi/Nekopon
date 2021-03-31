@@ -282,9 +282,9 @@ namespace MyGame.Unit.Effect
       particle.Velocity = v;
 
       // その他設定
-      BURST_TRACE_PROPS.Sprite  = particle.Sprite;
+      BURST_TRACE_PROPS.Sprite  = particle.MainSprite;
       BURST_TRACE_PROPS.Gravity = Random.Range(MIN_GRAVITY, MAX_GRAVITY);
-            
+      
       particle.SetTrace(BURST_TRACE_PROPS, TRACE_TIME);
     }
   }

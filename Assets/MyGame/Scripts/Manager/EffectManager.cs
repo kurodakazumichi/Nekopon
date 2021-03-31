@@ -38,6 +38,7 @@ namespace MyGame
       Ice,
       Leaves,
       Ghost,
+      Twinkle,
     }
 
     //-------------------------------------------------------------------------
@@ -58,6 +59,7 @@ namespace MyGame
       Ice.Load(pre, done);
       Leaves.Load(pre, done);
       Ghost.Load(pre, done);
+      Twinkle.Load(pre, done);
     }
 
     public static void Unload()
@@ -67,6 +69,7 @@ namespace MyGame
       Ice.Unload();
       Leaves.Unload();
       Ghost.Unload();
+      Twinkle.Unload();
     }
 
     //-------------------------------------------------------------------------
@@ -83,6 +86,7 @@ namespace MyGame
       InitPool<Ice>(Type.Ice);
       InitPool<Leaves>(Type.Leaves);
       InitPool<Ghost>(Type.Ghost);
+      InitPool<Twinkle>(Type.Twinkle);
     }
 
     protected override void OnMyDestory()
