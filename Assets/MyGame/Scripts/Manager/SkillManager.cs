@@ -76,6 +76,7 @@ namespace MyGame
       SkillThu.Load(pre, done);
       SkillIce.Load(pre, done);
       SkillTre.Load(pre, done);
+      SkillDar.Load(pre, done);
     }
 
     public static void Unload()
@@ -86,6 +87,7 @@ namespace MyGame
       SkillThu.Unload();
       SkillIce.Unload();
       SkillTre.Unload();
+      SkillDar.Unload();
     }
 
     //-------------------------------------------------------------------------
@@ -103,6 +105,7 @@ namespace MyGame
       InitPoolForSkill<SkillThu>(Define.App.Attribute.Thu);
       InitPoolForSkill<SkillIce>(Define.App.Attribute.Ice);
       InitPoolForSkill<SkillTre>(Define.App.Attribute.Tre);
+      InitPoolForSkill<SkillDar>(Define.App.Attribute.Dar);
     }
 
     protected override void OnMyDestory()

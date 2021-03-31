@@ -275,7 +275,7 @@ namespace MyGame.Unit.Versus
       }
       // 不可視(闇)
       if (Input.GetKeyDown(KeyCode.Alpha7)) {
-        this.puzzle.Invisible();
+        FireSkill(Define.App.Attribute.Dar);
       }
     }
 
