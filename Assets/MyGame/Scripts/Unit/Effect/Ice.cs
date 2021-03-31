@@ -92,20 +92,14 @@ namespace MyGame.Unit.Effect
     /// <summary>
     /// 雫のテクスチャ
     /// </summary>
-    public static Sprite OuterSprite = null;
-    public static Sprite InnerSprite = null;
-
-    /// <summary>
-    /// 加算合成用マテリアル
-    /// </summary>
-    public static Material Material;
+    private static Sprite OuterSprite = null;
+    private static Sprite InnerSprite = null;
 
     public static void Load(System.Action pre, System.Action done)
     {
       var rs = ResourceSystem.Instance;
       rs.Load<Sprite>("Skill.Ice.01.sprite", pre, done, (res) => { OuterSprite = res; });
       rs.Load<Sprite>("Skill.Ice.02.sprite", pre, done, (res) => { InnerSprite = res; });
-      rs.Load<Material>("Common.Additive.material", pre, done, (res) => { Material = res; });
     }
 
     public static void Unload()
@@ -113,10 +107,8 @@ namespace MyGame.Unit.Effect
       var rs = ResourceSystem.Instance;
       rs.Unload("Skill.Ice.01.sprite");
       rs.Unload("Skill.Ice.02.sprite");
-      rs.Unload("Common.Additive.material");
       OuterSprite = null;
       InnerSprite = null;
-      Material = null;
     }
 
     //-------------------------------------------------------------------------

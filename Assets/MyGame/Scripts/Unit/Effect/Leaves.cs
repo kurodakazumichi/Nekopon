@@ -66,20 +66,14 @@ namespace MyGame.Unit.Effect
     /// <summary>
     /// 葉っぱのテクスチャ
     /// </summary>
-    public static Sprite Sprite1 = null;
-    public static Sprite Sprite2 = null;
-
-    /// <summary>
-    /// 加算合成用マテリアル
-    /// </summary>
-    public static Material Material;
+    private static Sprite Sprite1 = null;
+    private static Sprite Sprite2 = null;
 
     public static void Load(System.Action pre, System.Action done)
     {
       var rs = ResourceSystem.Instance;
       rs.Load<Sprite>("Skill.Tre.01.sprite", pre, done, (res) => { Sprite1 = res; });
       rs.Load<Sprite>("Skill.Tre.02.sprite", pre, done, (res) => { Sprite2 = res; });
-      rs.Load<Material>("Common.Additive.material", pre, done, (res) => { Material = res; });
     }
 
     public static void Unload()
@@ -87,10 +81,8 @@ namespace MyGame.Unit.Effect
       var rs = ResourceSystem.Instance;
       rs.Unload("Skill.Ice.01.sprite");
       rs.Unload("Skill.Ice.02.sprite");
-      rs.Unload("Common.Additive.material");
       Sprite1 = null;
       Sprite2 = null;
-      Material = null;
     }
 
     //-------------------------------------------------------------------------
