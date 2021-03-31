@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace MyGame.Unit.Versus
 {
-  public partial class SkillWat : SkillBase<SkillWat.State>, SkillManager.ISkill 
+  public partial class SkillWat : SkillBase<SkillWat.State>
   {
     /// <summary>
     /// 状態
@@ -40,7 +40,7 @@ namespace MyGame.Unit.Versus
     /// <summary>
     /// 雨のエフェクト
     /// </summary>
-    EffectManager.IEffect effect = null;
+    IEffect effect = null;
 
     //-------------------------------------------------------------------------
     // Load, Unload

@@ -21,7 +21,7 @@ namespace MyGame.Unit.Versus
     /// <summary>
     /// 幽霊エフェクト
     /// </summary>
-    EffectManager.IEffect effect = null;
+    IEffect effect = null;
 
     //-------------------------------------------------------------------------
     // Load, Unload

@@ -5,7 +5,7 @@ namespace MyGame.Unit.Effect
   /// <summary>
   /// エフェクトの基底クラス
   /// </summary>
-  public abstract class EffectBase<T> : Unit<T>, EffectManager.IEffect where T : System.Enum
+  public abstract class EffectBase<T> : Unit<T>, IEffect where T : System.Enum
   {
     /// <summary>
     /// エフェクトの効果発動時に呼びたいアクション

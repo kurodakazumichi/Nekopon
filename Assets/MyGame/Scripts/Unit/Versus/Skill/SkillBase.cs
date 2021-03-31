@@ -7,7 +7,7 @@ namespace MyGame.Unit.Versus
   /// <summary>
   /// 属性スキルのベースクラス
   /// </summary>
-  public abstract class SkillBase<TState> : Unit<TState>, SkillManager.ISkill where TState : System.Enum
+  public abstract class SkillBase<TState> : Unit<TState>, ISkill where TState : System.Enum
   {
     //-------------------------------------------------------------------------
     // メンバ変数
@@ -43,7 +43,7 @@ namespace MyGame.Unit.Versus
     //-------------------------------------------------------------------------
     // ISkill Interfaceの実装
 
-    public virtual SkillManager.ISkill Init(Define.App.Attribute attribute)
+    public virtual ISkill Init(Define.App.Attribute attribute)
     {
       Attribute = attribute;
       return this;

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace MyGame.Unit.Versus
 {
-  public class SkillTre : SkillBase<SkillTre.State>, SkillManager.ISkill
+  public class SkillTre : SkillBase<SkillTre.State>
   {
     /// <summary>
     /// 状態
@@ -21,7 +21,7 @@ namespace MyGame.Unit.Versus
     /// <summary>
     /// 木の葉エフェクト
     /// </summary>
-    EffectManager.IEffect effect = null;
+    IEffect effect = null;
 
     //-------------------------------------------------------------------------
     // Load, Unload

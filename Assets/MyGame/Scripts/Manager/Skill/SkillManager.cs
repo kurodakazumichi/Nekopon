@@ -1,7 +1,6 @@
-﻿using System.Collections;
+﻿using MyGame.Unit.Versus;
 using System.Collections.Generic;
 using UnityEngine;
-using MyGame.Unit.Versus;
 
 namespace MyGame
 {
@@ -10,48 +9,6 @@ namespace MyGame
   /// </summary>
   public class SkillManager : SingletonMonoBehaviour<SkillManager>
   {
-    /// <summary>
-    /// 攻撃ユニットのInterface
-    /// </summary>
-    public interface IAttack : IPoolable
-    {
-      /// <summary>
-      /// セットアップ可能
-      /// </summary>
-      void Setup();
-
-      /// <summary>
-      /// Idleに出来る
-      /// </summary>
-      void ToIdle();
-    }
-
-    /// <summary>
-    /// 属性スキルユニットのInterface
-    /// </summary>
-    public interface ISkill : IPoolable
-    {
-      /// <summary>
-      /// 属性
-      /// </summary>
-      Define.App.Attribute Attribute { get; }
-
-      /// <summary>
-      /// 初期化
-      /// </summary>
-      ISkill Init(Define.App.Attribute attribute);
-
-      /// <summary>
-      /// セットアップ可能
-      /// </summary>
-      void Setup();
-
-      /// <summary>
-      /// 発動可能
-      /// </summary>
-      void Fire(Player owner, Player target);
-    }
-
     //-------------------------------------------------------------------------
     // メンバ変数
 
