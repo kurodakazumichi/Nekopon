@@ -165,10 +165,13 @@ namespace MyGame.Unit.Versus
       }
 
       /// <summary>
-      /// 回復する
+      /// 最大HPのrate%の回復をする
       /// </summary>
-      public void Recover(float recovery)
+      public void Recover(float rate)
       {
+        // 最大HPと割合から回復量を算出
+        var recovery = this.hp.Max * rate;
+
         // HPの差分(リアルダメージ)
         var real_damage = this.hp.Diff;
         

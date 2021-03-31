@@ -271,7 +271,7 @@ namespace MyGame.Unit.Versus
       }
       // 体力回復(聖)
       if (Input.GetKeyDown(KeyCode.Alpha6)) {
-        Recover(Random.Range(300, 600));
+        FireSkill(Define.App.Attribute.Hol);
       }
       // 不可視(闇)
       if (Input.GetKeyDown(KeyCode.Alpha7)) {
@@ -410,11 +410,11 @@ namespace MyGame.Unit.Versus
     }
 
     /// <summary>
-    /// 回復する
+    /// 最大HPのrate%回復する
     /// </summary>
-    public void Recover(float points)
+    public void Recover(float rate)
     {
-      this.status.Recover(points);
+      this.status.Recover(rate);
     }
 
 #if _DEBUG
