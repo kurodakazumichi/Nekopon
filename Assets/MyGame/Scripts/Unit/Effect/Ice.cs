@@ -271,6 +271,10 @@ namespace MyGame.Unit.Effect
       const float MIN_GRAVITY = 1f;
       const float MAX_GRAVITY = 5f;
 
+      // 自滅設定
+      particle.IsSelfDestructive = true;
+      particle.LifeTime = BURST_TIME;
+
       // 原点からParticleに向かうベクトルから速度を決定
       var p1 = CacheTransform.position;
       var p2 = particle.CacheTransform.position;
