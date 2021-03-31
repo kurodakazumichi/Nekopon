@@ -43,6 +43,9 @@ namespace MyGame.Unit.Effect
     //-------------------------------------------------------------------------
     // メンバ変数
 
+    /// <summary>
+    /// 幽霊用パーティクル
+    /// </summary>
     private readonly IParticle[] ghosts = new IParticle[GHOST_COUNT];
 
     //-------------------------------------------------------------------------
@@ -121,17 +124,20 @@ namespace MyGame.Unit.Effect
 
     private void OnHauntedUpdate() 
     {
-      const float ROTATION_INTERVAL = 360f / GHOST_COUNT;
+      const float INTERVAL = 360f / GHOST_COUNT;
+      const float ROTATION = 45f;
       const float RADIUS = 0.3f;
+      const float FADE_SPEED = 3f;
 
       Util.ForEach(this.ghosts, (ghost, index) => 
       { 
-        var rotation = Quaternion.AngleAxis(this.timer * 45f + ROTATION_INTERVAL * index, Vector3.forward);
+        var rotation 
+        = Quaternion.AngleAxis(this.timer * ROTATION + INTERVAL * index, Vector3.forward);
 
         ghost.CacheTransform.position
           = CacheTransform.position + rotation * Vector3.right * RADIUS;
 
-        ghost.Alpha = Mathf.Min(1f, this.timer * 3f);
+        ghost.Alpha = Mathf.Min(1f, FADE_SPEED * this.timer);
       });
 
       UpdateTimer();
@@ -147,12 +153,15 @@ namespace MyGame.Unit.Effect
     
     private void OnLeaveEnter()
     {
-      Util.ForEach(this.ghosts, (ghost, index) => { 
+      const float ALPHA_ACCELE = -1f;
+      const float BRIGHTNESS   = 0.2f;
+
+      Util.ForEach(this.ghosts, (ghost, index) => {
+        ghost.Sprite            = Sprite2;
         ghost.IsSelfDestructive = true;
-        ghost.LifeTime = LEAVE_TIME;
-        ghost.AlphaAcceleration = -1f;
-        ghost.Brightness = 0.2f;
-        ghost.Sprite = Sprite2;
+        ghost.AlphaAcceleration = ALPHA_ACCELE;
+        ghost.Brightness        = BRIGHTNESS;
+        ghost.LifeTime          = LEAVE_TIME;
       });
 
       Action?.Invoke();
