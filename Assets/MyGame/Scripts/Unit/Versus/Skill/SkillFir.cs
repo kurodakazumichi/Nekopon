@@ -179,7 +179,9 @@ namespace MyGame.Unit.Versus
         this.target.TakeDamage(Random.Range(MIN_DAMAGE, MAX_DAMAGE));
       }
 
-      // TODO: エフェクトを再生予定
+      // エフェクト生成
+      EffectManager.Instance.Create(EffectManager.Type.Spark)
+        .Fire(CacheTransform.position);
 
       // スキルを返却
       SkillManager.Instance.Release(this);

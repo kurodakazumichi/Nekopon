@@ -21,8 +21,8 @@ MonoBehaviour:
     m_Address: Skill.Thu.01.sprite
     m_ReadOnly: 0
     m_SerializedLabels: []
-    m_MainAsset: {fileID: 2800000, guid: 1fd5e5b4fca37c849b8d3c8c307b1447, type: 3}
-    m_TargetAsset: {fileID: 2800000, guid: 1fd5e5b4fca37c849b8d3c8c307b1447, type: 3}
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
   - m_GUID: 21c5040a1c667a34daff5823963f9fe7
     m_Address: Skill.Dar.02.sprite
     m_ReadOnly: 0
@@ -33,8 +33,8 @@ MonoBehaviour:
     m_Address: Skill.Ice.01.sprite
     m_ReadOnly: 0
     m_SerializedLabels: []
-    m_MainAsset: {fileID: 2800000, guid: 61d5f84c6179afe4cbe120b94fbd0df1, type: 3}
-    m_TargetAsset: {fileID: 2800000, guid: 61d5f84c6179afe4cbe120b94fbd0df1, type: 3}
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
   - m_GUID: 661daefc45e95b643a0841a10f3e0fa1
     m_Address: Skill.Wat.01.sprite
     m_ReadOnly: 0
@@ -45,8 +45,8 @@ MonoBehaviour:
     m_Address: Skill.Ice.02.sprite
     m_ReadOnly: 0
     m_SerializedLabels: []
-    m_MainAsset: {fileID: 2800000, guid: 69d776c5796ba1a4b9d436e7a646763b, type: 3}
-    m_TargetAsset: {fileID: 2800000, guid: 69d776c5796ba1a4b9d436e7a646763b, type: 3}
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
   - m_GUID: 6f1e6a560edfadc4b94730407ac3a545
     m_Address: Skill.Tre.02.sprite
     m_ReadOnly: 0
@@ -59,12 +59,18 @@ MonoBehaviour:
     m_SerializedLabels: []
     m_MainAsset: {fileID: 2800000, guid: 74e547761e2515c468c4bc7f4b64df21, type: 3}
     m_TargetAsset: {fileID: 2800000, guid: 74e547761e2515c468c4bc7f4b64df21, type: 3}
+  - m_GUID: 8a412f3c542b62948a8b51aa2fc44760
+    m_Address: Skill.Fir.02.sprite
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 2800000, guid: 8a412f3c542b62948a8b51aa2fc44760, type: 3}
+    m_TargetAsset: {fileID: 2800000, guid: 8a412f3c542b62948a8b51aa2fc44760, type: 3}
   - m_GUID: a20f996e49a97ef48a479f9be89bffc9
     m_Address: Skill.Cloud.sprite
     m_ReadOnly: 0
     m_SerializedLabels: []
-    m_MainAsset: {fileID: 2800000, guid: a20f996e49a97ef48a479f9be89bffc9, type: 3}
-    m_TargetAsset: {fileID: 2800000, guid: a20f996e49a97ef48a479f9be89bffc9, type: 3}
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
   - m_GUID: a9619bdd89480fe428e858150c85bab6
     m_Address: Skill.Dar.01.sprite
     m_ReadOnly: 0
@@ -75,8 +81,8 @@ MonoBehaviour:
     m_Address: Skill.Fir.01.sprite
     m_ReadOnly: 0
     m_SerializedLabels: []
-    m_MainAsset: {fileID: 2800000, guid: b1807c96fd5c0454faf7238757f975b0, type: 3}
-    m_TargetAsset: {fileID: 2800000, guid: b1807c96fd5c0454faf7238757f975b0, type: 3}
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
   - m_GUID: bf8f6541fc8758a489e8f5f18be6a69b
     m_Address: Skill.Hol.02.sprite
     m_ReadOnly: 0
@@ -111,8 +117,8 @@ MonoBehaviour:
     m_Address: Skill.Wat.02.sprite
     m_ReadOnly: 0
     m_SerializedLabels: []
-    m_MainAsset: {fileID: 2800000, guid: fdb9f7fe8ebc8ac44a12622b7cb37172, type: 3}
-    m_TargetAsset: {fileID: 2800000, guid: fdb9f7fe8ebc8ac44a12622b7cb37172, type: 3}
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 8c2478ab617b39d41897f31592ccbc8b, type: 2}
   m_SchemaSet:

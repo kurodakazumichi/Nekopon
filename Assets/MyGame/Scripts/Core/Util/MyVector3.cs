@@ -8,5 +8,14 @@ namespace MyGame
     {
       return v1 + (v2 - v1) * rate;
     }
+
+    public static Vector3 Random()
+    {
+      return new Vector3(
+        UnityEngine.Random.Range(-1f, 1f),
+        UnityEngine.Random.Range(-1f, 1f),
+        0
+      );
+    }
   }
 }

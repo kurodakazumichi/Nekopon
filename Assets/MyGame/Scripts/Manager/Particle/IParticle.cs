@@ -85,6 +85,11 @@ namespace MyGame
     Vector3 Velocity { set; }
 
     /// <summary>
+    /// 重力
+    /// </summary>
+    float Gravity { set; }
+
+    /// <summary>
     /// スケーリング速度
     /// </summary>
     float ScaleAcceleration { set; }
