@@ -44,6 +44,11 @@ namespace MyGame.Unit.Particle
     // プロパティ
 
     /// <summary>
+    /// パーティクルのタイプ
+    /// </summary>
+    public ParticleManager.Type Type { get; private set; }
+
+    /// <summary>
     /// Main用のマテリアル
     /// </summary>
     protected Material MainMaterial {
@@ -64,7 +69,10 @@ namespace MyGame.Unit.Particle
     //-------------------------------------------------------------------------
     // IParticleの実装
 
-    public abstract void Setup();
+    public virtual void Setup(ParticleManager.Type type)
+    {
+      Type = type;
+    }
 
     /// <summary>
     /// セットアップ
@@ -289,7 +297,6 @@ namespace MyGame.Unit.Particle
 
       if (this.traceTimer < 0) {
         var p = ParticleManager.Instance.Create(ParticleManager.Type.Standard);
-        p.Setup();
         p.Setup(this.trace);
         p.Fire(CacheTransform.position, CacheTransform.localScale, CacheTransform.rotation);
         this.traceTimer = TraceTime;

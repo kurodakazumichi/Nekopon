@@ -85,16 +85,16 @@ namespace MyGame
     public IParticle Create(Type type)
     {
       var effect = this.pools[(int)type].Create();
-      effect.Setup();
+      effect.Setup(type);
       return effect;
     }
 
     /// <summary>
     /// エフェクトを解除、使い終わったらエフェクトはReleaseしてプールに戻す
     /// </summary>
-    public void Release(Type type, IParticle effect)
+    public void Release(IParticle effect)
     {
-      this.pools[(int)type].Release(effect, CacheTransform);
+      this.pools[(int)effect.Type].Release(effect, CacheTransform);
     }
 
 #if _DEBUG

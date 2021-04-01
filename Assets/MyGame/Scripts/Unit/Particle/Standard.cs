@@ -43,8 +43,9 @@ namespace MyGame.Unit.Particle
     /// <summary>
     /// セットアップ
     /// </summary>
-    public override void Setup()
+    public override void Setup(ParticleManager.Type type)
     {
+      base.Setup(type);
       GlowMaterial = Material;
       Brightness = 0;
     }
@@ -117,7 +118,7 @@ namespace MyGame.Unit.Particle
     private void OnUsualExit()
     {
       isTraceEnabled = false;
-      ParticleManager.Instance.Release(ParticleManager.Type.Standard, this);
+      ParticleManager.Instance.Release(this);
     }
   }
 }

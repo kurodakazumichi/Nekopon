@@ -14,7 +14,7 @@ namespace MyGame
     /// <summary>
     /// 標準セットアップ
     /// </summary>
-    void Setup();
+    void Setup(ParticleManager.Type type);
 
     /// <summary>
     /// Propsを要するセットアップ
@@ -33,6 +33,11 @@ namespace MyGame
 
     //-------------------------------------------------------------------------
     // プロパティ系
+
+    /// <summary>
+    /// パーティクルのタイプ
+    /// </summary>
+    ParticleManager.Type Type { get; }
 
     /// <summary>
     /// Transform
