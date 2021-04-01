@@ -8,6 +8,11 @@ namespace MyGame.Define
   public static class App
   {
     /// <summary>
+    /// 画面下の座標
+    /// </summary>
+    public const float SCREEN_BOTTOM = -0.75f;
+
+    /// <summary>
     /// 属性の種類、配列の添え字としても利用するため0からの連番で定義
     /// </summary>
     public enum Attribute

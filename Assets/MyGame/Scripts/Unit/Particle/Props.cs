@@ -36,6 +36,16 @@ namespace MyGame.Unit.Particle
     /// </summary>
     public bool IsSelfDestructive = true;
 
+    /// <summary>
+    /// バウンドが有効かどうか
+    /// </summary>
+    public bool IsBoundEnabled = false;
+
+    /// <summary>
+    /// 弾力
+    /// </summary>
+    public float Elasticity = 0f;
+
     public void Copy(Props props)
     {
       if (props == null) {
@@ -57,6 +67,8 @@ namespace MyGame.Unit.Particle
       RotationAcceleration = props.RotationAcceleration;
       ScaleAcceleration    = props.ScaleAcceleration;
       IsSelfDestructive    = props.IsSelfDestructive;
+      IsBoundEnabled       = props.IsBoundEnabled;
+      Elasticity           = props.Elasticity;
     }
 
     public Props Clone()
@@ -78,6 +90,8 @@ namespace MyGame.Unit.Particle
         AlphaAcceleration    = this.AlphaAcceleration,
         LifeTime             = this.LifeTime,
         IsSelfDestructive    = this.IsSelfDestructive,
+        IsBoundEnabled       = this.IsBoundEnabled,
+        Elasticity           = this.Elasticity,
       };
       return props;
     }

@@ -5,6 +5,9 @@ namespace MyGame.Unit.Particle
 
   public class Standard : Base<Standard.State>
   {
+    /// <summary>
+    /// 状態
+    /// </summary>
     public enum State { 
       Idle,
       Usual,
@@ -109,6 +112,7 @@ namespace MyGame.Unit.Particle
       OperateAlpha(deltaTime);
       OperateTrace(deltaTime);
       OperateLifeTime(deltaTime);
+      OperateBound();
 
       if (NeedToIdle) {
         this.state.SetState(State.Idle);

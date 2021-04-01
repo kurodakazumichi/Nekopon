@@ -40,6 +40,16 @@ namespace MyGame.Unit.Particle
     /// </summary>
     protected bool isTraceEnabled = false;
 
+    /// <summary>
+    /// バウンドが有効化どうか
+    /// </summary>
+    protected bool isBoundEnabled = false;
+
+    /// <summary>
+    /// 弾力(バウンドの強さ)
+    /// </summary>
+    protected float elasticity = 0f;
+
     //-------------------------------------------------------------------------
     // プロパティ
 
@@ -80,7 +90,7 @@ namespace MyGame.Unit.Particle
     public virtual void Setup(Props props)
     {
       // SpriteRendererに関するパラメータ設定
-      Sprite = props.Sprite;
+      Sprite    = props.Sprite;
       LayerName = props.LayerName;
 
       if (props.MainMaterial) {
@@ -90,9 +100,8 @@ namespace MyGame.Unit.Particle
         GlowMaterial = props.GlowMaterial;
       }
 
-      Alpha      = props.Alpha;
-      Brightness = props.Brightness;
-
+      Alpha                = props.Alpha;
+      Brightness           = props.Brightness;
       Velocity             = props.Velocity;
       Gravity              = props.Gravity;
       RotationAcceleration = props.RotationAcceleration;
@@ -100,6 +109,8 @@ namespace MyGame.Unit.Particle
       ScaleAcceleration    = props.ScaleAcceleration;
       LifeTime             = props.LifeTime;
       IsSelfDestructive    = props.IsSelfDestructive;
+      isBoundEnabled       = props.IsBoundEnabled;
+      elasticity           = props.Elasticity;
 
       this.main.gameObject.SetActive(props.MainIsEnabled);
       this.glow.gameObject.SetActive(props.GlowIsEnabled);
@@ -118,6 +129,15 @@ namespace MyGame.Unit.Particle
       
       TraceTime = time;
       this.traceTimer = 0;
+    }
+
+    /// <summary>
+    /// バウンドの設定
+    /// </summary>
+    public void SetBound(bool enabled, float elasticity)
+    {
+      this.isBoundEnabled = enabled;
+      this.elasticity = elasticity;
     }
 
     /// <summary>
@@ -312,6 +332,28 @@ namespace MyGame.Unit.Particle
     {
       if (!IsSelfDestructive) return;
       this.LifeTime -= deltaTime;
+    }
+
+    /// <summary>
+    /// バウンドの操作
+    /// </summary>
+    protected virtual void OperateBound()
+    {
+      if (!this.isBoundEnabled) return;
+
+      var pos = CacheTransform.position;
+
+      if (pos.y < Define.App.SCREEN_BOTTOM) 
+      {
+        // 位置補正
+        pos.y = Define.App.SCREEN_BOTTOM;
+        CacheTransform.position = pos;
+
+        // 速度反転
+        var v = Velocity;
+        v.y *= -this.elasticity;
+        Velocity = v;
+      }
     }
 
     /// <summary>

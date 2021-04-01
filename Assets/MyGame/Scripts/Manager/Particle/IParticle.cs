@@ -27,6 +27,11 @@ namespace MyGame
     void SetTrace(Props props, float time = 0);
 
     /// <summary>
+    /// バウンドの設定
+    /// </summary>
+    void SetBound(bool enabled, float elasticity);
+
+    /// <summary>
     /// 発動
     /// </summary>
     void Fire(Vector3 position, Vector3? scale = null, Quaternion? rotation = null);

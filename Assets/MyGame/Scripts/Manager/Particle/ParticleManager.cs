@@ -152,8 +152,6 @@ namespace MyGame
           GUILayout.Label("Brightness");
           props.Brightness = GUILayout.HorizontalSlider(props.Brightness, 0, 1f);
         });
-
-
       }
 
       using (new GUILayout.HorizontalScope(GUI.skin.box)) 
@@ -188,6 +186,17 @@ namespace MyGame
         GUIVerticalScope(() => { 
           GUILayout.Label("Gravity");
           props.Gravity = GUILayout.HorizontalSlider(props.Gravity, -1f, 1f);
+        });
+      }
+
+      using (new GUILayout.HorizontalScope(GUI.skin.box)) 
+      {
+        props.IsBoundEnabled
+          = GUILayout.Toggle(props.IsBoundEnabled, "IsBoundEnabled");
+
+        GUIVerticalScope(() => { 
+          GUILayout.Label("Elasticity");
+          props.Elasticity = GUILayout.HorizontalSlider(props.Elasticity, 0f, 1f);
         });
       }
 
