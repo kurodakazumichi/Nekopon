@@ -197,10 +197,10 @@ namespace MyGame
     /// <summary>
     /// 固有スキルを生成
     /// </summary>
-    public IUniqueSkill Create(Define.App.UniqueSkill skillType, Define.App.Cat catType)
+    public IUniqueSkill Create(Define.App.UniqueSkill skillType, Player owner, Player target)
     {
       var unit = this.uniques.Create();
-      unit.Setup(skillType, catType);
+      unit.Setup(skillType, owner, target);
       return unit;
     }
 

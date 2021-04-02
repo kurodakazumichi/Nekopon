@@ -93,7 +93,7 @@ namespace MyGame.Unit.Versus
     /// <summary>
     /// 猫の種類
     /// </summary>
-    private Define.App.Cat catType = default;
+    public Define.App.Cat catType { get; private set; } = default;
 
     /// <summary>
     /// 攻撃ユニット
@@ -276,6 +276,12 @@ namespace MyGame.Unit.Versus
       // 不可視(闇)
       if (Input.GetKeyDown(KeyCode.Alpha7)) {
         FireSkill(Define.App.Attribute.Dar);
+      }
+
+      if (Input.GetKeyDown(KeyCode.Alpha8) && Type == Define.App.Player.P1) {
+        var owner = this;
+        var target = VersusManager.Instance.GetTargetPlayerBy(Type);
+        SkillManager.Instance.Create(Define.App.UniqueSkill.Invincible, owner, target).Fire();
       }
     }
 
