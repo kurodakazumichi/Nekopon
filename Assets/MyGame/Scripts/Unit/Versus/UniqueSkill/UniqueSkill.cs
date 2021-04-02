@@ -108,6 +108,9 @@ namespace MyGame.Unit.Versus
 
       this.cutin.MainFlipX = owner.Type == Define.App.Player.P1;
       this.cutin.Brightness = 1f;
+
+      // 通常のタイマーを止める
+      TimeSystem.Instance.TimeScale = 0f;
     }
 
     public void Fire()
@@ -193,7 +196,16 @@ namespace MyGame.Unit.Versus
 
     private void OnInvokeExit()
     {
+      TimeSystem.Instance.TimeScale = 1f;
       SkillManager.Instance.Release(this);
+    }
+
+    /// <summary>
+    /// Skill用の時間を使用する
+    /// </summary>
+    protected override void UpdateTimer()
+    {
+      this.timer += TimeSystem.Instance.SkillDeltaTime;
     }
   }
 
