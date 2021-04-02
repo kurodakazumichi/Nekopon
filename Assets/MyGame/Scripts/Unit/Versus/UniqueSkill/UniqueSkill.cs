@@ -37,6 +37,16 @@ namespace MyGame.Unit.Versus
     /// </summary>
     private Player target = null;
 
+    /// <summary>
+    /// 開始時のスケール
+    /// </summary>
+    private Vector3 startScale = Vector3.zero;
+
+    /// <summary>
+    /// 目標のスケール
+    /// </summary>
+    private Vector3 targetScale = Vector3.zero;
+
     //-------------------------------------------------------------------------
     // Load, Unload
 
@@ -95,6 +105,9 @@ namespace MyGame.Unit.Versus
         Sprites[(int)this.owner.catType],
         Define.Layer.Sorting.UI
       );
+
+      this.cutin.MainFlipX = owner.Type == Define.App.Player.P1;
+      this.cutin.Brightness = 1f;
     }
 
     public void Fire()
@@ -107,8 +120,14 @@ namespace MyGame.Unit.Versus
 
     private void OnPhase1Enter()
     {
+      const float SCALE_Y = 0.01f;
+
+      this.startScale  = new Vector3(0, SCALE_Y, 1f);
+      this.targetScale = new Vector3(1f, SCALE_Y, 1f);
+
       this.cutin.CacheTransform.localScale
-        = Vector3.zero;
+        = this.startScale;
+
       this.timer = 0;
     }
 
@@ -117,7 +136,7 @@ namespace MyGame.Unit.Versus
       var rate = this.timer / 0.1f;
 
       this.cutin.CacheTransform.localScale
-        = Vector3.Lerp(Vector3.zero, new Vector3(-1f, 0.01f, 1), rate);
+        = Vector3.Lerp(this.startScale, this.targetScale, rate);
 
       UpdateTimer();
 
@@ -131,8 +150,12 @@ namespace MyGame.Unit.Versus
 
     private void OnPhase2Enter()
     {
+      this.cutin.CacheTransform.localScale = this.targetScale;
+
+      this.startScale = this.targetScale;
+      this.targetScale.y = 1f;
+
       this.timer = 0;
-      this.cutin.CacheTransform.localScale = new Vector3(-1f, 0.01f, 1);
     }
 
     private void OnPhase2Update()
@@ -140,7 +163,7 @@ namespace MyGame.Unit.Versus
       var rate = this.timer / 0.1f;
 
       this.cutin.CacheTransform.localScale
-        = Vector3.Lerp(new Vector3(-1f, 0.01f, 1), Vector3.one, rate);
+        = Vector3.Lerp(this.startScale, this.targetScale, rate);
 
       UpdateTimer();
 
@@ -152,12 +175,15 @@ namespace MyGame.Unit.Versus
     private void OnInvokeEnter()
     {
       this.timer = 0;
-      this.cutin.CacheTransform.localScale = new Vector3(-1, 1, 1);
+      this.cutin.CacheTransform.localScale = this.targetScale;
     }
 
     private void OnInvokeUpdate()
     {
       var rate = this.timer / 1f;
+
+      this.cutin.Brightness = Mathf.Max(0, 1f - 5f * rate);
+
       UpdateTimer();
 
       if (1f < this.timer) {

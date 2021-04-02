@@ -283,6 +283,12 @@ namespace MyGame.Unit.Versus
         var target = VersusManager.Instance.GetTargetPlayerBy(Type);
         SkillManager.Instance.Create(Define.App.UniqueSkill.Invincible, owner, target).Fire();
       }
+
+      if (Input.GetKeyDown(KeyCode.Alpha9) && Type == Define.App.Player.P2) {
+        var owner = this;
+        var target = VersusManager.Instance.GetTargetPlayerBy(Type);
+        SkillManager.Instance.Create(Define.App.UniqueSkill.Invincible, owner, target).Fire();
+      }
     }
 
     //-------------------------------------------------------------------------

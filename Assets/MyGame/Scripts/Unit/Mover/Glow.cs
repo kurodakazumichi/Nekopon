@@ -103,6 +103,16 @@ namespace MyGame.Unit.Mover
       }
     }
 
+    /// <summary>
+    /// MainのみX方向の反転
+    /// GlowをFlipすると加算合成がきかなくなってしまう。
+    /// </summary>
+    public bool MainFlipX {
+      set {
+        this.main.flipX = value;
+      }
+    }
+
     //-------------------------------------------------------------------------
     // ライフサイクル
 
