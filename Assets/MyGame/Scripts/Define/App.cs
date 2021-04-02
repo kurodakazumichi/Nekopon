@@ -27,6 +27,17 @@ namespace MyGame.Define
     }
 
     /// <summary>
+    /// 固有スキル
+    /// </summary>
+    public enum UniqueSkill
+    {
+      Invincible, // 無敵
+      Reflection, // 反射
+      Recovery,   // 回復
+      Swap,       // 入替
+    }
+
+    /// <summary>
     /// プレイヤーの種類
     /// </summary>
     public enum Player
