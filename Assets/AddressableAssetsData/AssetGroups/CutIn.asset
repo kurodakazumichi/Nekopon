@@ -1,0 +1,49 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: CutIn
+  m_EditorClassIdentifier: 
+  m_GroupName: CutIn
+  m_Data:
+    m_SerializedData: []
+  m_GUID: ce95165223432104497a5c064062d85c
+  m_SerializeEntries:
+  - m_GUID: 087d68eaa938e2f4795b9834bd42b6a6
+    m_Address: CutIn.Shiro.sprite
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 2800000, guid: 087d68eaa938e2f4795b9834bd42b6a6, type: 3}
+    m_TargetAsset: {fileID: 2800000, guid: 087d68eaa938e2f4795b9834bd42b6a6, type: 3}
+  - m_GUID: 42b423320a03ef04cbdf2f50c0d7b083
+    m_Address: CutIn.Nick.sprite
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 2800000, guid: 42b423320a03ef04cbdf2f50c0d7b083, type: 3}
+    m_TargetAsset: {fileID: 2800000, guid: 42b423320a03ef04cbdf2f50c0d7b083, type: 3}
+  - m_GUID: 467d1e0682d1e4d489deda29a280a87b
+    m_Address: CutIn.Tii.sprite
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 2800000, guid: 467d1e0682d1e4d489deda29a280a87b, type: 3}
+    m_TargetAsset: {fileID: 2800000, guid: 467d1e0682d1e4d489deda29a280a87b, type: 3}
+  - m_GUID: 5d454a3bee4d26e42a8346be64f400a3
+    m_Address: CutIn.Minchi.sprite
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 2800000, guid: 5d454a3bee4d26e42a8346be64f400a3, type: 3}
+    m_TargetAsset: {fileID: 2800000, guid: 5d454a3bee4d26e42a8346be64f400a3, type: 3}
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 8c2478ab617b39d41897f31592ccbc8b, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 6c819fd7649261f40b149014eef1008b, type: 2}
+    - {fileID: 11400000, guid: 55ee9b69d6eb822448edc815be700df8, type: 2}
