@@ -22,6 +22,11 @@ namespace MyGame
     /// </summary>
     private Dictionary<int, ObjectPool<ISkill>> skills = new Dictionary<int, ObjectPool<ISkill>>();
 
+    /// <summary>
+    /// Uniqueスキルオブジェクトプール
+    /// </summary>
+    private ObjectPool<IUniqueSkill> uniques = new ObjectPool<IUniqueSkill>();
+
     //-------------------------------------------------------------------------
     // Load, Unload
 
@@ -35,6 +40,7 @@ namespace MyGame
       SkillTre.Load(pre, done);
       SkillHol.Load(pre, done);
       SkillDar.Load(pre, done);
+      UniqueSkill.Load(pre, done);
     }
 
     public static void Unload()
@@ -47,6 +53,7 @@ namespace MyGame
       SkillTre.Unload();
       SkillHol.Unload();
       SkillDar.Unload();
+      UniqueSkill.Unload();
     }
 
     //-------------------------------------------------------------------------
@@ -66,6 +73,7 @@ namespace MyGame
       InitPoolForSkill<SkillTre>(Define.App.Attribute.Tre);
       InitPoolForSkill<SkillHol>(Define.App.Attribute.Hol);
       InitPoolForSkill<SkillDar>(Define.App.Attribute.Dar);
+      InitPoolForUniqueSkill();
     }
 
     protected override void OnMyDestory()
@@ -118,6 +126,19 @@ namespace MyGame
       this.skills.Add((int)attribute, pool);
     }
 
+    /// <summary>
+    /// 固有スキルオブジェクトプール
+    /// </summary>
+    public void InitPoolForUniqueSkill()
+    {
+      this.uniques.SetGenerator(() => {
+        return MyGameObject
+          .Create<UniqueSkill>("UniqueSkill", CacheTransform);
+      });
+
+      this.uniques.Reserve(2);
+    }
+
     //-------------------------------------------------------------------------
     // 通常攻撃
 
@@ -168,6 +189,27 @@ namespace MyGame
     private ObjectPool<ISkill> GetPoolForSkill(Define.App.Attribute attribute)
     {
       return this.skills[(int)attribute];
+    }
+
+    //-------------------------------------------------------------------------
+    // 固有スキル
+
+    /// <summary>
+    /// 固有スキルを生成
+    /// </summary>
+    public IUniqueSkill Create(Define.App.UniqueSkill skillType, Define.App.Cat catType)
+    {
+      var unit = this.uniques.Create();
+      unit.Setup(skillType, catType);
+      return unit;
+    }
+
+    /// <summary>
+    /// 固有スキルを返却
+    /// </summary>
+    public void Release(IUniqueSkill skill)
+    {
+      this.uniques.Release(skill, CacheTransform);
     }
   }
 }
