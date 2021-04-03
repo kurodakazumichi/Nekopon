@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace MyGame.Unit.Versus
 {
-  public class UniqueSkill : Unit<UniqueSkill.State>, IUniqueSkill
+  public class UniqueSkill : Unit<UniqueSkill.State>
   {
     public enum State
     {
@@ -92,12 +92,13 @@ namespace MyGame.Unit.Versus
     }
 
 
-    //-------------------------------------------------------------------------
-    // IUniqueSkill Interfaceの実装
-
-    public void Setup(Define.App.UniqueSkill skillType, Player owner, Player target)
+    public void Setup(Define.App.UniqueSkill skillType)
     {
       this.type = skillType;
+    }
+
+    public void Fire(Player owner, Player target)
+    {
       this.owner = owner;
       this.target = target;
 
@@ -111,10 +112,9 @@ namespace MyGame.Unit.Versus
 
       // 通常のタイマーを止める
       TimeSystem.Instance.TimeScale = 0f;
-    }
 
-    public void Fire()
-    {
+      SkillManager.Instance.IsLockUniqueSkill = true;
+
       this.state.SetState(State.Phase1);
     }
 
@@ -196,8 +196,9 @@ namespace MyGame.Unit.Versus
 
     private void OnInvokeExit()
     {
+      this.cutin.Setup(null, "");
+      SkillManager.Instance.IsLockUniqueSkill = false;
       TimeSystem.Instance.TimeScale = 1f;
-      SkillManager.Instance.Release(this);
     }
 
     /// <summary>

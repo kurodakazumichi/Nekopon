@@ -100,18 +100,38 @@ namespace MyGame.Unit.Versus
     /// </summary>
     private Attack attack = null;
 
-    //-------------------------------------------------------------------------
-    // プロパティ
+    /// <summary>
+    /// 固有スキル
+    /// </summary>
+    private UniqueSkill unique = null;
 
     /// <summary>
     /// 攻撃を反射可能
     /// </summary>
-    public bool CanReflect = false;
+    public bool CanReflect { get; set; } = false;
 
     /// <summary>
     /// 無敵フラグ
     /// </summary>
-    public bool IsInvincible = false;
+    public bool IsInvincible { get; set; } = false;
+
+    //-------------------------------------------------------------------------
+    // プロパティ
+
+    /// <summary>
+    /// 猫の種類で固有スキルを決定
+    /// </summary>
+    private Define.App.UniqueSkill UniqueSkillType {
+      get {
+        switch (this.catType) {
+          case Define.App.Cat.Minchi: return Define.App.UniqueSkill.Invincible;
+          case Define.App.Cat.Nick: return Define.App.UniqueSkill.Reflection;
+          case Define.App.Cat.Tii: return Define.App.UniqueSkill.Recovery;
+          case Define.App.Cat.Shiro: return Define.App.UniqueSkill.Swap;
+          default: return default;
+        }
+      }
+    }
 
     //-------------------------------------------------------------------------
     // Load, Unload
@@ -120,12 +140,14 @@ namespace MyGame.Unit.Versus
     {
       Gauges.Load(pre, done);
       Puzzle.Load(pre, done);
+      UniqueSkill.Load(pre, done);
     }
 
     public static void Unload()
     {
       Gauges.Unload();
       Puzzle.Unload();
+      UniqueSkill.Unload();
     }
 
     //-------------------------------------------------------------------------
@@ -166,10 +188,12 @@ namespace MyGame.Unit.Versus
       this.gauges = new Gauges(props).Init();
 
       // 猫を生成
-      this.cat = new GameObject("Cat").AddComponent<Cat>();
-      this.cat.SetParent(this.folder);
+      this.cat = MyGameObject.Create<Cat>("Cat", this.folder);
       this.cat.CacheTransform.position = this.Location.Cat;
       this.cat.Init(this.catType, this.Type == Define.App.Player.P2);
+
+      // ユニークスキルを生成
+      this.unique = MyGameObject.Create<UniqueSkill>("Unique", this.folder);
 
       return this;
     }
@@ -188,6 +212,9 @@ namespace MyGame.Unit.Versus
 
       // パズルのセットアップ
       this.puzzle.Setup();
+
+      // 固有スキルのセットアップ
+      this.unique.Setup(UniqueSkillType);
     }
 
     /// <summary>
@@ -251,50 +278,46 @@ namespace MyGame.Unit.Versus
 
       // 強制ダメージ(火)
       if (Input.GetKeyDown(KeyCode.Alpha1)) {
-        FireSkill(Define.App.Attribute.Fir);
+        FireAttributeSkill(Define.App.Attribute.Fir);
       }
       // 状態異常回復(水)
       if (Input.GetKeyDown(KeyCode.Alpha2)) {
-        FireSkill(Define.App.Attribute.Wat);
+        FireAttributeSkill(Define.App.Attribute.Wat);
       }
       // 麻痺(雷)
       if (Input.GetKeyDown(KeyCode.Alpha3)) {
-        FireSkill(Define.App.Attribute.Thu);
+        FireAttributeSkill(Define.App.Attribute.Thu);
       }
       // 凍結(氷)
       if (Input.GetKeyDown(KeyCode.Alpha4)) {
-        FireSkill(Define.App.Attribute.Ice);
+        FireAttributeSkill(Define.App.Attribute.Ice);
       }
       // ランダム化
       if (Input.GetKeyDown(KeyCode.Alpha5)) {
-        FireSkill(Define.App.Attribute.Tre);
+        FireAttributeSkill(Define.App.Attribute.Tre);
       }
       // 体力回復(聖)
       if (Input.GetKeyDown(KeyCode.Alpha6)) {
-        FireSkill(Define.App.Attribute.Hol);
+        FireAttributeSkill(Define.App.Attribute.Hol);
       }
       // 不可視(闇)
       if (Input.GetKeyDown(KeyCode.Alpha7)) {
-        FireSkill(Define.App.Attribute.Dar);
+        FireAttributeSkill(Define.App.Attribute.Dar);
       }
 
       if (Input.GetKeyDown(KeyCode.Alpha8) && Type == Define.App.Player.P1) {
-        var owner = this;
-        var target = VersusManager.Instance.GetTargetPlayerBy(Type);
-        SkillManager.Instance.Create(Define.App.UniqueSkill.Invincible, owner, target).Fire();
+        FireUniqueSkill();
       }
 
       if (Input.GetKeyDown(KeyCode.Alpha9) && Type == Define.App.Player.P2) {
-        var owner = this;
-        var target = VersusManager.Instance.GetTargetPlayerBy(Type);
-        SkillManager.Instance.Create(Define.App.UniqueSkill.Invincible, owner, target).Fire();
+        FireUniqueSkill();
       }
     }
 
     //-------------------------------------------------------------------------
-    // 属性スキル系
+    // スキル系
 
-    public void FireSkill(Define.App.Attribute attribute)
+    private void FireAttributeSkill(Define.App.Attribute attribute)
     {
       // 属性スキルを取得
       var skill = SkillManager.Instance.Create(attribute);
@@ -315,6 +338,20 @@ namespace MyGame.Unit.Versus
 
       // スキル発動
       skill.Fire(owner, target);
+    }
+
+    /// <summary>
+    /// 固有スキルを使用する
+    /// </summary>
+    private void FireUniqueSkill()
+    {
+      // 固有スキルが使用できない状況であれば処理を抜ける
+      if (SkillManager.Instance.IsLockUniqueSkill) return;
+
+      // 固有スキル発動
+      var owner = this;
+      var target = VersusManager.Instance.GetTargetPlayerBy(Type);
+      this.unique.Fire(owner, target);
     }
 
     //-------------------------------------------------------------------------
