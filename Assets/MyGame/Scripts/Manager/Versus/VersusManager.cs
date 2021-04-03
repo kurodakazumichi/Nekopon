@@ -211,7 +211,7 @@ namespace MyGame
         Parent   = CacheTransform,
         Location = this.locations[type],
         Config   = SaveSystem.Instance.GetPlayerConfig(type),
-        CatType  = MyEnum.Random<App.Cat>()
+        CatType  = App.Cat.Nick,
       };
       return new Player(props).Init();
     }

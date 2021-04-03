@@ -148,12 +148,13 @@ namespace MyGame.Unit.Versus
       }
 
       /// <summary>
-      /// 攻撃を受ける
+      /// パワーを抽出する、このメソッドを呼ぶとstatusのパワーは0になる。
       /// </summary>
-      public void TakeAttack(Status enemyStatus)
+      public float ExtractPower()
       {
-        this.damage.Now += enemyStatus.power.Now;
-        enemyStatus.power.Empty();
+        var power = this.power.Now;
+        this.power.Empty();
+        return power;
       }
 
       /// <summary>

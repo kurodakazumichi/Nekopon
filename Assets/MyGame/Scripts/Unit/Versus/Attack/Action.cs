@@ -28,6 +28,11 @@ namespace MyGame.Unit.Versus
       private Player target;
 
       /// <summary>
+      /// 攻撃の威力
+      /// </summary>
+      private float power;
+
+      /// <summary>
       /// コンストラクタ
       /// </summary>
       public Action(Attack attack, Player owner, Player target)
@@ -35,6 +40,7 @@ namespace MyGame.Unit.Versus
         this.attack = attack;
         this.owner  = owner;
         this.target = target;
+        this.power  = owner.ExtactPower();
       }
 
       /// <summary>
@@ -60,7 +66,7 @@ namespace MyGame.Unit.Versus
         
         // 相手が反射不可であれば、そのまま相手に攻撃を与える
         else {
-          target.TakeAttack(owner);
+          target.TakeDamage(this.power);
           SkillManager.Instance.Release(attack);
         }
       }

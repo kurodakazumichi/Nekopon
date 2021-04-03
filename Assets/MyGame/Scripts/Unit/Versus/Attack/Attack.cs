@@ -46,7 +46,7 @@ namespace MyGame.Unit.Versus
     /// <summary>
     /// 攻撃に要する時間
     /// </summary>
-    private const float ATTACK_TIME = 0.5f;
+    private const float ATTACK_TIME = 0.7f;
 
     /// <summary>
     /// 振れ幅

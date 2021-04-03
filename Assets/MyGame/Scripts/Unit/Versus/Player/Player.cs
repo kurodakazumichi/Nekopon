@@ -466,19 +466,6 @@ namespace MyGame.Unit.Versus
     }
 
     /// <summary>
-    /// プレイヤーが攻撃を受ける
-    /// </summary>
-    public void TakeAttack(Player attacker)
-    {
-      // ガード成功ならダメージを受けない
-      if (TryGuard()) {
-        return;
-      }
-
-      this.status.TakeAttack(attacker.status);
-    }
-
-    /// <summary>
     /// プレイヤーがダメージを受ける
     /// </summary>
     public void TakeDamage(float points)
@@ -497,6 +484,14 @@ namespace MyGame.Unit.Versus
     public void Recover(float rate)
     {
       this.status.Recover(rate);
+    }
+
+    /// <summary>
+    /// ステータスから攻撃力を抽出する
+    /// </summary>
+    public float ExtactPower()
+    {
+      return this.status.ExtractPower();
     }
 
     //-------------------------------------------------------------------------
