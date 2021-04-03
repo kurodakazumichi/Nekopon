@@ -1,17 +1,38 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using MyGame.Unit.Versus.UniqueSkillExecutors;
 
 namespace MyGame.Unit.Versus
 {
   public class UniqueSkill : Unit<UniqueSkill.State>
   {
+    /// <summary>
+    /// スキル実行者のインターフェース
+    /// </summary>
+    public interface IExecutor
+    {
+      /// <summary>
+      /// 発動
+      /// </summary>
+      void Fire(Player owner, Player target);
+
+      /// <summary>
+      /// 更新
+      /// </summary>
+      void Update();
+    }
+
+    /// <summary>
+    /// 固有スキルの状態
+    /// </summary>
     public enum State
     {
       Idle,
       Phase1,
       Phase2,
       Invoke,
+      Execute,
     }
 
     //-------------------------------------------------------------------------
@@ -21,11 +42,6 @@ namespace MyGame.Unit.Versus
     /// カットインユニット
     /// </summary>
     private Mover.Glow cutin = null;
-
-    /// <summary>
-    /// 固有スキルタイプ
-    /// </summary>
-    private Define.App.UniqueSkill type = default;
 
     /// <summary>
     /// スキルオーナー
@@ -46,6 +62,19 @@ namespace MyGame.Unit.Versus
     /// 目標のスケール
     /// </summary>
     private Vector3 targetScale = Vector3.zero;
+
+    /// <summary>
+    /// スキル実行者
+    /// </summary>
+    private IExecutor executer = null;
+
+    //-------------------------------------------------------------------------
+    // プロパティ
+
+    /// <summary>
+    /// アイドルかどうか
+    /// </summary>
+    public bool IsIdle => this.state.StateKey == State.Idle;
 
     //-------------------------------------------------------------------------
     // Load, Unload
@@ -88,14 +117,30 @@ namespace MyGame.Unit.Versus
       this.state.Add(State.Phase1, OnPhase1Enter, OnPhase1Update);
       this.state.Add(State.Phase2, OnPhase2Enter, OnPhase2Update);
       this.state.Add(State.Invoke, OnInvokeEnter, OnInvokeUpdate, OnInvokeExit);
+      this.state.Add(State.Execute, OnExecuteEnter, OnExecuteUpdate, OnExecuteExit);
       this.state.SetState(State.Idle);
     }
 
 
     public void Setup(Define.App.UniqueSkill skillType)
     {
-      this.type = skillType;
+      switch(skillType) {
+        case Define.App.UniqueSkill.Invincible:
+          this.executer = new InvinsibleExecutor(OnUnlock, OnDone);
+          break;
+      }
     }
+
+    private void OnUnlock()
+    {
+      SkillManager.Instance.IsLockUniqueSkill = false;
+    }
+
+    private void OnDone()
+    {
+      this.state.SetState(State.Idle);
+    }
+
 
     public void Fire(Player owner, Player target)
     {
@@ -175,6 +220,9 @@ namespace MyGame.Unit.Versus
       }
     }
 
+    //-------------------------------------------------------------------------
+    // Invoke
+
     private void OnInvokeEnter()
     {
       this.timer = 0;
@@ -190,7 +238,7 @@ namespace MyGame.Unit.Versus
       UpdateTimer();
 
       if (1f < this.timer) {
-        this.state.SetState(State.Idle);
+        this.state.SetState(State.Execute);
       }
     }
 
@@ -207,6 +255,24 @@ namespace MyGame.Unit.Versus
     protected override void UpdateTimer()
     {
       this.timer += TimeSystem.Instance.SkillDeltaTime;
+    }
+
+    //-------------------------------------------------------------------------
+    // Execute
+
+    private void OnExecuteEnter()
+    {
+      this.executer.Fire(this.owner, this.target);
+    }
+
+    private void OnExecuteUpdate()
+    {
+      this.executer.Update();
+    }
+
+    private void OnExecuteExit()
+    {
+
     }
   }
 

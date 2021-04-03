@@ -348,6 +348,9 @@ namespace MyGame.Unit.Versus
       // 固有スキルが使用できない状況であれば処理を抜ける
       if (SkillManager.Instance.IsLockUniqueSkill) return;
 
+      // 現在スキルが作動中であれば処理を抜ける
+      if (!this.unique.IsIdle) return;
+
       // 固有スキル発動
       var owner = this;
       var target = VersusManager.Instance.GetTargetPlayerBy(Type);
@@ -447,6 +450,11 @@ namespace MyGame.Unit.Versus
     /// </summary>
     public void TakeAttack(Player attacker)
     {
+      // 無敵ならダメージを受けない
+      if (IsInvincible) {
+        return;
+      }
+
       this.status.TakeAttack(attacker.status);
     }
 
@@ -455,6 +463,11 @@ namespace MyGame.Unit.Versus
     /// </summary>
     public void TakeDamage(float points)
     {
+      // 無敵ならダメージを受けない
+      if (IsInvincible) {
+        return;
+      }
+
       this.status.TakeDamage(points);
     }
 
@@ -475,6 +488,12 @@ namespace MyGame.Unit.Versus
       using (new GUILayout.VerticalScope()) {
         this.status.OnDebug();
         this.puzzle.OnDebug();
+
+        using (new GUILayout.VerticalScope(GUI.skin.box)) {
+          GUILayout.Label($"Invinsible:{this.IsInvincible}");
+          GUILayout.Label($"Reflection:{this.CanReflect}");
+        }
+
       }
     }
 #endif
