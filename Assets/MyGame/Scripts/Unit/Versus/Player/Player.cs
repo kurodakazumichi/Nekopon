@@ -396,6 +396,11 @@ namespace MyGame.Unit.Versus
     /// </summary>
     public void Paralyze()
     {
+      // ガード成功ならダメージを受けない
+      if (TryGuard()) {
+        return;
+      }
+
       this.puzzle.Paralyze();
     }
 
@@ -404,6 +409,11 @@ namespace MyGame.Unit.Versus
     /// </summary>
     public void Freeze()
     {
+      // ガード成功ならダメージを受けない
+      if (TryGuard()) {
+        return;
+      }
+
       this.puzzle.Freeze();
     }
 
@@ -412,6 +422,11 @@ namespace MyGame.Unit.Versus
     /// </summary>
     public void Randomize()
     {
+      // ガード成功ならダメージを受けない
+      if (TryGuard()) {
+        return;
+      }
+
       this.puzzle.Randomize();
     }
 
@@ -420,6 +435,11 @@ namespace MyGame.Unit.Versus
     /// </summary>
     public void Invisible()
     {
+      // ガード成功ならダメージを受けない
+      if (TryGuard()) {
+        return;
+      }
+
       this.puzzle.Invisible();
     }
 
@@ -450,8 +470,8 @@ namespace MyGame.Unit.Versus
     /// </summary>
     public void TakeAttack(Player attacker)
     {
-      // 無敵ならダメージを受けない
-      if (IsInvincible) {
+      // ガード成功ならダメージを受けない
+      if (TryGuard()) {
         return;
       }
 
@@ -463,8 +483,8 @@ namespace MyGame.Unit.Versus
     /// </summary>
     public void TakeDamage(float points)
     {
-      // 無敵ならダメージを受けない
-      if (IsInvincible) {
+      // ガード成功ならダメージを受けない
+      if (TryGuard()) {
         return;
       }
 
@@ -477,6 +497,22 @@ namespace MyGame.Unit.Versus
     public void Recover(float rate)
     {
       this.status.Recover(rate);
+    }
+
+    //-------------------------------------------------------------------------
+    // 状態処理
+
+    /// <summary>
+    /// 無敵時ならガード出来るので、ガードを試す処理
+    /// </summary>
+    private bool TryGuard()
+    {
+      // 無敵でないなら何もしない
+      if (!IsInvincible) return false;
+
+      // TODO:ガード音再生
+
+      return true;
     }
 
 #if _DEBUG
