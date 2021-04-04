@@ -317,8 +317,28 @@ namespace MyGame.Unit.Versus
     //-------------------------------------------------------------------------
     // スキル系
 
-    private void FireAttributeSkill(Define.App.Attribute attribute)
+    public bool TryFireAttributeSkill(Define.App.Attribute attribute)
     {
+      // 現在のMPと使用MPを取得
+      var NowMp = this.status.GetMp(attribute);
+      var useMp = this.config.GetUseMp(attribute);
+
+      // スキルに必要なMPが不足していたらスキル発動できない
+      if (NowMp < useMp) {
+        return false;
+      }
+
+      // MP消費
+      this.status.AddMp(attribute, -useMp);
+
+      // スキル発動
+      FireAttributeSkill(attribute);
+      return true;
+    }
+
+    public void FireAttributeSkill(Define.App.Attribute attribute)
+    {
+      
       // 属性スキルを取得
       var skill = SkillManager.Instance.Create(attribute);
       

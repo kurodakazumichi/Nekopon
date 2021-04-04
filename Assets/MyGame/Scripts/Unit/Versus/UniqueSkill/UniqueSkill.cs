@@ -131,6 +131,9 @@ namespace MyGame.Unit.Versus
         case Define.App.UniqueSkill.Reflection:
           this.executer = new ReflectionExecutor(OnUnlock, OnDone);
           break;
+        case Define.App.UniqueSkill.Recovery:
+          this.executer = new RecoveryExecutor(OnUnlock, OnDone);
+          break;
         default:
           this.executer = new InvinsibleExecutor(OnUnlock, OnDone);
           break;

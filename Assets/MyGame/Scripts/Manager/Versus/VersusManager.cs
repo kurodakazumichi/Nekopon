@@ -160,17 +160,6 @@ namespace MyGame
     private void OnUsualUpdate()
     {
       UpdatePlayers();
-
-      // Debug
-      //if (Input.GetKeyDown(KeyCode.A)) {
-      //  this.guide.ToResult(App.Player.P1);
-      //}
-      //if (Input.GetKeyDown(KeyCode.S)) {
-      //  this.guide.ToResult(App.Player.P2);
-      //}
-      //if (Input.GetKeyDown(KeyCode.D)) {
-      //  this.guide.ToRetry();
-      //}
     }
 
     private void OnResultEnter()
@@ -211,7 +200,7 @@ namespace MyGame
         Parent   = CacheTransform,
         Location = this.locations[type],
         Config   = SaveSystem.Instance.GetPlayerConfig(type),
-        CatType  = App.Cat.Nick,
+        CatType  = App.Cat.Tii,
       };
       return new Player(props).Init();
     }
