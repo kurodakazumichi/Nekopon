@@ -200,7 +200,7 @@ namespace MyGame
         Parent   = CacheTransform,
         Location = this.locations[type],
         Config   = SaveSystem.Instance.GetPlayerConfig(type),
-        CatType  = App.Cat.Tii,
+        CatType  = App.Cat.Shiro,
       };
       return new Player(props).Init();
     }

@@ -24,7 +24,7 @@ namespace MyGame.Unit.Versus
     /// <summary>
     /// 親オブジェクト
     /// </summary>
-    private readonly Transform parent = null;
+    private Transform parent = null;
 
     /// <summary>
     /// Puzzle内のゲームオブジェクトを格納しておくゲームオブジェクト
@@ -122,18 +122,23 @@ namespace MyGame.Unit.Versus
     /// </summary>
     public bool IsFinishedChain => (this.state.StateKey == State.Finish);
 
+    /// <summary>
+    /// 入れ替え中か
+    /// </summary>
+    public bool IsSwapping {
+      get {
+        bool isSwapping = false;
+        Util.ForEach(this.paws, (paw, _) => { return isSwapping = paw.IsSwapping; });
+        return isSwapping;
+      }
+    }
+
     //-------------------------------------------------------------------------
     // Load, Unload
-
-    /// <summary>
-    /// 肉球のPrefab
-    /// </summary>
-    private static GameObject PawPrefab = null;
 
     public static void Load(System.Action pre, System.Action done)
     {
       var rm = ResourceSystem.Instance;
-      rm.Load<GameObject>("VS.Paw.prefab", pre, done, (res) => { PawPrefab = res; });
       Paw.Load(pre, done);
       Cursor.Load(pre, done);
     }
@@ -141,10 +146,8 @@ namespace MyGame.Unit.Versus
     public static void Unload()
     {
       var rm = ResourceSystem.Instance;
-      rm.Unload("VS.Paw.prefab");
       Paw.Unload();
       Cursor.Unload();
-      PawPrefab = null;
     }
 
     //-------------------------------------------------------------------------
@@ -166,6 +169,22 @@ namespace MyGame.Unit.Versus
       this.state.SetState(State.Idle);
     }
 
+    public void ChangeParent(Transform parent, Vector3 basePosition)
+    {
+      this.parent = parent;
+      this.basePosition = basePosition;
+      this.folder.parent = this.parent;
+
+      SyncCursorPosition();
+
+      Util.ForEach(this.paws, (paw, index) => { 
+        var start = paw.CacheTransform.position;
+        var target = PositionBy(index);
+        target.y = start.y;
+        paw.Swap(start, target);
+      });
+    }
+
     /// <summary>
     /// 肉球、カーソルを生成してプールする
     /// </summary>
@@ -185,8 +204,7 @@ namespace MyGame.Unit.Versus
     /// </summary>
     private void InitCursor()
     {
-      this.cursor = new GameObject("curosr").AddComponent<Unit.Versus.Cursor>();
-      this.cursor.SetParent(this.folder);
+      this.cursor = MyGameObject.Create<Cursor>("Cursor", this.folder);
       this.cursor.SetActive(false);
 
       SyncCursorPosition();
@@ -200,8 +218,7 @@ namespace MyGame.Unit.Versus
       // 肉球を生成
       for (int i = 0; i < Define.Versus.PAW_TOTAL; ++i) 
       {
-        var paw = Object.Instantiate(PawPrefab).GetComponent<Paw>();
-        paw.SetParent(this.folder);
+        var paw = MyGameObject.Create<Paw>("Paw", this.folder);
         paw.SetActive(false);
         this.paws[i] = paw;
       }

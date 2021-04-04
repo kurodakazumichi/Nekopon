@@ -134,6 +134,9 @@ namespace MyGame.Unit.Versus
         case Define.App.UniqueSkill.Recovery:
           this.executer = new RecoveryExecutor(OnUnlock, OnDone);
           break;
+        case Define.App.UniqueSkill.Swap:
+          this.executer = new SwapExecutor(OnUnlock, OnDone);
+          break;
         default:
           this.executer = new InvinsibleExecutor(OnUnlock, OnDone);
           break;
@@ -142,6 +145,7 @@ namespace MyGame.Unit.Versus
 
     private void OnUnlock()
     {
+      TimeSystem.Instance.TimeScale = 1f;
       SkillManager.Instance.IsLockUniqueSkill = false;
     }
 
@@ -254,8 +258,6 @@ namespace MyGame.Unit.Versus
     private void OnInvokeExit()
     {
       this.cutin.Setup(null, "");
-      SkillManager.Instance.IsLockUniqueSkill = false;
-      TimeSystem.Instance.TimeScale = 1f;
     }
 
     /// <summary>

@@ -11,6 +11,56 @@ namespace MyGame.Unit.Versus
   /// </summary>
   public partial class Paw : Unit<Paw.State>
   {
+    public class Swapper
+    {
+      private Vector3 startPosition = Vector3.zero;
+      private Vector3 targetPosition = Vector3.zero;
+      private float timer = 0;
+      public bool IsActive { get; private set; }
+      private Paw paw = null;
+      private float time = 0;
+      public Swapper(Paw paw)
+      {
+        this.paw = paw;
+      }
+
+      public void Start(Vector3 start, Vector3 target)
+      {
+        if (this.paw == null) {
+          return;
+        }
+
+        this.time = UnityEngine.Random.Range(0.5f, 1f);
+
+        this.startPosition  = start;
+        this.targetPosition = target;
+
+        this.paw.startPosition = target;
+        this.paw.targetPosition.x = target.x;
+
+        IsActive = true;
+        this.timer = 0;
+      }
+
+      public void Update()
+      {
+        if (!IsActive) {
+          return;
+        }
+
+        var rate = this.timer / this.time;
+
+        this.paw.CacheTransform.position
+          = MyVector3.Lerp(this.startPosition, this.targetPosition, Tween.EaseOutBack(rate));
+
+        this.timer += TimeSystem.Instance.SkillDeltaTime;
+
+        if(this.time < this.timer) {
+          this.IsActive = false;
+        }
+      }
+    }
+
     /// <summary>
     /// 肉球ステータスとしてのインターフェース
     /// </summary>
@@ -44,19 +94,17 @@ namespace MyGame.Unit.Versus
     }
 
     //-------------------------------------------------------------------------
-    // Inspector設定項目
+    // 定数
 
     /// <summary>
     /// 消滅にかかる時間
     /// </summary>
-    [SerializeField]
-    private float _VanishingTime = 0.5f;
+    private const float VANISH_TIME = 0.5f;
 
     /// <summary>
     /// 消滅時に回転するけど、その時の回転スピード
     /// </summary>
-    [SerializeField]
-    private float _VanishingAngularSpeed = 1080f;
+    private const float VANISH_ANGULAR_SPEED = 1080f;
 
     //-------------------------------------------------------------------------
     // メンバ変数
@@ -74,12 +122,12 @@ namespace MyGame.Unit.Versus
     /// <summary>
     /// 移動前の座標
     /// </summary>
-    private Vector3 moveStartPosition = Vector3.zero;
+    private Vector3 startPosition = Vector3.zero;
 
     /// <summary>
     /// 移動後の座標
     /// </summary>
-    private Vector3 moveEndPosition = Vector3.zero;
+    private Vector3 targetPosition = Vector3.zero;
 
     /// <summary>
     /// 移動に要する時間
@@ -90,6 +138,11 @@ namespace MyGame.Unit.Versus
     /// ステータス(凍結、麻痺)
     /// </summary>
     private readonly List<IStatus> status = new List<IStatus>();
+
+    /// <summary>
+    /// 入れ替え用
+    /// </summary>
+    private Swapper swapper = null;
 
     //-------------------------------------------------------------------------
     // プロパティ
@@ -193,6 +246,11 @@ namespace MyGame.Unit.Versus
     /// </summary>
     public bool IsParalyzed => this.status[(int)SubState.Paralysis].IsActive;
 
+    /// <summary>
+    /// 入れ替え中か
+    /// </summary>
+    public bool IsSwapping => this.swapper.IsActive;
+
     //-------------------------------------------------------------------------
     // Load, Unload
 
@@ -233,12 +291,15 @@ namespace MyGame.Unit.Versus
     protected override void MyAwake()
     {
       // Component取得
-      this.spriteRenderer = CacheTransform.Find("Sprite").GetComponent<SpriteRenderer>();
+      this.spriteRenderer = MyGameObject.Create<SpriteRenderer>("Sprite", CacheTransform);
 
       // Status:Freeze→Paralysis→Invisibleの順で登録する
       this.status.Add(new StatusFreeze(CacheTransform));
       this.status.Add(new StatusParalysis(CacheTransform));
       this.status.Add(new StatusInvisible(this));
+
+      // 相手のパズルと入れ替えを行う者
+      this.swapper = new Swapper(this);
 
       // 状態構築
       this.state.Add(State.Idle, OnIdleEnter);
@@ -253,6 +314,10 @@ namespace MyGame.Unit.Versus
     {
       base.MyUpdate();
       this.status.ForEach((status) => { status.Update(); });
+
+      if (this.swapper.IsActive) {
+        this.swapper.Update();
+      }
     }
 
     //-------------------------------------------------------------------------
@@ -271,7 +336,7 @@ namespace MyGame.Unit.Versus
     {
       this.tweenType = type;
       this.movingTime = time;
-      this.moveEndPosition = target;
+      this.targetPosition = target;
       this.state.SetState(State.Move);
     }
 
@@ -357,6 +422,14 @@ namespace MyGame.Unit.Versus
       this.status.ForEach((status) => { status.Finish(); });
     }
 
+    /// <summary>
+    /// 相手の肉球との入れ替え
+    /// </summary>
+    public void Swap(Vector3 start, Vector3 target)
+    {
+      this.swapper.Start(start, target);
+    }
+
     //-------------------------------------------------------------------------
     // ステートマシン
 
@@ -382,10 +455,10 @@ namespace MyGame.Unit.Versus
     {
       float deltaTime = TimeSystem.Instance.DeltaTime;
       
-      this.CacheTransform.Rotate(0, 0, _VanishingAngularSpeed * deltaTime);
-      this.CacheTransform.localScale = Vector3.Lerp(Vector3.one, Vector3.zero, this.timer/_VanishingTime);
+      this.CacheTransform.Rotate(0, 0, VANISH_ANGULAR_SPEED * deltaTime);
+      this.CacheTransform.localScale = Vector3.Lerp(Vector3.one, Vector3.zero, this.timer/VANISH_TIME);
 
-      if (_VanishingTime <= this.timer) { this.state.SetState(State.Idle); }
+      if (VANISH_TIME <= this.timer) { this.state.SetState(State.Idle); }
 
       this.timer += deltaTime;
     }
@@ -402,7 +475,7 @@ namespace MyGame.Unit.Versus
     private void OnMoveEnter()
     {
       this.SetDefaultParams();
-      this.moveStartPosition = CacheTransform.position;
+      this.startPosition = CacheTransform.position;
       this.timer = 0;
     }
 
@@ -413,7 +486,7 @@ namespace MyGame.Unit.Versus
       t = Tween.easing(this.tweenType, t);
 
       // 座標更新
-      CacheTransform.position = Vector3.Lerp(this.moveStartPosition, this.moveEndPosition, t);
+      CacheTransform.position = Vector3.Lerp(this.startPosition, this.targetPosition, t);
 
       // 時間経過していたら移動完了フェーズへ
       if (movingTime <= this.timer) { this.state.SetState(State.Usual); }
@@ -422,7 +495,7 @@ namespace MyGame.Unit.Versus
 
     private void OnMoveExit()
     {
-      CacheTransform.position = this.moveEndPosition;
+      CacheTransform.position = this.targetPosition;
     }
 
     //-------------------------------------------------------------------------

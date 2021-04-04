@@ -133,6 +133,11 @@ namespace MyGame.Unit.Versus
       }
     }
 
+    /// <summary>
+    /// パズルが入れ替え中かどうか
+    /// </summary>
+    public bool IsSwapping => this.puzzle.IsSwapping;
+
     //-------------------------------------------------------------------------
     // Load, Unload
 
@@ -158,12 +163,12 @@ namespace MyGame.Unit.Versus
     /// </summary>
     public Player(Props props)
     {
-      this.Type     = props.Type;
-      this.parent   = props.Parent;
+      this.Type = props.Type;
+      this.parent = props.Parent;
       this.Location = props.Location;
-      this.config   = props.Config;
-      this.catType  = props.CatType;
-      this.status   = new Status().Init(config);
+      this.config = props.Config;
+      this.catType = props.CatType;
+      this.status = new Status().Init(config);
     }
 
     /// <summary>
@@ -183,7 +188,7 @@ namespace MyGame.Unit.Versus
       // ゲージを生成
       var props = new Gauges.Props();
       props.Location = this.Location;
-      props.Parent   = this.folder;
+      props.Parent = this.folder;
 
       this.gauges = new Gauges(props).Init();
 
@@ -232,41 +237,45 @@ namespace MyGame.Unit.Versus
       this.gauges.Dp = this.status.DpRate;
 
       // カーソル移動(上下左右)
-      if (Input.GetKeyDown(KeyCode.LeftArrow)) {
-        this.puzzle.MoveCursorL();
-      }
-      if (Input.GetKeyDown(KeyCode.RightArrow)) {
-        this.puzzle.MoveCursorR();
-      }
-      if (Input.GetKeyDown(KeyCode.UpArrow)) {
-        this.puzzle.MoveCursorU();
-      }
-      if (Input.GetKeyDown(KeyCode.DownArrow)) {
-        this.puzzle.MoveCursorD();
-      }
+      if (Type == Define.App.Player.P1) {
 
-      // 肉球選択 or 入れ替え
-      if (Input.GetKeyDown(KeyCode.Z)) {
-        // 選択中の肉球があれば入れ替え
-        if (this.puzzle.HasSelectedPaw) {
-          this.puzzle.Swap();
+        if (Input.GetKeyDown(KeyCode.LeftArrow)) {
+          this.puzzle.MoveCursorL();
+        }
+        if (Input.GetKeyDown(KeyCode.RightArrow)) {
+          this.puzzle.MoveCursorR();
+        }
+        if (Input.GetKeyDown(KeyCode.UpArrow)) {
+          this.puzzle.MoveCursorU();
+        }
+        if (Input.GetKeyDown(KeyCode.DownArrow)) {
+          this.puzzle.MoveCursorD();
         }
 
-        // 選択中の肉中がなければカーソルのある所の肉球を選択
-        else {
-          this.puzzle.SelectPaw();
+        // 肉球選択 or 入れ替え
+        if (Input.GetKeyDown(KeyCode.Z)) {
+          // 選択中の肉球があれば入れ替え
+          if (this.puzzle.HasSelectedPaw) {
+            this.puzzle.Swap();
+          }
+
+          // 選択中の肉中がなければカーソルのある所の肉球を選択
+          else {
+            this.puzzle.SelectPaw();
+          }
+        }
+
+        // 肉球選択の解除
+        if (Input.GetKeyDown(KeyCode.X)) {
+          this.puzzle.ReleasePaw();
+        }
+
+        // 連鎖
+        if (Input.GetKeyDown(KeyCode.S)) {
+          this.puzzle.StartChain();
         }
       }
 
-      // 肉球選択の解除
-      if (Input.GetKeyDown(KeyCode.X)) {
-        this.puzzle.ReleasePaw();
-      }
-
-      // 連鎖
-      if (Input.GetKeyDown(KeyCode.S)) {
-        this.puzzle.StartChain();
-      }
       if (this.puzzle != null && this.puzzle.IsInChain) {
         this.puzzle.UpdateChain();
 
@@ -275,6 +284,7 @@ namespace MyGame.Unit.Versus
           Attack();
         }
       }
+
 
       // 強制ダメージ(火)
       if (Input.GetKeyDown(KeyCode.Alpha1)) {
@@ -338,17 +348,16 @@ namespace MyGame.Unit.Versus
 
     public void FireAttributeSkill(Define.App.Attribute attribute)
     {
-      
+
       // 属性スキルを取得
       var skill = SkillManager.Instance.Create(attribute);
-      
+
       // スキル発動者と対称を取得
       var owner = this;
       var target = VersusManager.Instance.GetTargetPlayerBy(Type);
 
       // 自分に対するスキルならtargetを自分に設定
-      switch(attribute) 
-      {
+      switch (attribute) {
         // 水と聖は対象が自分
         case Define.App.Attribute.Wat:
         case Define.App.Attribute.Hol:
@@ -385,8 +394,8 @@ namespace MyGame.Unit.Versus
     /// </summary>
     private void OnVanished(Puzzle.ChainInfo score)
     {
-      // 初回の連鎖で、攻撃ユニットがなければ生成
-      if (score.ChainCount == 1 && this.attack == null) {
+      // 攻撃ユニットがなければ生成
+      if (this.attack == null) {
         this.attack = SkillManager.Instance.Create(this.folder);
         this.attack.ToUsual(this.Location.AttackBase);
       }
@@ -461,6 +470,28 @@ namespace MyGame.Unit.Versus
       }
 
       this.puzzle.Invisible();
+    }
+
+    /// <summary>
+    /// パズルの入れ替え
+    /// </summary>
+    public void SwapPuzzle(Player target)
+    {
+      var puzzle = this.puzzle;
+      this.ChangePuzzle(target.puzzle);
+      target.ChangePuzzle(puzzle);
+    }
+
+    /// <summary>
+    /// パズルを変更する
+    /// </summary>
+    private void ChangePuzzle(Puzzle puzzle)
+    {
+      this.puzzle = puzzle;
+      this.puzzle.OnVanished = OnVanished;
+      this.puzzle.ChangeParent(this.folder, this.Location.Paw);
+
+      Attack();
     }
 
     //-------------------------------------------------------------------------
