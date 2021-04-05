@@ -717,9 +717,9 @@ namespace MyGame.Unit.Versus
     // 特殊な入れ替え処理
 
     /// <summary>
-    /// 親を変更する
+    /// 所有者を変更する
     /// </summary>
-    public void ChangeParent(Transform parent, Vector3 basePosition)
+    public void ChangeOwner(Transform parent, Vector3 basePosition)
     {
       // 親情報を更新
       this.parent = parent;

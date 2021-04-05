@@ -478,20 +478,24 @@ namespace MyGame.Unit.Versus
     public void SwapPuzzle(Player target)
     {
       var puzzle = this.puzzle;
-      this.ChangePuzzle(target.puzzle);
-      target.ChangePuzzle(puzzle);
+      this.SwapPuzzleProc(target.puzzle);
+      target.SwapPuzzleProc(puzzle);
     }
 
     /// <summary>
-    /// パズルを変更する
+    /// パズルを入れ替える際に行う処理
     /// </summary>
-    private void ChangePuzzle(Puzzle puzzle)
+    private void SwapPuzzleProc(Puzzle puzzle)
     {
+      // 指定されたパズルの所有者を変更する
       this.puzzle = puzzle;
       this.puzzle.OnVanished = OnVanished;
-      this.puzzle.ChangeParent(this.folder, this.Location.Paw);
+      this.puzzle.ChangeOwner(this.folder, this.Location.Paw);
 
-      Attack();
+      // 攻撃があれば入れ替え時に攻撃発動
+      if (this.attack != null) {
+        Attack();
+      }
     }
 
     //-------------------------------------------------------------------------
