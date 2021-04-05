@@ -1,8 +1,6 @@
-﻿using System.Collections;
+﻿using MyGame.Define;
 using System.Collections.Generic;
 using UnityEngine;
-using MyGame.Define;
-using System;
 
 namespace MyGame.Unit.Versus
 {
@@ -11,56 +9,6 @@ namespace MyGame.Unit.Versus
   /// </summary>
   public partial class Paw : Unit<Paw.State>
   {
-    public class Swapper
-    {
-      private Vector3 startPosition = Vector3.zero;
-      private Vector3 targetPosition = Vector3.zero;
-      private float timer = 0;
-      public bool IsActive { get; private set; }
-      private Paw paw = null;
-      private float time = 0;
-      public Swapper(Paw paw)
-      {
-        this.paw = paw;
-      }
-
-      public void Start(Vector3 start, Vector3 target)
-      {
-        if (this.paw == null) {
-          return;
-        }
-
-        this.time = UnityEngine.Random.Range(0.5f, 1f);
-
-        this.startPosition  = start;
-        this.targetPosition = target;
-
-        this.paw.startPosition = target;
-        this.paw.targetPosition.x = target.x;
-
-        IsActive = true;
-        this.timer = 0;
-      }
-
-      public void Update()
-      {
-        if (!IsActive) {
-          return;
-        }
-
-        var rate = this.timer / this.time;
-
-        this.paw.CacheTransform.position
-          = MyVector3.Lerp(this.startPosition, this.targetPosition, Tween.EaseOutBack(rate));
-
-        this.timer += TimeSystem.Instance.SkillDeltaTime;
-
-        if(this.time < this.timer) {
-          this.IsActive = false;
-        }
-      }
-    }
-
     /// <summary>
     /// 肉球ステータスとしてのインターフェース
     /// </summary>
@@ -140,9 +88,9 @@ namespace MyGame.Unit.Versus
     private readonly List<IStatus> status = new List<IStatus>();
 
     /// <summary>
-    /// 入れ替え用
+    /// 相手の肉球と座標入れ替えをする実行者
     /// </summary>
-    private Swapper swapper = null;
+    private SwapExecutor swapEcecutor = null;
 
     //-------------------------------------------------------------------------
     // プロパティ
@@ -249,7 +197,7 @@ namespace MyGame.Unit.Versus
     /// <summary>
     /// 入れ替え中か
     /// </summary>
-    public bool IsSwapping => this.swapper.IsActive;
+    public bool IsSwapping => this.swapEcecutor.IsActive;
 
     //-------------------------------------------------------------------------
     // Load, Unload
@@ -299,7 +247,7 @@ namespace MyGame.Unit.Versus
       this.status.Add(new StatusInvisible(this));
 
       // 相手のパズルと入れ替えを行う者
-      this.swapper = new Swapper(this);
+      this.swapEcecutor = new SwapExecutor(this);
 
       // 状態構築
       this.state.Add(State.Idle, OnIdleEnter);
@@ -313,10 +261,13 @@ namespace MyGame.Unit.Versus
     protected override void MyUpdate()
     {
       base.MyUpdate();
+
+      // 麻痺、凍結、不可視などのステータス処理
       this.status.ForEach((status) => { status.Update(); });
 
-      if (this.swapper.IsActive) {
-        this.swapper.Update();
+      // 相手の肉球と入れ替えが必要な場合のみActiveになる
+      if (this.swapEcecutor.IsActive) {
+        this.swapEcecutor.Update();
       }
     }
 
@@ -427,7 +378,7 @@ namespace MyGame.Unit.Versus
     /// </summary>
     public void Swap(Vector3 start, Vector3 target)
     {
-      this.swapper.Start(start, target);
+      this.swapEcecutor.Start(start, target);
     }
 
     //-------------------------------------------------------------------------
