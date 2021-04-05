@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
+﻿using UnityEngine;
 
 namespace MyGame.Unit.Versus
 {
@@ -167,19 +164,6 @@ namespace MyGame.Unit.Versus
       this.state.Add(State.Refill, OnRefillEnter, OnRefillUpdate);
       this.state.Add(State.Finish);
       this.state.SetState(State.Idle);
-    }
-
-    public void ChangeParent(Transform parent, Vector3 basePosition)
-    {
-      this.parent = parent;
-      this.basePosition = basePosition;
-      this.folder.parent = this.parent;
-
-      SyncCursorPosition();
-
-      Util.ForEach(this.paws, (paw, index) => { 
-        paw.Swap(PositionBy(index).x);
-      });
     }
 
     /// <summary>
@@ -727,6 +711,30 @@ namespace MyGame.Unit.Versus
       Paw dst = this.paws[dstIndex];
       this.paws[dstIndex] = src;
       this.paws[srcIndex] = dst;
+    }
+
+    //-------------------------------------------------------------------------
+    // 特殊な入れ替え処理
+
+    /// <summary>
+    /// 親を変更する
+    /// </summary>
+    public void ChangeParent(Transform parent, Vector3 basePosition)
+    {
+      // 親情報を更新
+      this.parent = parent;
+      this.folder.parent = this.parent;
+
+      // ベース座標を更新
+      this.basePosition = basePosition;
+
+      // 親変更に伴い、カーソルの座標を更新
+      SyncCursorPosition();
+
+      // 全ての肉球を入れ替え状態にする
+      Util.ForEach(this.paws, (paw, index) => {
+        paw.Swap(PositionBy(index).x);
+      });
     }
 
 #if _DEBUG
