@@ -178,10 +178,7 @@ namespace MyGame.Unit.Versus
       SyncCursorPosition();
 
       Util.ForEach(this.paws, (paw, index) => { 
-        var start = paw.CacheTransform.position;
-        var target = PositionBy(index);
-        target.y = start.y;
-        paw.Swap(start, target);
+        paw.Swap(PositionBy(index).x);
       });
     }
 

@@ -7,7 +7,7 @@ namespace MyGame.Unit.Versus
     /// <summary>
     /// 相手プレイヤーと肉球を入れ替える際の入れ替え処理実行クラス
     /// </summary>
-    public class SwapExecutor : MonoBehaviour
+    public class SwapExecutor
     {
       //-------------------------------------------------------------------------
       // メンバ変数
@@ -56,7 +56,7 @@ namespace MyGame.Unit.Versus
       /// <summary>
       /// 入れ替え開始
       /// </summary>
-      public void Start(Vector3 start, Vector3 target)
+      public void Start(float targetX)
       {
         if (this.paw == null) {
           return;
@@ -68,12 +68,13 @@ namespace MyGame.Unit.Versus
         this.time = Random.Range(MIN_TIME, MAX_TIME);
 
         // 入れ替え元、入れ替え先の座標を設定
-        this.startPosition  = start;
-        this.targetPosition = target;
+        this.startPosition  = this.paw.CacheTransform.position;
+        this.targetPosition = this.paw.CacheTransform.position;
+        this.targetPosition.x = targetX;
 
         // 現在の肉球の開始位置、目標位置も入れ替え先の座標に更新
-        this.paw.startPosition = target;
-        this.paw.targetPosition.x = target.x;
+        this.paw.startPosition.x  = targetX;
+        this.paw.targetPosition.x = targetX;
 
         // アクティブにする
         IsActive = true;

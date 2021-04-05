@@ -90,7 +90,7 @@ namespace MyGame.Unit.Versus
     /// <summary>
     /// 相手の肉球と座標入れ替えをする実行者
     /// </summary>
-    private SwapExecutor swapEcecutor = null;
+    private SwapExecutor swapExecutor = null;
 
     //-------------------------------------------------------------------------
     // プロパティ
@@ -197,7 +197,7 @@ namespace MyGame.Unit.Versus
     /// <summary>
     /// 入れ替え中か
     /// </summary>
-    public bool IsSwapping => this.swapEcecutor.IsActive;
+    public bool IsSwapping => this.swapExecutor.IsActive;
 
     //-------------------------------------------------------------------------
     // Load, Unload
@@ -247,7 +247,7 @@ namespace MyGame.Unit.Versus
       this.status.Add(new StatusInvisible(this));
 
       // 相手のパズルと入れ替えを行う者
-      this.swapEcecutor = new SwapExecutor(this);
+      this.swapExecutor = new SwapExecutor(this);
 
       // 状態構築
       this.state.Add(State.Idle, OnIdleEnter);
@@ -266,8 +266,8 @@ namespace MyGame.Unit.Versus
       this.status.ForEach((status) => { status.Update(); });
 
       // 相手の肉球と入れ替えが必要な場合のみActiveになる
-      if (this.swapEcecutor.IsActive) {
-        this.swapEcecutor.Update();
+      if (this.swapExecutor.IsActive) {
+        this.swapExecutor.Update();
       }
     }
 
@@ -376,9 +376,9 @@ namespace MyGame.Unit.Versus
     /// <summary>
     /// 相手の肉球との入れ替え
     /// </summary>
-    public void Swap(Vector3 start, Vector3 target)
+    public void Swap(float targetX)
     {
-      this.swapEcecutor.Start(start, target);
+      this.swapExecutor.Start(targetX);
     }
 
     //-------------------------------------------------------------------------
