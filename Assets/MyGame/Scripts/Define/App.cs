@@ -47,6 +47,26 @@ namespace MyGame.Define
     }
 
     /// <summary>
+    /// 脳のタイプ
+    /// </summary>
+    public enum Brain
+    {
+      Player,
+      AI,
+    }
+
+    /// <summary>
+    /// 方向
+    /// </summary>
+    public enum Direction
+    {
+      L, // 左
+      R, // 右
+      U, // 上
+      D, // 下
+    }
+
+    /// <summary>
     /// 属性の個数
     /// </summary>
     public static int AttributeCount => Enum.GetNames(typeof(Attribute)).Length;

@@ -8,13 +8,13 @@ namespace MyGame.InputManagement
   /// </summary>
   public enum Command
   {
-    Move,
-    Decide,
-    PressAnyButton,
+    Move,           // 方向入力
+    Decide,         // 決定
+    PressAnyButton, // 何かしらのキーを押した
   }
 
   /// <summary>
-  /// 
+  /// コマンドのインターフェース
   /// </summary>
   public interface ICommand
   {
@@ -27,11 +27,24 @@ namespace MyGame.InputManagement
     }
   }
 
+  /// <summary>
+  /// コマンドベース
+  /// </summary>
   public abstract class CommandBase: ICommand
   { 
+    /// <summary>
+    /// 軸
+    /// </summary>
     public virtual Vector3 Axis { get; protected set; } = Vector3.zero;
 
+    /// <summary>
+    /// コマンドが確定しているかどうか
+    /// </summary>
     public virtual bool IsFixed { get; protected set; } = false;
+
+    /// <summary>
+    /// コマンドが成立するかどうかを判定する
+    /// </summary>
     public abstract void Execute(GamePad pad);
   }
 

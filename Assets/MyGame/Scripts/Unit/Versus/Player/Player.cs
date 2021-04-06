@@ -106,6 +106,11 @@ namespace MyGame.Unit.Versus
     private UniqueSkill unique = null;
 
     /// <summary>
+    /// 脳
+    /// </summary>
+    private IBrain brain = null;
+
+    /// <summary>
     /// 攻撃を反射可能
     /// </summary>
     public bool CanReflect { get; set; } = false;
@@ -163,12 +168,12 @@ namespace MyGame.Unit.Versus
     /// </summary>
     public Player(Props props)
     {
-      this.Type = props.Type;
-      this.parent = props.Parent;
+      this.Type     = props.Type;
+      this.parent   = props.Parent;
       this.Location = props.Location;
-      this.config = props.Config;
-      this.catType = props.CatType;
-      this.status = new Status().Init(config);
+      this.config   = props.Config;
+      this.catType  = props.CatType;
+      this.status   = new Status().Init(config);
     }
 
     /// <summary>
@@ -223,6 +228,14 @@ namespace MyGame.Unit.Versus
     }
 
     /// <summary>
+    /// 脳をセットする
+    /// </summary>
+    public void SetBrain(IBrain brain)
+    {
+      this.brain = brain;
+    }
+
+    /// <summary>
     /// プレイヤー始動
     /// </summary>
     public void Start()
@@ -232,9 +245,11 @@ namespace MyGame.Unit.Versus
 
     public void Update()
     {
-      this.status.Update();
-      this.gauges.Hp = this.status.HpRate;
-      this.gauges.Dp = this.status.DpRate;
+      // ゲージの更新
+      UpdateGauge();
+
+      // 思考の更新
+      UpdateThink();
 
       // カーソル移動(上下左右)
       if (Type == Define.App.Player.P1) {
@@ -321,6 +336,52 @@ namespace MyGame.Unit.Versus
 
       if (Input.GetKeyDown(KeyCode.Alpha9) && Type == Define.App.Player.P2) {
         FireUniqueSkill();
+      }
+    }
+
+    /// <summary>
+    /// ゲージの更新
+    /// </summary>
+    private void UpdateGauge()
+    {
+      this.status.Update();
+      this.gauges.Hp = this.status.HpRate;
+      this.gauges.Dp = this.status.DpRate;
+    }
+
+    private void UpdateThink()
+    {
+      // 脳が設定されていなければ何もしない
+      if (this.brain == null) {
+        return;
+      }
+
+      // 思考する
+      var action = this.brain.Think();
+
+      // 行動が取得できていれば実行する
+      if (action != null) {
+        action.Execute();
+      }
+    }
+
+    //-------------------------------------------------------------------------
+    // 操作系
+
+    /// <summary>
+    /// カーソル移動
+    /// </summary>
+    public void MoveCursor(Define.App.Direction dir)
+    {
+      if (this.puzzle == null) {
+        return;
+      }
+
+      switch(dir) {
+        case Define.App.Direction.L: this.puzzle.MoveCursorL(); break;
+        case Define.App.Direction.R: this.puzzle.MoveCursorR(); break;
+        case Define.App.Direction.U: this.puzzle.MoveCursorU(); break;
+        case Define.App.Direction.D: this.puzzle.MoveCursorD(); break;
       }
     }
 

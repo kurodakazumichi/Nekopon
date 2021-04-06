@@ -97,12 +97,14 @@ namespace MyGame
       this.locations.Add(App.Player.P1, new Location("P1", "P2", locations));
       this.locations.Add(App.Player.P2, new Location("P2", "P1", locations));
 
-      // プレイヤー生成
+      // プレイヤーを生成し、脳を設定
       this.p1 = CreatePlayer(App.Player.P1);
       this.p2 = CreatePlayer(App.Player.P2);
+      this.p1.SetBrain(BrainFactory.Create(App.Brain.Player, this.p1, this.p2));
+      this.p2.SetBrain(BrainFactory.Create(App.Brain.Player, this.p1, this.p2));
 
       // ガイド生成
-      this.guide = new GameObject("Guide").AddComponent<Unit.Versus.Guide>();
+      this.guide = new GameObject("Guide").AddComponent<Guide>();
       this.guide.SetParent(CacheTransform);
       this.guide.Init(
         this.locations[App.Player.P1].Center,
@@ -202,6 +204,7 @@ namespace MyGame
         Config   = SaveSystem.Instance.GetPlayerConfig(type),
         CatType  = App.Cat.Shiro,
       };
+
       return new Player(props).Init();
     }
 
