@@ -29,11 +29,24 @@ namespace MyGame.Unit.Versus
     public enum State
     {
       Idle,
-      Phase1,
-      Phase2,
-      Invoke,
+      ExpandX,
+      ExpandY,
+      CutIn,
       Execute,
     }
+
+    //-------------------------------------------------------------------------
+    // 定数
+
+    /// <summary>
+    /// 拡大速度
+    /// </summary>
+    private const float EXPAND_TIME = 0.1f;
+
+    /// <summary>
+    /// カットイン表示時間
+    /// </summary>
+    private const float CUTIN_TIME = 1f;
 
     //-------------------------------------------------------------------------
     // メンバ変数
@@ -66,7 +79,7 @@ namespace MyGame.Unit.Versus
     /// <summary>
     /// スキル実行者
     /// </summary>
-    private IExecutor executer = null;
+    private IExecutor executor = null;
 
     //-------------------------------------------------------------------------
     // プロパティ
@@ -80,7 +93,7 @@ namespace MyGame.Unit.Versus
     // Load, Unload
 
     /// <summary>
-    /// Spriteリソース
+    /// 各キャラクターのカットインスプライト
     /// </summary>
     public static Dictionary<int, Sprite> Sprites = new Dictionary<int, Sprite>();
 
@@ -114,72 +127,92 @@ namespace MyGame.Unit.Versus
 
       // 状態の構築
       this.state.Add(State.Idle);
-      this.state.Add(State.Phase1, OnPhase1Enter, OnPhase1Update);
-      this.state.Add(State.Phase2, OnPhase2Enter, OnPhase2Update);
-      this.state.Add(State.Invoke, OnInvokeEnter, OnInvokeUpdate, OnInvokeExit);
+      this.state.Add(State.ExpandX, OnExpandXEnter, OnExpandXUpdate);
+      this.state.Add(State.ExpandY, OnExpandYEnter, OnExpandYUpdate);
+      this.state.Add(State.CutIn, OnCutInEnter, OnCutInUpdate, OnCutInExit);
       this.state.Add(State.Execute, OnExecuteEnter, OnExecuteUpdate, OnExecuteExit);
       this.state.SetState(State.Idle);
     }
 
-
     public void Setup(Define.App.UniqueSkill skillType)
     {
+      // スキルタイプに合わせてExecutorクラスを生成
       switch(skillType) {
         case Define.App.UniqueSkill.Invincible:
-          this.executer = new InvinsibleExecutor(OnUnlock, OnDone);
+          this.executor = new InvinsibleExecutor(Unlock, Done);
           break;
         case Define.App.UniqueSkill.Reflection:
-          this.executer = new ReflectionExecutor(OnUnlock, OnDone);
+          this.executor = new ReflectionExecutor(Unlock, Done);
           break;
         case Define.App.UniqueSkill.Recovery:
-          this.executer = new RecoveryExecutor(OnUnlock, OnDone);
+          this.executor = new RecoveryExecutor(Unlock, Done);
           break;
         case Define.App.UniqueSkill.Swap:
-          this.executer = new SwapExecutor(OnUnlock, OnDone);
+          this.executor = new SwapExecutor(Unlock, Done);
           break;
         default:
-          this.executer = new InvinsibleExecutor(OnUnlock, OnDone);
+          this.executor = new InvinsibleExecutor(Unlock, Done);
           break;
       }
     }
 
-    private void OnUnlock()
+    /// <summary>
+    /// スキル使用にロックをかける
+    /// </summary>
+    private void Lock()
     {
-      TimeSystem.Instance.TimeScale = 1f;
+      TimeSystem.Instance.Pause = true;
+      SkillManager.Instance.IsLockUniqueSkill = true;
+    }
+
+    /// <summary>
+    /// スキル使用のロックを解除する
+    /// </summary>
+    private void Unlock()
+    {
+      TimeSystem.Instance.Pause = false;
       SkillManager.Instance.IsLockUniqueSkill = false;
     }
 
-    private void OnDone()
+    /// <summary>
+    /// スキル処理を完了する
+    /// </summary>
+    private void Done()
     {
       this.state.SetState(State.Idle);
     }
 
-
+    /// <summary>
+    /// スキルを発動する
+    /// </summary>
     public void Fire(Player owner, Player target)
     {
+      // スキル使用者，対象を保持
       this.owner = owner;
       this.target = target;
 
+      // カットインをセットアップ
       this.cutin.Setup(
         Sprites[(int)this.owner.catType],
         Define.Layer.Sorting.UI
       );
 
+      // 使用したプレイヤーに合わせてテクスチャを反転させ、輝度を高くしておく
       this.cutin.MainFlipX = owner.Type == Define.App.Player.P1;
       this.cutin.Brightness = 1f;
 
-      // 通常のタイマーを止める
-      TimeSystem.Instance.TimeScale = 0f;
+      // スキル発動中は他のスキルを発動できないようにロックする
+      Lock();
 
-      SkillManager.Instance.IsLockUniqueSkill = true;
-
-      this.state.SetState(State.Phase1);
+      // 開始
+      this.state.SetState(State.ExpandX);
     }
 
     //-------------------------------------------------------------------------
-    // Phase1
+    // ExpandX
+    // カットイン画像を画面中心から画面幅いっぱいに引き延ばしながら表示
 
-    private void OnPhase1Enter()
+    private void OnExpandXEnter()
     {
       const float SCALE_Y = 0.01f;
 
@@ -192,24 +225,25 @@ namespace MyGame.Unit.Versus
       this.timer = 0;
     }
 
-    private void OnPhase1Update()
+    private void OnExpandXUpdate()
     {
-      var rate = this.timer / 0.1f;
+      var rate = this.timer / EXPAND_TIME;
 
       this.cutin.CacheTransform.localScale
         = Vector3.Lerp(this.startScale, this.targetScale, rate);
 
       UpdateTimer();
 
-      if (0.1f < this.timer) {
-        this.state.SetState(State.Phase2);
+      if (EXPAND_TIME < this.timer) {
+        this.state.SetState(State.ExpandY);
       }
     }
 
     //-------------------------------------------------------------------------
-    // Phase2
+    // ExpandY
+    // カットイン画像を画面高さいっぱいに引き延ばしながら表示
 
-    private void OnPhase2Enter()
+    private void OnExpandYEnter()
     {
       this.cutin.CacheTransform.localScale = this.targetScale;
 
@@ -219,43 +253,45 @@ namespace MyGame.Unit.Versus
       this.timer = 0;
     }
 
-    private void OnPhase2Update()
+    private void OnExpandYUpdate()
     {
-      var rate = this.timer / 0.1f;
+      var rate = this.timer / EXPAND_TIME;
 
       this.cutin.CacheTransform.localScale
         = Vector3.Lerp(this.startScale, this.targetScale, rate);
 
       UpdateTimer();
 
-      if (0.1f < this.timer) {
-        this.state.SetState(State.Invoke);
+      if (EXPAND_TIME < this.timer) {
+        this.state.SetState(State.CutIn);
       }
     }
 
     //-------------------------------------------------------------------------
-    // Invoke
+    // CutIn
+    // カットインを表示
 
-    private void OnInvokeEnter()
+    private void OnCutInEnter()
     {
       this.timer = 0;
       this.cutin.CacheTransform.localScale = this.targetScale;
     }
 
-    private void OnInvokeUpdate()
+    private void OnCutInUpdate()
     {
-      var rate = this.timer / 1f;
+      var rate = this.timer / CUTIN_TIME;
 
-      this.cutin.Brightness = Mathf.Max(0, 1f - 5f * rate);
+      const float SPEED = 5f;
+      this.cutin.Brightness = 1f - Mathf.Min(1f, SPEED * rate);
 
       UpdateTimer();
 
-      if (1f < this.timer) {
+      if (CUTIN_TIME < this.timer) {
         this.state.SetState(State.Execute);
       }
     }
 
-    private void OnInvokeExit()
+    private void OnCutInExit()
     {
       this.cutin.Setup(null, "");
     }
@@ -273,12 +309,14 @@ namespace MyGame.Unit.Versus
 
     private void OnExecuteEnter()
     {
-      this.executer.Fire(this.owner, this.target);
+      // スキル効果発動
+      this.executor.Fire(this.owner, this.target);
     }
 
     private void OnExecuteUpdate()
     {
-      this.executer.Update();
+      // executorの中でスキル終了を呼ぶので、ここではUpdateを呼ぶだけでOK
+      this.executor.Update();
     }
 
     private void OnExecuteExit()

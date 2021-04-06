@@ -14,14 +14,15 @@ namespace MyGame
 
     private float skillTimeScale = 1f;
 
-    public float TimeScale {
-      get { return this.timeScale; }
-      set { this.timeScale = Mathf.Max(0, value); }
-    }
-
     public float SkillTimeScale {
       get { return this.skillTimeScale; }
       set { this.skillTimeScale = Mathf.Max(0, value); }
+    }
+
+    public bool Pause {
+      set {
+        this.timeScale = value? 0f : 1f;
+      }
     }
 
     public float DeltaTime {
