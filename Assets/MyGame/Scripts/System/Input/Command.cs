@@ -8,9 +8,20 @@ namespace MyGame.InputManagement
   /// </summary>
   public enum Command
   {
-    Move,           // 方向入力
-    Decide,         // 決定
-    PressAnyButton, // 何かしらのキーを押した
+    Move,            // 方向入力
+    Decide,          // 決定
+    Cancel,          // キャンセル
+    Chain,           // 連鎖
+    ShowSkillGuide,  // スキルガイドを表示
+    FireSkillFir,    // 属性スキル(火)
+    FireSkillWat,    // 属性スキル(水)
+    FireSkillThu,    // 属性スキル(雷)
+    FireSkillIce,    // 属性スキル(氷)
+    FireSkillTre,    // 属性スキル(木)
+    FireSkillHol,    // 属性スキル(聖)
+    FireSkillDar,    // 属性スキル(闇)
+    FireUniqueSkill, // 固有スキル
+    PressAnyButton,  // 何かしらのキーを押した
   }
 
   /// <summary>
@@ -105,6 +116,109 @@ namespace MyGame.InputManagement
     public override void Execute(GamePad pad)
     {
       IsFixed = pad.GetButtonDown(ButtonType.Y);
+    }
+  }
+
+  /// <summary>
+  /// スキルガイド表示コマンド
+  /// </summary>
+  public class ShowSkillGuideCommand: CommandBase, ICommand
+  {
+    public override void Execute(GamePad pad)
+    {
+      IsFixed = pad.GetButtonHold(ButtonType.L1);
+    }
+  }
+
+  /// <summary>
+  /// 属性スキル(火)
+  /// </summary>
+  public class FireSkillFirCommand: CommandBase, ICommand
+  {
+    public override void Execute(GamePad pad)
+    {
+      IsFixed = pad.GetButtonHold(ButtonType.L1) && pad.GetButtonDown(ButtonType.Y);
+    }
+  }
+
+  /// <summary>
+  /// 属性スキル(水)
+  /// </summary>
+  public class FireSkillWatCommand : CommandBase, ICommand
+  {
+    public override void Execute(GamePad pad)
+    {
+      IsFixed = pad.GetButtonHold(ButtonType.L1) && pad.GetButtonDown(ButtonType.B);
+    }
+  }
+
+  /// <summary>
+  /// 属性スキル(雷)
+  /// </summary>
+  public class FireSkillThrCommand : CommandBase, ICommand
+  {
+    public override void Execute(GamePad pad)
+    {
+      IsFixed = pad.GetButtonHold(ButtonType.L1) && pad.GetButtonDown(ButtonType.A);
+    }
+  }
+
+  /// <summary>
+  /// 属性スキル(氷)
+  /// </summary>
+  public class FireSkillIceCommand : CommandBase, ICommand
+  {
+    public override void Execute(GamePad pad)
+    {
+      IsFixed = pad.GetButtonHold(ButtonType.L1) && pad.GetButtonDown(ButtonType.X);
+    }
+  }
+
+  /// <summary>
+  /// 属性スキル(木)
+  /// </summary>
+  public class FireSkillTreCommand : CommandBase, ICommand
+  {
+    public override void Execute(GamePad pad)
+    {
+      IsFixed = pad.GetButtonHold(ButtonType.L1) && pad.GetAxisDown(AxisType.DX);
+    }
+  }
+
+  /// <summary>
+  /// 属性スキル(聖)
+  /// </summary>
+  public class FireSkillHolCommand : CommandBase, ICommand
+  {
+    public override void Execute(GamePad pad)
+    {
+      var L1 = pad.GetButtonHold(ButtonType.L1);
+      var DU = pad.GetAxisDown(AxisType.DY) && 0 < pad.GetAxis(AxisType.DY);
+      IsFixed = L1 && DU;
+    }
+  }
+
+  /// <summary>
+  /// 属性スキル(闇)
+  /// </summary>
+  public class FireSkillDarCommand : CommandBase, ICommand
+  {
+    public override void Execute(GamePad pad)
+    {
+      var L1 = pad.GetButtonHold(ButtonType.L1);
+      var DD = pad.GetAxisDown(AxisType.DY) && pad.GetAxis(AxisType.DY) < 0;
+      IsFixed = L1 && DD;
+    }
+  }
+
+  /// <summary>
+  /// 固有スキル発動コマンド
+  /// </summary>
+  public class FireUniqueSkillCommand: CommandBase, ICommand
+  {
+    public override void Execute(GamePad pad)
+    {
+      IsFixed = pad.GetButtonDown(ButtonType.R1);
     }
   }
 
