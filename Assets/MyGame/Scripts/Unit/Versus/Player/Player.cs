@@ -382,6 +382,7 @@ namespace MyGame.Unit.Versus
         case Define.App.Direction.R: this.puzzle.MoveCursorR(); break;
         case Define.App.Direction.U: this.puzzle.MoveCursorU(); break;
         case Define.App.Direction.D: this.puzzle.MoveCursorD(); break;
+        default: break;
       }
     }
 

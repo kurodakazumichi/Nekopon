@@ -60,6 +60,7 @@ namespace MyGame.Define
     /// </summary>
     public enum Direction
     {
+      N, // ニュートラル
       L, // 左
       R, // 右
       U, // 上

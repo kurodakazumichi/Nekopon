@@ -48,6 +48,10 @@ namespace MyGame.InputManagement
     public abstract void Execute(GamePad pad);
   }
 
+  /// <summary>
+  /// 移動コマンド
+  /// 左スティック、十字キーの入力を統合
+  /// </summary>
   public class MoveCommand : CommandBase, ICommand
   {
     public override Vector3 Axis => this.value;
@@ -71,15 +75,20 @@ namespace MyGame.InputManagement
     }
   }
 
+  /// <summary>
+  /// 決定コマンド
+  /// </summary>
   public class DecideCommand: CommandBase, ICommand
   {
-    
     public override void Execute(GamePad pad)
     {
       IsFixed = pad.GetButtonDown(ButtonType.A);
     }
   }
 
+  /// <summary>
+  /// 何かしらキーが押された
+  /// </summary>
   public class PressAnyButton: CommandBase, ICommand
   {
     public override void Execute(GamePad pad)

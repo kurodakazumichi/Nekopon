@@ -101,7 +101,7 @@ namespace MyGame
       this.p1 = CreatePlayer(App.Player.P1);
       this.p2 = CreatePlayer(App.Player.P2);
       this.p1.SetBrain(BrainFactory.Create(App.Brain.Player, this.p1, this.p2));
-      this.p2.SetBrain(BrainFactory.Create(App.Brain.Player, this.p1, this.p2));
+      this.p2.SetBrain(BrainFactory.Create(App.Brain.Player, this.p2, this.p1));
 
       // ガイド生成
       this.guide = new GameObject("Guide").AddComponent<Guide>();

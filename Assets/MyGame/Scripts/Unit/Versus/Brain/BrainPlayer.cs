@@ -1,56 +1,29 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using MyGame.Unit.Versus.BrainAction;
 
 namespace MyGame.Unit.Versus
 {
-  public class MoveCursorAction : IAction
-  {
-    /// <summary>
-    /// プレイヤー
-    /// </summary>
-    private Player player = null;
-
-    /// <summary>
-    /// 方向
-    /// </summary>
-    private Vector3 direction = Vector3.zero;
-
-    /// <summary>
-    /// コンストラクタ
-    /// </summary>
-    public MoveCursorAction(Player player, Vector3 direction)
-    {
-      this.player = player;
-      this.direction = direction;
-    }
-
-    public void Execute()
-    {
-      if (this.direction.x <= -1) {
-        this.player.MoveCursor(Define.App.Direction.L);
-      }
-
-      if (1f <= this.direction.x) {
-        this.player.MoveCursor(Define.App.Direction.R);
-      }
-
-      if (this.direction.y <= -1) {
-        this.player.MoveCursor(Define.App.Direction.D);
-      }
-
-      if (1f <= this.direction.y) {
-        this.player.MoveCursor(Define.App.Direction.U);
-      }
-    }
-  }
-
   public class BrainPlayer : IBrain
   {
+    //-------------------------------------------------------------------------
+    // 定数
+
+    /// <summary>
+    /// カーソル移動時、キーを押し続けた時にリピート移動する際の時間間隔
+    /// </summary>
+    private const float MOVE_REPEAT_TIMER = 0.12f;
+
+    //-------------------------------------------------------------------------
+    // メンバ変数
+
     /// <summary>
     /// ゲームパッド番号
     /// </summary>
     private int padNo = 0;
+
+    /// <summary>
+    /// 移動待機用のタイマー
+    /// </summary>
+    private float waitMoveTimer = 0;
 
     /// <summary>
     /// プレイヤー
@@ -61,6 +34,9 @@ namespace MyGame.Unit.Versus
     /// 決定された行動
     /// </summary>
     private IAction decidedAction = null;
+
+    //-------------------------------------------------------------------------
+    // メソッド
 
     /// <summary>
     /// コンストラクタ
@@ -78,24 +54,37 @@ namespace MyGame.Unit.Versus
     {
       this.decidedAction = null;
 
-
       MonitorMoveCursor();
-
       
       return this.decidedAction;
     }
 
+    /// <summary>
+    /// カーソル移動の監視
+    /// </summary>
     private void MonitorMoveCursor()
     {
       if (this.decidedAction != null) return;
 
+      // 時間経過
+      this.waitMoveTimer -= TimeSystem.Instance.DeltaTime;
+
+      // 移動コマンドを取得
       var com = InputSystem.Instance.GetCommand(InputManagement.Command.Move, this.padNo);
 
-      if (com.IsFixed) {
-        this.decidedAction = new MoveCursorAction(this.owner, com.Axis);
+      // コマンドが成立していなければ終了
+      if (!com.IsFixed) {
+        return;
       }
-    }
+      
+      // カーソル移動から一定時間経過していなければ終了
+      if (0 < this.waitMoveTimer) {
+        return;
+      }
 
-    
+      // リピートタイマーをセットしつつ、カーソル移動コマンドを生成
+      this.waitMoveTimer = MOVE_REPEAT_TIMER;
+      this.decidedAction = new MoveCursorAction(this.owner, com.Axis);
+    }
   }
 }
