@@ -1,4 +1,6 @@
 ﻿using MyGame.Unit.Versus.BrainAction;
+using MyGame.InputManagement;
+using MyGame.Define;
 
 namespace MyGame.Unit.Versus
 {
@@ -35,6 +37,11 @@ namespace MyGame.Unit.Versus
     /// </summary>
     private IAction decidedAction = null;
 
+    /// <summary>
+    /// 入力システム
+    /// </summary>
+    private InputSystem input = null;
+
     //-------------------------------------------------------------------------
     // メソッド
 
@@ -43,6 +50,10 @@ namespace MyGame.Unit.Versus
     /// </summary>
     public BrainPlayer(Player owner)
     {
+      // InputSystemをキャッシュ
+      this.input = InputSystem.Instance;
+
+      // Ownerとパッド番号を保持
       this.owner = owner;
       this.padNo = (owner.Type == Define.App.Player.P1)? 0 : 1;
     }
@@ -55,7 +66,8 @@ namespace MyGame.Unit.Versus
       this.decidedAction = null;
 
       MonitorMoveCursor();
-      
+      MonitorAttributeSkill();
+
       return this.decidedAction;
     }
 
@@ -70,7 +82,7 @@ namespace MyGame.Unit.Versus
       this.waitMoveTimer -= TimeSystem.Instance.DeltaTime;
 
       // 移動コマンドを取得
-      var com = InputSystem.Instance.GetCommand(InputManagement.Command.Move, this.padNo);
+      var com = this.input.GetCommand(Command.Move, this.padNo);
 
       // コマンドが成立していなければ終了
       if (!com.IsFixed) {
@@ -86,5 +98,53 @@ namespace MyGame.Unit.Versus
       this.waitMoveTimer = MOVE_REPEAT_TIMER;
       this.decidedAction = new MoveCursorAction(this.owner, com.Axis);
     }
+
+    /// <summary>
+    /// 属性スキル発動の監視
+    /// </summary>
+    private void MonitorAttributeSkill()
+    {
+      if (this.decidedAction != null) return;
+
+      if (this.input.GetCommand(Command.ShowSkillGuide, this.padNo).IsFixed) return;
+
+      this.decidedAction = GetFireAttributeAction(); 
+    }
+
+    /// <summary>
+    /// 属性スキル発動アクションを取得
+    /// </summary>
+    private IAction GetFireAttributeAction()
+    {
+      if (this.input.GetCommand(Command.FireSkillFir, this.padNo).IsFixed) {
+        return new FireAttributeAction(this.owner, App.Attribute.Fir);
+      }
+
+      if (this.input.GetCommand(Command.FireSkillWat, this.padNo).IsFixed) {
+        return new FireAttributeAction(this.owner, App.Attribute.Wat);
+      }
+
+      if (this.input.GetCommand(Command.FireSkillThu, this.padNo).IsFixed) {
+        return new FireAttributeAction(this.owner, App.Attribute.Thu);
+      }
+
+      if (this.input.GetCommand(Command.FireSkillIce, this.padNo).IsFixed) {
+        return new FireAttributeAction(this.owner, App.Attribute.Ice);
+      }
+
+      if (this.input.GetCommand(Command.FireSkillTre, this.padNo).IsFixed) {
+        return new FireAttributeAction(this.owner, App.Attribute.Tre);
+      }
+
+      if (this.input.GetCommand(Command.FireSkillHol, this.padNo).IsFixed) {
+        return new FireAttributeAction(this.owner, App.Attribute.Hol);
+      }
+
+      if (this.input.GetCommand(Command.FireSkillDar, this.padNo).IsFixed) {
+        return new FireAttributeAction(this.owner, App.Attribute.Dar);
+      }
+
+      return null;
+    } 
   }
 }

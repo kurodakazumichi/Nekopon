@@ -54,6 +54,7 @@ namespace MyGame
       this.commands[(int)Command.Cancel]         = new CancelCommand();
       this.commands[(int)Command.Chain]          = new ChainCommand();
       this.commands[(int)Command.ShowSkillGuide] = new ShowSkillGuideCommand();
+      this.commands[(int)Command.HideSkillGuide] = new HideSkillGuideCommand();
       this.commands[(int)Command.FireSkillFir]   = new FireSkillFirCommand();
       this.commands[(int)Command.FireSkillWat]   = new FireSkillWatCommand();
       this.commands[(int)Command.FireSkillThu]   = new FireSkillThrCommand();

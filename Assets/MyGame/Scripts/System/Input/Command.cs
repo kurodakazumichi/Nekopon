@@ -13,6 +13,7 @@ namespace MyGame.InputManagement
     Cancel,          // キャンセル
     Chain,           // 連鎖
     ShowSkillGuide,  // スキルガイドを表示
+    HideSkillGuide,  // スキルガイドを非表示
     FireSkillFir,    // 属性スキル(火)
     FireSkillWat,    // 属性スキル(水)
     FireSkillThu,    // 属性スキル(雷)
@@ -126,7 +127,18 @@ namespace MyGame.InputManagement
   {
     public override void Execute(GamePad pad)
     {
-      IsFixed = pad.GetButtonHold(ButtonType.L1);
+      IsFixed = pad.GetButtonDown(ButtonType.L1);
+    }
+  }
+
+  /// <summary>
+  /// スキルガイド非表示コマンド
+  /// </summary>
+  public class HideSkillGuideCommand: CommandBase, ICommand
+  {
+    public override void Execute(GamePad pad)
+    {
+      IsFixed = pad.GetButtonUp(ButtonType.L1);
     }
   }
 
