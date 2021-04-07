@@ -62,11 +62,30 @@ namespace MyGame
     /// </summary>
     private void Awake()
     {
+      InitAxisMap();
+      InitButtonMap();
+    }
+
+    /// <summary>
+    /// AxisMapをセットアップ
+    /// </summary>
+    private void InitAxisMap()
+    {
+      if (0 < this.axisMap.Count) return;
+
       MyEnum.ForEach<AxisType>((type) => {
         this.axisMap.Add(new AxisMap(type));
       });
+    }
 
-      MyEnum.ForEach<ButtonType>((type) => { 
+    /// <summary>
+    /// ButtonMapをセットアップ
+    /// </summary>
+    private void InitButtonMap()
+    {
+      if (0 < this.buttonMap.Count) return;
+
+      MyEnum.ForEach<ButtonType>((type) => {
         this.buttonMap.Add(new ButtonMap(type));
       });
     }
@@ -122,7 +141,7 @@ namespace MyGame
     /// KeyConfigのInspector拡張
     /// </summary>
     [CustomEditor(typeof(JoyConfig))]
-    public class KeyConfigEditor : ScriptableObjectInspectorEditorBase<JoyConfig>
+    public class JoyConfigEditor : ScriptableObjectInspectorEditorBase<JoyConfig>
     {
       protected override void OnMyInspectorGUI()
       {

@@ -83,8 +83,30 @@ namespace MyGame
     /// </summary>
     private void Awake()
     {
+      InitMaxMp();
+      InitUseMp();
+    }
+
+    /// <summary>
+    /// 最大MPの初期化
+    /// </summary>
+    private void InitMaxMp()
+    {
+      if (0 < this.maxMp.Count) return;
+
       MyEnum.ForEach<App.Attribute>((attribute) => {
         this.maxMp.Add(0);
+      });
+    }
+
+    /// <summary>
+    /// 使用MPの初期化
+    /// </summary>
+    private void InitUseMp()
+    {
+      if (0 < this.useMp.Count) return;
+
+      MyEnum.ForEach<App.Attribute>((attribute) => {
         this.useMp.Add(0);
       });
     }

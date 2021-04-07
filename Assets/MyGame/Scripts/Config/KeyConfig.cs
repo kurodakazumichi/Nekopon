@@ -44,7 +44,17 @@ namespace MyGame
     /// </summary>
     private void Awake()
     {
-      MyEnum.ForEach<KeyType>((type) => { 
+      InitKeyMap();
+    }
+
+    /// <summary>
+    /// KeyMapのセットアップ
+    /// </summary>
+    private void InitKeyMap()
+    {
+      if (0 < this.keyMap.Count) return;
+
+      MyEnum.ForEach<KeyType>((type) => {
         this.keyMap.Add(new KeyMap(type));
       });
     }
