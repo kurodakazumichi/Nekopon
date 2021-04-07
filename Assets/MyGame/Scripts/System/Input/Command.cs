@@ -87,6 +87,28 @@ namespace MyGame.InputManagement
   }
 
   /// <summary>
+  /// キャンセルコマンド
+  /// </summary>
+  public class CancelCommand: CommandBase, ICommand
+  {
+    public override void Execute(GamePad pad)
+    {
+      IsFixed = pad.GetButtonDown(ButtonType.B);
+    }
+  }
+
+  /// <summary>
+  /// 連鎖コマンド
+  /// </summary>
+  public class ChainCommand: CommandBase, ICommand
+  {
+    public override void Execute(GamePad pad)
+    {
+      IsFixed = pad.GetButtonDown(ButtonType.Y);
+    }
+  }
+
+  /// <summary>
   /// 何かしらキーが押された
   /// </summary>
   public class PressAnyButton: CommandBase, ICommand
