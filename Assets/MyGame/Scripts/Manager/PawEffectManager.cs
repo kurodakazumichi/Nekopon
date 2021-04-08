@@ -227,6 +227,7 @@ namespace MyGame
     {
       if (GUILayout.Button("Release")) 
       {
+#if UNITY_EDITOR
         // 選択中のオブジェクトチェック
         var go = UnityEditor.Selection.activeGameObject;
 
@@ -244,6 +245,7 @@ namespace MyGame
         }
 
         Release(e);
+#endif
       }
     }
 #endif

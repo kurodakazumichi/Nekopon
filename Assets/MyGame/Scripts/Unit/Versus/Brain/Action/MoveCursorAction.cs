@@ -26,7 +26,7 @@ namespace MyGame.Unit.Versus.BrainAction
     /// </summary>
     public override void Execute()
     {
-      this.owner.MoveCursor(DirectionBy(this.direction));
+      this.owner.TryMoveCursor(DirectionBy(this.direction));
     }
 
     /// <summary>
@@ -35,11 +35,11 @@ namespace MyGame.Unit.Versus.BrainAction
     public App.Direction DirectionBy(Vector3 dir)
     {
       // xがマイナスなら左、プラスなら右
-      if (dir.x <= 0) return App.Direction.L;
+      if (dir.x < 0) return App.Direction.L;
       if (0 < dir.x)  return App.Direction.R;
 
       // yがマイナスなら下、プラスなら上
-      if (dir.y <= 0) return App.Direction.D;
+      if (dir.y < 0) return App.Direction.D;
       if (0 < dir.y)  return App.Direction.U;
 
       return App.Direction.N;

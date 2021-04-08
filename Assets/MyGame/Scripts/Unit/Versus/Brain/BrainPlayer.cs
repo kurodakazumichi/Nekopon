@@ -12,7 +12,7 @@ namespace MyGame.Unit.Versus
     /// <summary>
     /// カーソル移動時、キーを押し続けた時にリピート移動する際の時間間隔
     /// </summary>
-    private const float MOVE_REPEAT_TIMER = 0.12f;
+    private const float MOVE_REPEAT_TIMER = 0.06f;
 
     //-------------------------------------------------------------------------
     // メンバ変数
@@ -26,6 +26,11 @@ namespace MyGame.Unit.Versus
     /// 移動待機用のタイマー
     /// </summary>
     private float waitMoveTimer = 0;
+
+    /// <summary>
+    /// 初回移動
+    /// </summary>
+    private bool isFirstMove = true;
 
     /// <summary>
     /// プレイヤー
@@ -67,6 +72,9 @@ namespace MyGame.Unit.Versus
 
       MonitorMoveCursor();
       MonitorAttributeSkill();
+      MonitorSelectPaw();
+      MonitorReleasePaw();
+      MonitorChain();
 
       return this.decidedAction;
     }
@@ -86,6 +94,7 @@ namespace MyGame.Unit.Versus
 
       // コマンドが成立していなければ終了
       if (!com.IsFixed) {
+        this.isFirstMove = true;
         return;
       }
       
@@ -95,8 +104,9 @@ namespace MyGame.Unit.Versus
       }
 
       // リピートタイマーをセットしつつ、カーソル移動コマンドを生成
-      this.waitMoveTimer = MOVE_REPEAT_TIMER;
+      this.waitMoveTimer = MOVE_REPEAT_TIMER * ((this.isFirstMove)? 2f : 1f);
       this.decidedAction = new MoveCursorAction(this.owner, com.Axis);
+      this.isFirstMove = false;
     }
 
     /// <summary>
@@ -109,6 +119,54 @@ namespace MyGame.Unit.Versus
       if (this.input.GetCommand(Command.ShowSkillGuide, this.padNo).IsFixed) return;
 
       this.decidedAction = GetFireAttributeAction(); 
+    }
+
+    /// <summary>
+    /// 肉球選択のコマンドを監視
+    /// </summary>
+    private void MonitorSelectPaw()
+    {
+      if (this.decidedAction != null) {
+        return;
+      }
+
+      if (!input.GetCommand(Command.Decide, this.padNo).IsFixed) {
+        return; 
+      }
+
+      this.decidedAction = new SelectPawAction(this.owner);
+    }
+
+    /// <summary>
+    /// 肉球解除のコマンドを監視
+    /// </summary>
+    private void MonitorReleasePaw()
+    {
+      if (this.decidedAction != null) {
+        return;
+      }
+
+      if (!input.GetCommand(Command.Cancel, this.padNo).IsFixed) {
+        return;
+      }
+
+      this.decidedAction = new ReleasePawAction(this.owner);
+    }
+
+    /// <summary>
+    /// 連鎖コマンドの監視
+    /// </summary>
+    private void MonitorChain()
+    {
+      if (this.decidedAction != null) {
+        return;
+      }
+
+      if (!input.GetCommand(Command.Chain, this.padNo).IsFixed) {
+        return;
+      }
+
+      this.decidedAction = new ChainAction(this.owner);
     }
 
     /// <summary>

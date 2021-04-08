@@ -369,9 +369,9 @@ namespace MyGame.Unit.Versus
     // 操作系
 
     /// <summary>
-    /// カーソル移動
+    /// カーソルの上下左右移動を試す。
     /// </summary>
-    public void MoveCursor(Define.App.Direction dir)
+    public void TryMoveCursor(Define.App.Direction dir)
     {
       if (this.puzzle == null) {
         return;
@@ -384,6 +384,35 @@ namespace MyGame.Unit.Versus
         case Define.App.Direction.D: this.puzzle.MoveCursorD(); break;
         default: break;
       }
+    }
+
+    /// <summary>
+    /// 現在カーソルがある位置の肉球を選択するか
+    /// 選択中の肉球があれば、現在のカーソルの位置にある肉球と入れ替えを試みる
+    /// </summary>
+    public void TrySelectPaw()
+    {
+      if (this.puzzle.HasSelectedPaw) {
+        this.puzzle.Swap();
+      } else {
+        this.puzzle.SelectPaw();
+      }
+    }
+
+    /// <summary>
+    /// 肉球の解除を試みる
+    /// </summary>
+    public void TryReleasePaw()
+    {
+      this.puzzle.ReleasePaw();
+    }
+
+    /// <summary>
+    /// 連鎖を試みる
+    /// </summary>
+    public void TryChain()
+    {
+      this.puzzle.StartChain();
     }
 
     //-------------------------------------------------------------------------
