@@ -461,6 +461,14 @@ namespace MyGame.Unit.Versus
     }
 
     /// <summary>
+    /// 固有スキル使用を試みる
+    /// </summary>
+    public void TryFireUniqueSkill()
+    {
+      FireUniqueSkill();
+    }
+
+    /// <summary>
     /// 固有スキルを使用する
     /// </summary>
     private void FireUniqueSkill()

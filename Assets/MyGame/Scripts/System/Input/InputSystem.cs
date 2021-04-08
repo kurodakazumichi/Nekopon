@@ -49,20 +49,21 @@ namespace MyGame
       this.pads.Add(new GamePad());
 
       // コマンド登録
-      this.commands[(int)Command.Move]           = new MoveCommand();
-      this.commands[(int)Command.Decide]         = new DecideCommand();
-      this.commands[(int)Command.Cancel]         = new CancelCommand();
-      this.commands[(int)Command.Chain]          = new ChainCommand();
-      this.commands[(int)Command.ShowSkillGuide] = new ShowSkillGuideCommand();
-      this.commands[(int)Command.HideSkillGuide] = new HideSkillGuideCommand();
-      this.commands[(int)Command.FireSkillFir]   = new FireSkillFirCommand();
-      this.commands[(int)Command.FireSkillWat]   = new FireSkillWatCommand();
-      this.commands[(int)Command.FireSkillThu]   = new FireSkillThrCommand();
-      this.commands[(int)Command.FireSkillIce]   = new FireSkillIceCommand();
-      this.commands[(int)Command.FireSkillTre]   = new FireSkillTreCommand();
-      this.commands[(int)Command.FireSkillHol]   = new FireSkillHolCommand();
-      this.commands[(int)Command.FireSkillDar]   = new FireSkillDarCommand();
-      this.commands[(int)Command.PressAnyButton] = new PressAnyButton();
+      this.commands[(int)Command.Move]            = new MoveCommand();
+      this.commands[(int)Command.Decide]          = new DecideCommand();
+      this.commands[(int)Command.Cancel]          = new CancelCommand();
+      this.commands[(int)Command.Chain]           = new ChainCommand();
+      this.commands[(int)Command.ShowSkillGuide]  = new ShowSkillGuideCommand();
+      this.commands[(int)Command.HideSkillGuide]  = new HideSkillGuideCommand();
+      this.commands[(int)Command.FireSkillFir]    = new FireSkillFirCommand();
+      this.commands[(int)Command.FireSkillWat]    = new FireSkillWatCommand();
+      this.commands[(int)Command.FireSkillThu]    = new FireSkillThrCommand();
+      this.commands[(int)Command.FireSkillIce]    = new FireSkillIceCommand();
+      this.commands[(int)Command.FireSkillTre]    = new FireSkillTreCommand();
+      this.commands[(int)Command.FireSkillHol]    = new FireSkillHolCommand();
+      this.commands[(int)Command.FireSkillDar]    = new FireSkillDarCommand();
+      this.commands[(int)Command.FireUniqueSkill] = new FireUniqueSkillCommand();
+      this.commands[(int)Command.PressAnyButton]  = new PressAnyButton();
     }
 
     protected override void MyUpdate()

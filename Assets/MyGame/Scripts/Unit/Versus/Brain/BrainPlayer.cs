@@ -33,6 +33,11 @@ namespace MyGame.Unit.Versus
     private bool isFirstMove = true;
 
     /// <summary>
+    /// スキルガイド表示状態
+    /// </summary>
+    private bool isShowSkillGuide = false;
+
+    /// <summary>
     /// プレイヤー
     /// </summary>
     private Player owner = null;
@@ -70,11 +75,31 @@ namespace MyGame.Unit.Versus
     {
       this.decidedAction = null;
 
-      MonitorMoveCursor();
-      MonitorAttributeSkill();
-      MonitorSelectPaw();
-      MonitorReleasePaw();
-      MonitorChain();
+      if (this.input.GetCommand(Command.ShowSkillGuide, this.padNo).IsFixed) {
+        this.isShowSkillGuide = true;
+        return new SkillGuideAction(this.owner, true);
+      }
+
+      if (this.input.GetCommand(Command.HideSkillGuide, this.padNo).IsFixed) {
+        this.isShowSkillGuide = false;
+        return new SkillGuideAction(this.owner, false);
+      }
+
+      if (this.isShowSkillGuide) {
+        MonitorAttributeSkill();
+        
+      } else {
+        MonitorMoveCursor();
+        MonitorSelectPaw();
+        MonitorReleasePaw();
+        MonitorChain();
+      }
+
+      if (this.decidedAction == null) {
+        if (this.input.GetCommand(Command.FireUniqueSkill, this.padNo).IsFixed) {
+          return new FireUniqueSkillAction(this.owner);
+        }
+      }
 
       return this.decidedAction;
     }
