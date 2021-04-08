@@ -20,7 +20,7 @@ namespace MyGame.Unit.Versus
     /// <summary>
     /// ゲームパッド番号
     /// </summary>
-    private int padNo = 0;
+    private readonly int padNo = 0;
 
     /// <summary>
     /// 移動待機用のタイマー
@@ -40,7 +40,7 @@ namespace MyGame.Unit.Versus
     /// <summary>
     /// プレイヤー
     /// </summary>
-    private Player owner = null;
+    private readonly Player owner = null;
 
     /// <summary>
     /// 決定された行動
@@ -50,7 +50,7 @@ namespace MyGame.Unit.Versus
     /// <summary>
     /// 入力システム
     /// </summary>
-    private InputSystem input = null;
+    private readonly InputSystem input = null;
 
     //-------------------------------------------------------------------------
     // メソッド
@@ -65,7 +65,7 @@ namespace MyGame.Unit.Versus
 
       // Ownerとパッド番号を保持
       this.owner = owner;
-      this.padNo = (owner.Type == Define.App.Player.P1)? 0 : 1;
+      this.padNo = (owner.Type == App.Player.P1)? 0 : 1;
     }
 
     /// <summary>
@@ -75,33 +75,54 @@ namespace MyGame.Unit.Versus
     {
       this.decidedAction = null;
 
-      if (this.input.GetCommand(Command.ShowSkillGuide, this.padNo).IsFixed) {
-        this.isShowSkillGuide = true;
-        return new SkillGuideAction(this.owner, true);
-      }
-
-      if (this.input.GetCommand(Command.HideSkillGuide, this.padNo).IsFixed) {
-        this.isShowSkillGuide = false;
-        return new SkillGuideAction(this.owner, false);
-      }
+      MonitorShowSkillGuide();
+      MonitorHideSkillGuide();
 
       if (this.isShowSkillGuide) {
         MonitorAttributeSkill();
-        
       } else {
         MonitorMoveCursor();
         MonitorSelectPaw();
         MonitorReleasePaw();
         MonitorChain();
-      }
-
-      if (this.decidedAction == null) {
-        if (this.input.GetCommand(Command.FireUniqueSkill, this.padNo).IsFixed) {
-          return new FireUniqueSkillAction(this.owner);
-        }
+        MonitorUniqueSkill();
       }
 
       return this.decidedAction;
+    }
+
+    /// <summary>
+    /// スキルガイド表示監視
+    /// </summary>
+    private void MonitorShowSkillGuide()
+    {
+      if (this.decidedAction != null) {
+        return;
+      }
+
+      if (!this.input.GetCommand(Command.ShowSkillGuide, this.padNo).IsFixed) {
+        return;
+      }
+
+      this.isShowSkillGuide = true;
+      this.decidedAction = new SkillGuideAction(this.owner, true);
+    }
+
+    /// <summary>
+    /// スキルガイド非表示監視
+    /// </summary>
+    private void MonitorHideSkillGuide()
+    {
+      if (this.decidedAction != null) {
+        return;
+      }
+
+      if (!this.input.GetCommand(Command.HideSkillGuide, this.padNo).IsFixed) {
+        return;
+      }
+
+      this.isShowSkillGuide = false;
+      this.decidedAction = new SkillGuideAction(this.owner, false);
     }
 
     /// <summary>
@@ -192,6 +213,20 @@ namespace MyGame.Unit.Versus
       }
 
       this.decidedAction = new ChainAction(this.owner);
+    }
+
+    /// <summary>
+    /// 固有スキル発動の監視
+    /// </summary>
+    private void MonitorUniqueSkill()
+    {
+      if (this.decidedAction != null) return;
+
+      if (!this.input.GetCommand(Command.FireUniqueSkill, this.padNo).IsFixed) {
+        return;
+      }
+
+      this.decidedAction = new FireUniqueSkillAction(this.owner);
     }
 
     /// <summary>

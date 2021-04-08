@@ -149,7 +149,7 @@ namespace MyGame.InputManagement
   {
     public override void Execute(GamePad pad)
     {
-      IsFixed = pad.GetButtonHold(ButtonType.L1) && pad.GetButtonDown(ButtonType.Y);
+      IsFixed = pad.GetButtonDown(ButtonType.Y);
     }
   }
 
@@ -160,7 +160,7 @@ namespace MyGame.InputManagement
   {
     public override void Execute(GamePad pad)
     {
-      IsFixed = pad.GetButtonHold(ButtonType.L1) && pad.GetButtonDown(ButtonType.B);
+      IsFixed = pad.GetButtonDown(ButtonType.B);
     }
   }
 
@@ -171,7 +171,7 @@ namespace MyGame.InputManagement
   {
     public override void Execute(GamePad pad)
     {
-      IsFixed = pad.GetButtonHold(ButtonType.L1) && pad.GetButtonDown(ButtonType.A);
+      IsFixed = pad.GetButtonDown(ButtonType.A);
     }
   }
 
@@ -182,7 +182,7 @@ namespace MyGame.InputManagement
   {
     public override void Execute(GamePad pad)
     {
-      IsFixed = pad.GetButtonHold(ButtonType.L1) && pad.GetButtonDown(ButtonType.X);
+      IsFixed = pad.GetButtonDown(ButtonType.X);
     }
   }
 
@@ -193,7 +193,7 @@ namespace MyGame.InputManagement
   {
     public override void Execute(GamePad pad)
     {
-      IsFixed = pad.GetButtonHold(ButtonType.L1) && pad.GetAxisDown(AxisType.DX);
+      IsFixed = pad.GetAxisDown(AxisType.DX);
     }
   }
 
@@ -204,9 +204,7 @@ namespace MyGame.InputManagement
   {
     public override void Execute(GamePad pad)
     {
-      var L1 = pad.GetButtonHold(ButtonType.L1);
-      var DU = pad.GetAxisDown(AxisType.DY) && 0 < pad.GetAxis(AxisType.DY);
-      IsFixed = L1 && DU;
+      IsFixed = pad.GetAxisDown(AxisType.DY) && 0 < pad.GetAxis(AxisType.DY);
     }
   }
 
@@ -217,9 +215,7 @@ namespace MyGame.InputManagement
   {
     public override void Execute(GamePad pad)
     {
-      var L1 = pad.GetButtonHold(ButtonType.L1);
-      var DD = pad.GetAxisDown(AxisType.DY) && pad.GetAxis(AxisType.DY) < 0;
-      IsFixed = L1 && DD;
+      IsFixed = pad.GetAxisDown(AxisType.DY) && pad.GetAxis(AxisType.DY) < 0;
     }
   }
 
