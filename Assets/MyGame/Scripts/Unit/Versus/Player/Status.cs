@@ -66,6 +66,16 @@ namespace MyGame.Unit.Versus
       /// </summary>
       public float PowerRate => Mathf.Min(1f, this.power.Now / dp.Max);
 
+      /// <summary>
+      /// 現在のHP
+      /// </summary>
+      public float Hp => hp.Now;
+
+      /// <summary>
+      /// 現在のAP
+      /// </summary>
+      public float Ap => ap.Now;
+
       //-------------------------------------------------------------------------
       // メソッド
 

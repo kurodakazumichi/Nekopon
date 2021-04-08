@@ -259,11 +259,22 @@ namespace MyGame
     }
 
 #if _DEBUG
+    //-------------------------------------------------------------------------
+    // デバッグ
+
     public override void OnDebug()
     {
       using (new GUILayout.HorizontalScope(GUI.skin.box)) {
         DoPlayers((p) => { p.OnDebug(); });
       }
+    }
+
+    /// <summary>
+    /// 仮実装
+    /// </summary>
+    private void OnGUI()
+    {
+      DoPlayers((p) => { p.OnGUI(); });
     }
 #endif
   }

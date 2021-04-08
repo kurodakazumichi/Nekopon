@@ -628,9 +628,45 @@ namespace MyGame.Unit.Versus
           GUILayout.Label($"Invinsible:{this.IsInvincible}");
           GUILayout.Label($"Reflection:{this.CanReflect}");
         }
-
       }
     }
+
+    private GUIStyle __font = new GUIStyle();
+
+    /// <summary>
+    /// ステータスなどを仮表示
+    /// </summary>
+    public void OnGUI()
+    {
+      float unit = Screen.width / 20f;
+      float centerX = Screen.width / 2f;
+      float biasX = (Type == Define.App.Player.P1)
+        ? -2.3f * unit
+        : 0.7f * unit;
+      
+      this.__font.fontSize = 27;
+      
+      GUI.Label(new Rect(centerX + biasX, unit * 0.4f, 100, 100), ((int)this.status.Hp).ToString(), this.__font);
+
+      GUI.Label(new Rect(centerX + biasX, unit * 1.1f, 100, 100), ((int)this.status.Ap).ToString(), this.__font);
+
+      int i = 0;
+      MyEnum.ForEach<Define.App.Attribute>((a) => { 
+
+        GUI.Label(
+          new Rect(
+            centerX + biasX,
+            unit * 2.9f + unit * i * 0.77f,
+            100,
+            100
+          ),
+          ((int)this.status.GetMp(a)).ToString(),
+          this.__font
+        );
+        i++;
+      });
+    }
+
 #endif
   }
 }
