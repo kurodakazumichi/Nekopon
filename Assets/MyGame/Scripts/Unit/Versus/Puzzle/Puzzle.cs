@@ -348,6 +348,9 @@ namespace MyGame.Unit.Versus
     /// </summary>
     public void SelectPaw()
     {
+      // 連鎖中は選択できない
+      if (IsInChain) return;
+
       // 既に選択中なら何もしない
       if (HasSelectedPaw) return;
 
@@ -367,7 +370,13 @@ namespace MyGame.Unit.Versus
     /// </summary>
     public void ReleasePaw()
     {
+      // 連鎖中は解除等は受け付けない
+      if (IsInChain) return;
+
+      // 選択中のモノがなければ解除できないので終了
       if (!HasSelectedPaw) return;
+
+      // 解除
       this.paws[this.selectedIndex].ToUsual();
       this.selectedIndex = -1;
     }
@@ -377,6 +386,9 @@ namespace MyGame.Unit.Versus
     /// </summary>
     public void Swap()
     {
+      // 連鎖中は入れ替えない
+      if (IsInChain) return;
+
       // 選択された肉球がなければ何もしない
       if (!HasSelectedPaw) return;
 
@@ -476,7 +488,13 @@ namespace MyGame.Unit.Versus
     {
       // 連鎖中に連鎖は開始できない
       if (IsInChain) return;
+
+      // 連鎖スコアをリセット
       ChainScore.Reset();
+
+      // 選択中の肉球を解除
+      ReleasePaw();
+
       this.state.SetState(State.Vanish);
     }
 

@@ -243,100 +243,14 @@ namespace MyGame.Unit.Versus
       this.puzzle.ShowCursor();
     }
 
+    /// <summary>
+    /// 更新
+    /// </summary>
     public void Update()
     {
-      // ゲージの更新
-      UpdateGauge();
-
-      // 思考の更新
-      UpdateThink();
-
-      // カーソル移動(上下左右)
-      if (Type == Define.App.Player.P1) {
-
-        if (Input.GetKeyDown(KeyCode.LeftArrow)) {
-          this.puzzle.MoveCursorL();
-        }
-        if (Input.GetKeyDown(KeyCode.RightArrow)) {
-          this.puzzle.MoveCursorR();
-        }
-        if (Input.GetKeyDown(KeyCode.UpArrow)) {
-          this.puzzle.MoveCursorU();
-        }
-        if (Input.GetKeyDown(KeyCode.DownArrow)) {
-          this.puzzle.MoveCursorD();
-        }
-
-        // 肉球選択 or 入れ替え
-        if (Input.GetKeyDown(KeyCode.Z)) {
-          // 選択中の肉球があれば入れ替え
-          if (this.puzzle.HasSelectedPaw) {
-            this.puzzle.Swap();
-          }
-
-          // 選択中の肉中がなければカーソルのある所の肉球を選択
-          else {
-            this.puzzle.SelectPaw();
-          }
-        }
-
-        // 肉球選択の解除
-        if (Input.GetKeyDown(KeyCode.X)) {
-          this.puzzle.ReleasePaw();
-        }
-
-        // 連鎖
-        if (Input.GetKeyDown(KeyCode.S)) {
-          this.puzzle.StartChain();
-        }
-      }
-
-      if (this.puzzle != null && this.puzzle.IsInChain) {
-        this.puzzle.UpdateChain();
-
-        if (this.puzzle.IsFinishedChain) {
-          this.puzzle.EndChain();
-          Attack();
-        }
-      }
-
-
-      // 強制ダメージ(火)
-      if (Input.GetKeyDown(KeyCode.Alpha1)) {
-        FireAttributeSkill(Define.App.Attribute.Fir);
-      }
-      // 状態異常回復(水)
-      if (Input.GetKeyDown(KeyCode.Alpha2)) {
-        FireAttributeSkill(Define.App.Attribute.Wat);
-      }
-      // 麻痺(雷)
-      if (Input.GetKeyDown(KeyCode.Alpha3)) {
-        FireAttributeSkill(Define.App.Attribute.Thu);
-      }
-      // 凍結(氷)
-      if (Input.GetKeyDown(KeyCode.Alpha4)) {
-        FireAttributeSkill(Define.App.Attribute.Ice);
-      }
-      // ランダム化
-      if (Input.GetKeyDown(KeyCode.Alpha5)) {
-        FireAttributeSkill(Define.App.Attribute.Tre);
-      }
-      // 体力回復(聖)
-      if (Input.GetKeyDown(KeyCode.Alpha6)) {
-        FireAttributeSkill(Define.App.Attribute.Hol);
-      }
-      // 不可視(闇)
-      if (Input.GetKeyDown(KeyCode.Alpha7)) {
-        FireAttributeSkill(Define.App.Attribute.Dar);
-      }
-
-      if (Input.GetKeyDown(KeyCode.Alpha8) && Type == Define.App.Player.P1) {
-        FireUniqueSkill();
-      }
-
-      if (Input.GetKeyDown(KeyCode.Alpha9) && Type == Define.App.Player.P2) {
-        FireUniqueSkill();
-      }
+      UpdateGauge();  // ゲージの更新
+      UpdateThink();  // 思考の更新
+      UpdatePuzzle(); // パズルの更新
     }
 
     /// <summary>
@@ -362,6 +276,30 @@ namespace MyGame.Unit.Versus
       // 行動が取得できていれば実行する
       if (action != null) {
         action.Execute();
+      }
+    }
+
+    /// <summary>
+    /// パズルの更新処理
+    /// </summary>
+    private void UpdatePuzzle()
+    {
+      if (this.puzzle == null) {
+        return;
+      }
+
+      // 連鎖中でなければ更新する必要はない
+      if (!this.puzzle.IsInChain) {
+        return;
+      }
+
+      // パズルの更新
+      this.puzzle.UpdateChain();
+
+      // 連鎖が終わったらパズルを連鎖完了して、攻撃
+      if (this.puzzle.IsFinishedChain) {
+        this.puzzle.EndChain();
+        Attack();
       }
     }
 
@@ -392,6 +330,10 @@ namespace MyGame.Unit.Versus
     /// </summary>
     public void TrySelectPaw()
     {
+      if (this.puzzle == null) {
+        return;
+      }
+
       if (this.puzzle.HasSelectedPaw) {
         this.puzzle.Swap();
       } else {
@@ -404,6 +346,10 @@ namespace MyGame.Unit.Versus
     /// </summary>
     public void TryReleasePaw()
     {
+      if (this.puzzle == null) {
+        return;
+      }
+
       this.puzzle.ReleasePaw();
     }
 
@@ -412,6 +358,10 @@ namespace MyGame.Unit.Versus
     /// </summary>
     public void TryChain()
     {
+      if (this.puzzle == null) {
+        return;
+      }
+
       this.puzzle.StartChain();
     }
 

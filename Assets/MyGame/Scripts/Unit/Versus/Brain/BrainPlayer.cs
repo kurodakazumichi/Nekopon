@@ -160,9 +160,13 @@ namespace MyGame.Unit.Versus
     /// </summary>
     private void MonitorAttributeSkill()
     {
-      if (this.decidedAction != null) return;
+      if (this.decidedAction != null) {
+        return;
+      }
 
-      if (this.input.GetCommand(Command.ShowSkillGuide, this.padNo).IsFixed) return;
+      if (this.input.GetCommand(Command.ShowSkillGuide, this.padNo).IsFixed) {
+        return;
+      }
 
       this.decidedAction = GetFireAttributeAction(); 
     }
