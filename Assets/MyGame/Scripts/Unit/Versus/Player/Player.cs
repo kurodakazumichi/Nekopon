@@ -392,7 +392,6 @@ namespace MyGame.Unit.Versus
 
     public void FireAttributeSkill(Define.App.Attribute attribute)
     {
-
       // 属性スキルを取得
       var skill = SkillManager.Instance.Create(attribute);
 
@@ -418,6 +417,17 @@ namespace MyGame.Unit.Versus
     /// </summary>
     public void TryFireUniqueSkill()
     {
+      // 現在のAPと使用APを取得
+      float nowAp = this.status.Ap;
+      float useAp = this.config.UseAp;
+
+      // APが足りていなければ何もしない
+      if (nowAp < useAp) {
+        return;
+      }
+
+      // APを消費してスキルを発動
+      this.status.AddAp(-useAp);
       FireUniqueSkill();
     }
 
