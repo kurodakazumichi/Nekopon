@@ -382,6 +382,9 @@ namespace MyGame.Unit.Versus
       // MP消費
       this.status.AddMp(attribute, -useMp);
 
+      // APを増やす
+      this.status.AddAp(1f);
+
       // スキル発動
       FireAttributeSkill(attribute);
       return true;

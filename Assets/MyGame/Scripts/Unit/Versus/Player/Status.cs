@@ -133,6 +133,14 @@ namespace MyGame.Unit.Versus
       }
 
       /// <summary>
+      /// APを加算
+      /// </summary>
+      public void AddAp(float ap)
+      {
+        this.ap.Now += ap;
+      }
+
+      /// <summary>
       /// ステータスの更新、ダメージがある限り徐々に体力を減らしていく
       /// </summary>
       public void Update()
