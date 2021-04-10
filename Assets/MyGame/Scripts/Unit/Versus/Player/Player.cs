@@ -143,6 +143,12 @@ namespace MyGame.Unit.Versus
     /// </summary>
     public bool IsSwapping => this.puzzle.IsSwapping;
 
+    /// <summary>
+    /// カーソルの位置
+    /// </summary>
+    public Vector2Int CursorCoord 
+      => (this.puzzle != null)? this.puzzle.CursorCoord : Vector2Int.zero;
+
     //-------------------------------------------------------------------------
     // Load, Unload
 

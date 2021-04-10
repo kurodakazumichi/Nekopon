@@ -130,6 +130,11 @@ namespace MyGame.Unit.Versus
       }
     }
 
+    /// <summary>
+    /// カーソルの座標だけ公開
+    /// </summary>
+    public Vector2Int CursorCoord => this.cursorCoord;
+
     //-------------------------------------------------------------------------
     // Load, Unload
 
