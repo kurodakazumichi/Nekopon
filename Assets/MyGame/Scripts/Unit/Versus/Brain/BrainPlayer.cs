@@ -4,6 +4,9 @@ using MyGame.Define;
 
 namespace MyGame.Unit.Versus
 {
+  /// <summary>
+  /// プレイヤー用の脳
+  /// </summary>
   public class BrainPlayer : IBrain
   {
     //-------------------------------------------------------------------------

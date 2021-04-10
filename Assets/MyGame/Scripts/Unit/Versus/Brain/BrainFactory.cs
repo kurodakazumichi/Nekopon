@@ -16,12 +16,12 @@ namespace MyGame.Unit.Versus
       {
         // AIの場合は猫タイプによって生成
         case App.Brain.AI: {
-          return Create(owner, target);
+          return CreateAIBrain(owner, target);
         }
         
         // AI以外だったらプレイヤー操作用のBrainを生成
         default: {
-          return Create(owner);
+          return CreatePlayerBrain(owner);
         }
       }
     }
@@ -29,7 +29,7 @@ namespace MyGame.Unit.Versus
     /// <summary>
     /// プレイヤー種別によって脳を生成
     /// </summary>
-    private static IBrain Create(Player owner)
+    private static IBrain CreatePlayerBrain(Player owner)
     {
       return new BrainPlayer(owner);
     }
@@ -37,9 +37,14 @@ namespace MyGame.Unit.Versus
     /// <summary>
     /// 猫の種類によって脳を生成
     /// </summary>
-    private static IBrain Create(Player owner, Player target)
+    private static IBrain CreateAIBrain(Player owner, Player target)
     {
-      return null;
+      var props = new BrainAI.Props() { 
+        owner  = owner,
+        target = target,
+      };
+
+      return new BrainAI(props);
     }
   }
 
