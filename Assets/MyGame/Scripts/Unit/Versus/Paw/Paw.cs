@@ -199,6 +199,13 @@ namespace MyGame.Unit.Versus
     /// </summary>
     public bool IsSwapping => this.swapExecutor.IsActive;
 
+    /// <summary>
+    /// カーソルで選択し、動かしたことがあるフラグ
+    /// AIで移動済のものは検索対象から外したいのでそのためのフラグ
+    /// 移動後にtrueになり、属性が変わったり、消えたりするとfalseになる
+    /// </summary>
+    public bool HasMoved { get; set; } = false;
+
     //-------------------------------------------------------------------------
     // Load, Unload
 
@@ -321,6 +328,7 @@ namespace MyGame.Unit.Versus
     /// </summary>
     public void RandomAttribute()
     {
+      HasMoved = false;
       SetAttribute(MyEnum.Random<App.Attribute>());
     }
 
@@ -399,6 +407,7 @@ namespace MyGame.Unit.Versus
     private void OnVanishEnter()
     {
       SetDefaultParams();
+      HasMoved = false;
       this.timer = 0;
     }
 
@@ -524,7 +533,10 @@ namespace MyGame.Unit.Versus
 
     public override void OnDebug()
     {
+      GUILayout.Label($"State:{this.state.StateKey}");
       GUILayout.Label($"Attribute:{Attribute}");
+      GUILayout.Label($"hasMoved:{HasMoved}");
+      GUILayout.Label($"IsEvaluated:{IsEvaluated}");
     }
 #endif
 

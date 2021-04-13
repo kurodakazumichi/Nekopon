@@ -346,7 +346,7 @@ namespace MyGame.Unit.Versus
     }
 
     //-------------------------------------------------------------------------
-    // 肉球関連
+    // 肉球単体に関するもの
 
     /// <summary>
     /// 肉球を選択する
@@ -419,7 +419,13 @@ namespace MyGame.Unit.Versus
       dst.CacheTransform.position = PositionBy(srcIndex);
       this.paws[srcIndex] = dst;
       this.paws[dstIndex] = src;
+
+      // 移動元は動かしたことがあるフラグを立てる
+      src.HasMoved = true;
     }
+
+    //-------------------------------------------------------------------------
+    // 肉球全体に関するもの
 
     /// <summary>
     /// 肉球をランダムに凍結させる
@@ -481,6 +487,144 @@ namespace MyGame.Unit.Versus
           paw.RandomAttribute();
         }
       });
+    }
+
+    /// <summary>
+    /// 肉球の評価フラグを全て落とす
+    /// </summary>
+    private void ClearEvaluated()
+    {
+      // 評価済フラグを落とす
+      Util.ForEach(this.paws, (paw, _) => { paw.IsEvaluated = false; });
+    }
+
+    /// <summary>
+    /// 肉球の評価フラグを再帰的に落とす
+    /// </summary>
+    private void ClearEvaluated(int x, int y)
+    {
+      // 繋がりをみる肉球をいれておく変数
+      Paw curr = this.paws[IndexBy(x, y)];
+      Paw next;
+
+      // 評価フラグを落とす
+      curr.IsEvaluated = false;
+
+      // 上方向の繋がりをみる
+      if (y < Define.Versus.PAW_ROW - 1) {
+        next = this.paws[IndexBy(x, y + 1)];
+        if (next.IsEvaluated) ClearEvaluated(x, y + 1);
+      }
+
+      // 下方向のつながりを見る
+      if (0 < y) {
+        next = this.paws[IndexBy(x, y - 1)];
+        if (next.IsEvaluated) ClearEvaluated(x, y - 1);
+      }
+
+      // 左方向のつながりを見る
+      if (0 < x) {
+        next = this.paws[IndexBy(x - 1, y)];
+        if (next.IsEvaluated) ClearEvaluated(x - 1, y);
+      }
+
+      // 右方向のつながりを見る
+      if (x < Define.Versus.PAW_COL - 1) {
+        next = this.paws[IndexBy(x + 1, y)];
+        if (next.IsEvaluated) ClearEvaluated(x + 1, y);
+      }
+    }
+
+    /// <summary>
+    /// x,yの位置にある肉球から繋がれている肉球の数を調べ上げる
+    /// </summary>
+    private void LookUpPawConnectable(int x, int y, ref int count)
+    {
+      // 連結数をカウントアップ
+      count++;
+
+      // 繋がりをみる肉球をいれておく変数
+      Paw curr = this.paws[IndexBy(x, y)];
+      Paw next;
+
+      // 評価中の肉球は評価済にしておく
+      curr.IsEvaluated = true;
+
+      // 上方向の繋がりをみる
+      if (y < Define.Versus.PAW_ROW - 1) {
+        next = this.paws[IndexBy(x, y + 1)];
+        if (!next.IsEvaluated && curr.CanConnect(next)) LookUpPawConnectable(x, y + 1, ref count);
+      }
+
+      // 下方向のつながりを見る
+      if (0 < y) {
+        next = this.paws[IndexBy(x, y - 1)];
+        if (!next.IsEvaluated && curr.CanConnect(next)) LookUpPawConnectable(x, y - 1, ref count);
+      }
+
+      // 左方向のつながりを見る
+      if (0 < x) {
+        next = this.paws[IndexBy(x - 1, y)];
+        if (!next.IsEvaluated && curr.CanConnect(next)) LookUpPawConnectable(x - 1, y, ref count);
+      }
+
+      // 右方向のつながりを見る
+      if (x < Define.Versus.PAW_COL - 1) {
+        next = this.paws[IndexBy(x + 1, y)];
+        if (!next.IsEvaluated && curr.CanConnect(next)) LookUpPawConnectable(x + 1, y, ref count);
+      }
+    }
+
+    /// <summary>
+    /// 属性を指定すると近くの選択可能な肉球の座標を取得する
+    /// </summary>
+    public bool FindNearPawCoord(Define.App.Attribute attribute, ref Vector2Int coord)
+    {
+      // 距離
+      float distance = -1;
+
+      for(int y = 0; y < Define.Versus.PAW_ROW; ++y) 
+      {
+        for(int x = 0; x < Define.Versus.PAW_COL; ++x) 
+        {
+          var paw = this.paws[IndexBy(x, y)]; // 探索対象の肉球
+          var pos = new Vector2Int(x, y);     // 探索位置
+
+          // 既に移動済みのものは除外
+          if (paw.HasMoved) continue;
+
+          // 探している属性と違うなら除外
+          if (paw.Attribute != attribute) continue;
+
+          // 選択できないものは除外
+          if (!paw.CanSelect) continue;
+
+          // カーソルとの距離を測る
+          var tmp = (this.cursorCoord - pos).sqrMagnitude;
+
+          // 初回じゃなく、現状見つかっているものより遠ければ除外
+          if (0 <= distance && distance < tmp) continue;
+
+          // 連結している肉球の数を調べる
+          var count = 0;
+          LookUpPawConnectable(x, y, ref count);
+          ClearEvaluated(x, y);
+
+          // 既に連鎖可能な数繋がっていたら除外
+          if (Define.Versus.CHAIN_PAW_COUNT <= count) continue;
+
+          // 近いものがあればその座標を記録し、距離を更新
+          coord.Set(x, y);
+          distance = tmp;
+
+          // 0距離のものが見つかっているのであればそれ以上近くはないので探索終了
+          if (distance == 0) {
+            return true;
+          }
+        }
+      }
+
+      return (0 <= distance);
     }
 
     //-------------------------------------------------------------------------
@@ -548,7 +692,7 @@ namespace MyGame.Unit.Versus
 
           // 肉球のつながりを調べる
           int count = 0;
-          LookUpPawConnection(x, y, ref count);
+          LookUpPawConnectable(x, y, ref count);
 
           // 肉球の連結数が連鎖可能な数を超えている場合は肉球を消滅状態にする
           if (Define.Versus.CHAIN_PAW_COUNT <= count) {
@@ -565,7 +709,7 @@ namespace MyGame.Unit.Versus
       }
 
       // 評価済フラグを落とす
-      Util.ForEach(this.paws, (paw, _) => { paw.IsEvaluated = false; });
+      ClearEvaluated();
 
       // 消えるのがある場合は連鎖数をUP、ない場合は連鎖終了へ
       if (HasVanishingPaw) {
@@ -665,48 +809,6 @@ namespace MyGame.Unit.Versus
     }
 
     /// <summary>
-    /// x,yの位置にある肉球に繋がってる肉球の数を調べ上げる
-    /// </summary>
-    private void LookUpPawConnection(int x, int y, ref int count)
-    {
-      // 連結数をカウントアップ
-      count++;
-
-      // 繋がりをみる肉球をいれておく変数
-      Paw curr = this.paws[IndexBy(x, y)];
-      Paw next;
-
-      // 評価中の肉球は評価済にしておく
-      curr.IsEvaluated = true;
-
-      // 上方向の繋がりをみる
-      if (y < Define.Versus.PAW_ROW - 1) 
-      {
-        next = this.paws[IndexBy(x, y + 1)];
-        if (!next.IsEvaluated && curr.CanConnect(next)) LookUpPawConnection(x, y + 1, ref count);
-      }
-
-      // 下方向のつながりを見る
-      if (0 < y) {
-        next = this.paws[IndexBy(x, y - 1)];
-        if (!next.IsEvaluated && curr.CanConnect(next)) LookUpPawConnection(x, y - 1, ref count);
-      }
-
-      // 左方向のつながりを見る
-      if (0 < x) {
-        next = this.paws[IndexBy(x - 1, y)];
-        if (!next.IsEvaluated && curr.CanConnect(next)) LookUpPawConnection(x - 1, y, ref count);
-      }
-
-      // 右方向のつながりを見る
-      if (x < Define.Versus.PAW_COL - 1) {
-        next = this.paws[IndexBy(x + 1, y)];
-        if (!next.IsEvaluated && curr.CanConnect(next)) LookUpPawConnection(x + 1, y, ref count);
-      }
-
-    }
-
-    /// <summary>
     /// 連鎖すると肉球が消え場所が空くので、消えてない肉球を下に詰める。
     /// </summary>
     private void StaffPawDown(int srcIndex)
@@ -764,51 +866,25 @@ namespace MyGame.Unit.Versus
     //-------------------------------------------------------------------------
     // デバッグ
 
-    // 肉球座標
-    private string __pawCoord = "0,0";
-
-    // デバッグ表示する肉球
-    private Paw __paw = null;
-
     public void OnDebug()
     {
       ChainScore.OnDebug();
 
-      OnDebugPawSelectForm();
+      var paw = this.paws[IndexBy(this.cursorCoord)];
+      paw.OnDebug();
 
-      if (this.__paw) {
-        this.__paw.OnDebug();
-      }
-    }
-
-    /// <summary>
-    /// 肉球を指定するための入力フォーム
-    /// </summary>
-    private void OnDebugPawSelectForm()
-    {
-      using (new GUILayout.HorizontalScope()) 
+      using(new GUILayout.VerticalScope(GUI.skin.box)) 
       {
-        // 座標を取得
-        this.__pawCoord = GUILayout.TextField(this.__pawCoord);
-
-        if (GUILayout.Button("Show")) 
-        {
-          var coord = this.__pawCoord.Split(',');
-          int x, y;
-
-          if (!int.TryParse(coord[0], out x)) return;
-          if (!int.TryParse(coord[1], out y)) return;
-
-          var index = IndexBy(x, y);
-
-          if (0 <= index && Define.Versus.PAW_TOTAL <= index) return;
-
-          this.__paw = this.paws[index];
-        }
-
-        if (GUILayout.Button("Reset")) {
-          this.__pawCoord = "";
-          this.__paw = null;
+        GUILayout.Label("[Find Paw]");
+        using (new GUILayout.HorizontalScope()) {
+          MyEnum.ForEach<Define.App.Attribute>((attribute) =>
+          {
+            if (GUILayout.Button($"{attribute}")) {
+              var pos = Vector2Int.zero;
+              var found = FindNearPawCoord(attribute, ref pos);
+              Debug.Logger.Log($"{found}:{pos}");
+            }
+          });
         }
       }
     }
