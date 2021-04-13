@@ -641,12 +641,13 @@ namespace MyGame.Unit.Versus
     {
       using (new GUILayout.VerticalScope()) {
         this.status.OnDebug();
-        this.puzzle.OnDebug();
-
+        
         using (new GUILayout.VerticalScope(GUI.skin.box)) {
           GUILayout.Label($"Invinsible:{this.IsInvincible}");
           GUILayout.Label($"Reflection:{this.CanReflect}");
         }
+
+        this.puzzle.OnDebug();
       }
     }
 

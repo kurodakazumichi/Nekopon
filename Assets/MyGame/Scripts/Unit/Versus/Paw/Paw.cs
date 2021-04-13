@@ -518,6 +518,16 @@ namespace MyGame.Unit.Versus
       this.spriteRenderer.color = color;
     }
 
+#if _DEBUG
+    //-------------------------------------------------------------------------
+    // デバッグ
+
+    public override void OnDebug()
+    {
+      GUILayout.Label($"Attribute:{Attribute}");
+    }
+#endif
+
   }
 
 }

@@ -763,10 +763,56 @@ namespace MyGame.Unit.Versus
 #if _DEBUG
     //-------------------------------------------------------------------------
     // デバッグ
+
+    // 肉球座標
+    private string __pawCoord = "0,0";
+
+    // デバッグ表示する肉球
+    private Paw __paw = null;
+
     public void OnDebug()
     {
-      this.ChainScore.OnDebug();
+      ChainScore.OnDebug();
+
+      OnDebugPawSelectForm();
+
+      if (this.__paw) {
+        this.__paw.OnDebug();
+      }
     }
+
+    /// <summary>
+    /// 肉球を指定するための入力フォーム
+    /// </summary>
+    private void OnDebugPawSelectForm()
+    {
+      using (new GUILayout.HorizontalScope()) 
+      {
+        // 座標を取得
+        this.__pawCoord = GUILayout.TextField(this.__pawCoord);
+
+        if (GUILayout.Button("Show")) 
+        {
+          var coord = this.__pawCoord.Split(',');
+          int x, y;
+
+          if (!int.TryParse(coord[0], out x)) return;
+          if (!int.TryParse(coord[1], out y)) return;
+
+          var index = IndexBy(x, y);
+
+          if (0 <= index && Define.Versus.PAW_TOTAL <= index) return;
+
+          this.__paw = this.paws[index];
+        }
+
+        if (GUILayout.Button("Reset")) {
+          this.__pawCoord = "";
+          this.__paw = null;
+        }
+      }
+    }
+
 #endif
   }
 }
