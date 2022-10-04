@@ -144,10 +144,9 @@ namespace MyGame.Unit.Versus
     public bool IsSwapping => this.puzzle.IsSwapping;
 
     /// <summary>
-    /// カーソルの位置
+    /// 分析可能なパズル
     /// </summary>
-    public Vector2Int CursorCoord 
-      => (this.puzzle != null)? this.puzzle.CursorCoord : Vector2Int.zero;
+    public IAnalyzableForBrain AnalyzablePuzzle => this.puzzle;
 
     //-------------------------------------------------------------------------
     // Load, Unload

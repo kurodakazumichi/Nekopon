@@ -2,7 +2,7 @@
 
 namespace MyGame.Unit.Versus
 {
-  public partial class Puzzle
+  public partial class Puzzle : IAnalyzableForBrain
   {
     /// <summary>
     /// 状態
@@ -625,6 +625,47 @@ namespace MyGame.Unit.Versus
       }
 
       return (0 <= distance);
+    }
+
+    /// <summary>
+    /// 属性とモードを指定して、入れ替え先の肉球の位置を探す
+    /// </summary>
+    public bool FindSwapPawCoord(
+      Define.App.Attribute attribute,
+      Define.Versus.FindMode mode,
+      ref Vector2Int coord
+    )
+    {
+      for (int y = 0; y < Define.Versus.PAW_ROW; ++y) 
+      {
+        for (int x = 0; x < Define.Versus.PAW_COL; ++x)
+        {
+          var index = IndexBy(x, y);
+          var paw   = this.paws[index];
+          
+          // 移動済は無視
+          if (paw.HasMoved) continue;
+
+          // 選択中の肉球と同じなら除外
+          if (index == this.selectedIndex) continue;
+
+          // 属性が同じ場合は除外
+          if (paw.Attribute == attribute) continue;
+
+          // 連結数を取得
+          var count = 0;
+          LookUpPawConnectable(x, y, ref count);
+          ClearEvaluated(x, y);
+
+          // 沢山繋がってたら除外
+          if (Define.Versus.CHAIN_PAW_COUNT <= count) continue;
+
+          coord.Set(x, y);
+          return true;
+
+        }
+      }
+      return false;
     }
 
     //-------------------------------------------------------------------------

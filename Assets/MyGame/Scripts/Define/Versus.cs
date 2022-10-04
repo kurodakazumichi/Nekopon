@@ -16,6 +16,15 @@ namespace MyGame.Define
     }
 
     /// <summary>
+    /// 連鎖構築モード(AI用)
+    /// </summary>
+    public enum FindMode
+    {
+      Base, // 連鎖の基盤を構築する
+      Grow, // 連鎖を大きくする
+    }
+
+    /// <summary>
     /// 肉球を配置する際のX方向の間隔
     /// </summary>
     public const float PAW_INTERVAL_X = 0.105f;

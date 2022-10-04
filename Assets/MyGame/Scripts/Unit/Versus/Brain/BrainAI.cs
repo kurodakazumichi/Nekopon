@@ -4,6 +4,14 @@ using MyGame.Unit.Versus.BrainAction;
 
 namespace MyGame.Unit.Versus
 {
+  public interface IAnalyzableForBrain
+  {
+    Vector2Int CursorCoord { get; }
+    bool HasSelectedPaw { get; }
+    bool FindNearPawCoord(App.Attribute attribute, ref Vector2Int coord);
+    bool FindSwapPawCoord(App.Attribute attribute, Define.Versus.FindMode mode, ref Vector2Int coord);
+  }
+
   /// <summary>
   /// AI用の脳
   /// </summary>
@@ -20,7 +28,9 @@ namespace MyGame.Unit.Versus
 
     private enum State
     {
+      Idle,
       Build, // 連鎖を構築する
+      Wait,
     }
 
     /// <summary>
@@ -60,14 +70,21 @@ namespace MyGame.Unit.Versus
     private StateMachine<State> state = new StateMachine<State>();
 
     /// <summary>
+    /// パズル
+    /// </summary>
+    private IAnalyzableForBrain puzzle = null;
+
+    /// <summary>
     /// コンストラクタ
     /// </summary>
     public BrainAI(Props props)
     {
       this.props = props;
-
+      this.state.Add(State.Idle);
+      this.state.Add(State.Wait, OnWaitEnter, OnWaitUpdate);
       this.state.Add(State.Build, OnBuildEnter, OnBuildUpdate);
-      this.state.SetState(State.Build);
+      
+      this.state.SetState(State.Idle);
     }
 
     /// <summary>
@@ -75,13 +92,37 @@ namespace MyGame.Unit.Versus
     /// </summary>
     public IAction Think()
     {
-      this.waitTimer -= TimeSystem.Instance.DeltaTime;
-      if (IsWait) return null;
-      
-      this.waitTimer = 0.05f;
+      if (this.puzzle == null) {
+        this.puzzle = this.props.owner.AnalyzablePuzzle;
+        return null;
+      }
+      this.decidedAction = null;
+      if (Input.GetKeyDown(KeyCode.Alpha1)) {
+        this.targetAttribute = App.Attribute.Fir;
+      }
+      if (Input.GetKeyDown(KeyCode.Alpha2)) {
+        this.targetAttribute = App.Attribute.Wat;
+      }
+      if (Input.GetKeyDown(KeyCode.Alpha3)) {
+        this.targetAttribute = App.Attribute.Thu;
+      }
+      if (Input.GetKeyDown(KeyCode.Alpha4)) {
+        this.targetAttribute = App.Attribute.Ice;
+      }
+      if (Input.GetKeyDown(KeyCode.Alpha5)) {
+        this.targetAttribute = App.Attribute.Tre;
+      }
+      if (Input.GetKeyDown(KeyCode.Alpha6)) {
+        this.targetAttribute = App.Attribute.Hol;
+      }
+      if (Input.GetKeyDown(KeyCode.Alpha7)) {
+        this.targetAttribute = App.Attribute.Dar;
+      }
+      if (Input.GetKeyDown(KeyCode.Return)) {
+        this.state.SetState(State.Build);
+      }
 
       this.state.Update();
-
 
       return this.decidedAction;
     }
@@ -99,22 +140,29 @@ namespace MyGame.Unit.Versus
         return MyEnum.Random<App.Attribute>();
     }
 
-
-
     //-------------------------------------------------------------------------
     // Build:連鎖の構築を行うState
     // 
     private void OnBuildEnter()
     {
+      // 選択中の肉球がある場合
+      if (this.puzzle.HasSelectedPaw) {
+        if (!this.puzzle.FindSwapPawCoord(this.targetAttribute, Define.Versus.FindMode.Base, ref this.targetCoord)) {
+          this.state.SetState(State.Idle);
+        }
+      }
       // 目標の座標を設定する
-      this.targetCoord.x = Random.Range(0, Define.Versus.PAW_COL);
-      this.targetCoord.y = Random.Range(0, Define.Versus.PAW_ROW);
+      else {
+        if (!this.puzzle.FindNearPawCoord(this.targetAttribute, ref this.targetCoord)) {
+          this.state.SetState(State.Idle);
+        }
+      }
     }
 
     private void OnBuildUpdate()
     {
       // 現在のカーソルの座標を取得
-      var currentCoord = this.props.owner.CursorCoord;
+      var currentCoord = this.puzzle.CursorCoord;
 
       // TODO:目的の座標にある肉球の状態が変わっていないかチェック
       // 属性スキル(木)や、入替スキルによって肉球が変わる可能性があるし
@@ -124,7 +172,7 @@ namespace MyGame.Unit.Versus
       // 目標地点にたどり着いていたら肉球を選択するアクションを登録
       if (this.targetCoord == currentCoord) {
         this.decidedAction = new SelectPawAction(this.props.owner);
-        this.state.SetState(State.Build);
+        this.state.SetState(State.Wait);
         return;
       }
 
@@ -153,6 +201,22 @@ namespace MyGame.Unit.Versus
       }
 
       return null;
+    }
+
+    private void OnWaitEnter()
+    {
+      this.waitTimer = 0.01f;
+    }
+
+    private void OnWaitUpdate()
+    {
+      this.waitTimer -= TimeSystem.Instance.DeltaTime;
+
+      //if (IsWait) {
+      //  return;
+      //}
+
+      this.state.SetState(State.Build);
     }
   }
 }
